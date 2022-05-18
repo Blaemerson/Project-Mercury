@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+import 'package:projectmercury/pages/store_page.dart';
+
+import '../utils/global_variables.dart';
+import '../widgets/store_item_card.dart';
+
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home'),
+      ),
+      body: const Center(
+        child: Text('Home page'),
+      ),
+      floatingActionButton: SizedBox(
+        width: 64,
+        height: 64,
+        child: FloatingActionButton(
+          child: const Icon(Icons.storefront, size: 42),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return const StorePage();
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

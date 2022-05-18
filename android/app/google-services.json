@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "205829397512",
+    "project_id": "project-mercury-prototype",
+    "storage_bucket": "project-mercury-prototype.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205829397512:android:c4a0b32b064c3a700745bd",
+        "android_client_info": {
+          "package_name": "com.example.projectmercury"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205829397512-88ok0f56lbr1fllu8iepuol7n5en4kco.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsoU55HtjBf0r3SSc8F2OvSy3BcmPVyGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205829397512-88ok0f56lbr1fllu8iepuol7n5en4kco.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "205829397512-b11qoc4cm5mlk63n5pmulqp1a7r8226u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.projectmercury"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
