@@ -17,12 +17,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _displayNameController = TextEditingController();
   AuthMode _authMode = AuthMode.login;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _displayNameController.dispose();
     super.dispose();
   }
 
@@ -35,8 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void signup() async {
-    String res = await AuthMethods()
-        .signup(_emailController.text, _passwordController.text);
+    String res = await AuthMethods().signup(_emailController.text,
+        _passwordController.text, _displayNameController.text);
     if (res != 'success') {
       showSnackBar(res, context);
     }
@@ -89,6 +91,22 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget _buildDisplayNameField() {
+    return TextFormField(
+      decoration: const InputDecoration(
+        labelText: 'Password',
+      ),
+      controller: _displayNameController,
+      keyboardType: TextInputType.name,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Please enter a passowrd.";
+        }
+        return null;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,6 +144,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   _buildEmailField(),
                   _buildPasswordField(),
+                  _authMode == AuthMode.signup
+                      ? _buildDisplayNameField()
+                      : Container(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
