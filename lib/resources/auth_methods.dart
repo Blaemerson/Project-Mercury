@@ -25,11 +25,15 @@ class AuthMethods {
     return res;
   }
 
-  Future<String> signup(String email, String password) async {
+  Future<String> signup(
+      String email, String password, String displayName) async {
     String res = 'success';
     try {
-      await _auth.createUserWithEmailAndPassword(
+      UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      await cred.user!.updateDisplayName(displayName);
+    } on FirebaseAuthException catch (res) {
+      return res.message.toString();
     } catch (res) {
       return res.toString();
     }

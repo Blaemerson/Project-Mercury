@@ -1,12 +1,12 @@
 class User {
   final String uid;
-  final String email;
+  final String displayName;
   int totalScore;
 
   User({
     required this.uid,
-    required this.email,
-    required this.totalScore,
+    required this.displayName,
+    this.totalScore = 0,
   });
 
   addToScore(int score) {
