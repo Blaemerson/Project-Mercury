@@ -37,17 +37,17 @@ class StorePage extends StatelessWidget {
               ),
             ),
           ),
-          Flexible(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return StoreItemCard(
-                  storeItem: storeItems[index],
-                );
-              },
-              itemCount: storeItems.length,
-              scrollDirection: Axis.horizontal,
-            ),
-          ),
+          // Flexible(
+          //   child: ListView.builder(
+          //     itemBuilder: (context, index) {
+          //       return StoreItemCard(
+          //         storeItem: storeItems[index],
+          //       );
+          //     },
+          //     itemCount: storeItems.length,
+          //     scrollDirection: Axis.horizontal,
+          //   ),
+          // ),
           Flexible(
             flex: 3,
             child: ListView.builder(

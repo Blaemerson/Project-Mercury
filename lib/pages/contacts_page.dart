@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:projectmercury/utils/global_variables.dart';
 
 import '../widgets/contact_card.dart';
 

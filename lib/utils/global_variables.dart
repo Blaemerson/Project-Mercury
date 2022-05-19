@@ -43,11 +43,13 @@ List<Transaction> transactions = [
     description: 'Utility Bills',
     amount: -500,
     timeStamp: DateTime.now(),
+    state: transactionState.actionNeeded,
   ),
   Transaction(
     description: 'Rent',
     amount: -2000,
     timeStamp: DateTime.now(),
+    state: transactionState.actionNeeded,
   ),
   Transaction(
     description: 'Midterm Deposit',
@@ -59,16 +61,19 @@ List<Transaction> transactions = [
     description: 'TV Purchase',
     amount: -300,
     timeStamp: DateTime.now(),
+    state: transactionState.actionNeeded,
   ),
   Transaction(
     description: 'Car Payment',
     amount: -1500,
     timeStamp: DateTime.now(),
+    state: transactionState.actionNeeded,
   ),
   Transaction(
     description: 'Grocery',
     amount: -300,
     timeStamp: DateTime.now(),
+    state: transactionState.actionNeeded,
   ),
   Transaction(
     description: 'Midterm Deposit',
@@ -131,7 +136,7 @@ List<Message> messages = [
     photo:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDMuZCURfJMSd76h_PCBbdYF2TgDZvlsQ_TQ&usqp=CAU',
     name: 'Lindsey Phillips',
-    text: 'Hi, can I have your social secutiry number?',
+    text: 'Hi, can I have your social security number?',
     request: 'social security number',
     timeSent: DateTime.now(),
   ),
@@ -139,7 +144,7 @@ List<Message> messages = [
     photo:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDMuZCURfJMSd76h_PCBbdYF2TgDZvlsQ_TQ&usqp=CAU',
     name: 'Lindsey Phillips',
-    text: 'Hi, can I have your social secutiry number?',
+    text: 'Hi, can I have your social security number?',
     request: 'social security number',
     timeSent: DateTime.now(),
   ),
@@ -147,7 +152,7 @@ List<Message> messages = [
     photo:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDMuZCURfJMSd76h_PCBbdYF2TgDZvlsQ_TQ&usqp=CAU',
     name: 'Lindsey Phillips',
-    text: 'Hi, can I have your social secutiry number?',
+    text: 'Hi, can I have your social security number?',
     request: 'social security number',
     timeSent: DateTime.now(),
   ),
@@ -155,7 +160,7 @@ List<Message> messages = [
     photo:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDMuZCURfJMSd76h_PCBbdYF2TgDZvlsQ_TQ&usqp=CAU',
     name: 'Lindsey Phillips',
-    text: 'Hi, can I have your social secutiry number?',
+    text: 'Hi, can I have your social security number?',
     request: 'social security number',
     timeSent: DateTime.now(),
   ),
@@ -163,7 +168,7 @@ List<Message> messages = [
     photo:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDMuZCURfJMSd76h_PCBbdYF2TgDZvlsQ_TQ&usqp=CAU',
     name: 'Lindsey Phillips',
-    text: 'Hi, can I have your social secutiry number?',
+    text: 'Hi, can I have your social security number?',
     request: 'social security number',
     timeSent: DateTime.now(),
   ),

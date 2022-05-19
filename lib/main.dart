@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/screens/login_screen.dart';
 import 'package:projectmercury/screens/navigation_screen.dart';
 
@@ -18,6 +19,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Project Mercury',
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [
+        AnalyticsMethods().getAnalyticObserver(),
+      ],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: Colors.red,

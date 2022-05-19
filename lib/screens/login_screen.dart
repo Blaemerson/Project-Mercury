@@ -74,6 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildPasswordField() {
     return TextFormField(
+      obscureText: true,
       decoration: const InputDecoration(
         labelText: 'Password',
       ),
@@ -94,13 +95,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildDisplayNameField() {
     return TextFormField(
       decoration: const InputDecoration(
-        labelText: 'Password',
+        labelText: 'Username',
       ),
       controller: _displayNameController,
       keyboardType: TextInputType.name,
       validator: (value) {
         if (value!.isEmpty) {
-          return "Please enter a passowrd.";
+          return "Please enter a username.";
         }
         return null;
       },
@@ -142,11 +143,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                   ),
-                  _buildEmailField(),
-                  _buildPasswordField(),
                   _authMode == AuthMode.signup
                       ? _buildDisplayNameField()
                       : Container(),
+                  _buildEmailField(),
+                  _buildPasswordField(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
