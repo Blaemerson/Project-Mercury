@@ -11,11 +11,15 @@ class InfoPage extends StatelessWidget {
           title: const Text('Info'),
         ),
         body: Center(
-          child: TextButton(
+          child: Container(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            child: TextButton(
               onPressed: () async {
                 await AuthMethods().signout();
               },
-              child: const Text('SignOut')),
+              child: const Text('SignOut'),
+            ),
+          ),
         ));
   }
 }

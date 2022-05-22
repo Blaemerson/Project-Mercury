@@ -59,8 +59,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
         child: BottomNavigationBar(
           currentIndex: _pageSelected,
           iconSize: 50,
-          selectedItemColor: Theme.of(context).colorScheme.primary,
-          unselectedItemColor: Colors.black,
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
           selectedLabelStyle: const TextStyle(
@@ -82,14 +80,14 @@ class _NavigationScreenState extends State<NavigationScreen> {
             ),
             BottomNavigationBarItem(
               icon: Badge(
-                badgeContent: const Text('2'),
+                badgeContent: const Text(''),
                 child: const Icon(Icons.money),
               ),
               label: 'Money',
             ),
             BottomNavigationBarItem(
               icon: Badge(
-                badgeContent: const Text('3'),
+                badgeContent: const Text(''),
                 child: const Icon(Icons.people),
               ),
               label: 'Contacts',

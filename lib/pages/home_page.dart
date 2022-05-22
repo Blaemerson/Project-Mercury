@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/store_page.dart';
 
-import '../utils/global_variables.dart';
-import '../widgets/store_item_card.dart';
-
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 

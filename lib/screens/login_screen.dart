@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
-import 'package:projectmercury/screens/navigation_screen.dart';
 
 import '../utils/global_variables.dart';
 
@@ -115,7 +114,6 @@ class _LoginScreenState extends State<LoginScreen> {
         constraints: BoxConstraints.expand(
           height: MediaQuery.of(context).size.height,
         ),
-        color: Colors.blueGrey[100],
         child: Form(
           autovalidateMode: AutovalidateMode.disabled,
           key: _formKey,

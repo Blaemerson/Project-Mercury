@@ -22,16 +22,16 @@ class StorePage extends StatelessWidget {
             alignment: Alignment.center,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(32),
                 topRight: Radius.circular(32),
               ),
             ),
-            child: const Text(
+            child: Text(
               'Furniture Store',
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onPrimary,
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
               ),
