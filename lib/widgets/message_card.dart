@@ -11,10 +11,21 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Divider(),
-        Padding(
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 5,
+              color: Theme.of(context).colorScheme.onBackground,
+              offset: const Offset(0, 2),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
@@ -48,7 +59,7 @@ class MessageCard extends StatelessWidget {
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

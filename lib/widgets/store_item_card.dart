@@ -16,7 +16,7 @@ class StoreItemCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: Colors.pink[100],
+            color: Theme.of(context).colorScheme.primaryContainer,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

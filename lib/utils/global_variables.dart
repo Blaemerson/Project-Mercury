@@ -14,14 +14,6 @@ import '../pages/money_page.dart';
 var formatCurrency = NumberFormat.simpleCurrency();
 var formatDate = DateFormat('yMMMMd');
 
-showSnackBar(String content, BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(content),
-    ),
-  );
-}
-
 // Pages
 List<Widget> navBarPages = const [
   HomePage(),

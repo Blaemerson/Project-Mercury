@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 
-import '../utils/global_variables.dart';
+import '../utils/utils.dart';
 
 enum AuthMode { signup, login }
 
@@ -133,8 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    child: Image.network(
-                        'https://www.pngall.com/wp-content/uploads/2/Mercury-Planet.png'),
+                    child: const Image(image: AssetImage('assets/logo.png')),
                   ),
                   const Text(
                     'Welcome to Project Mercury',
@@ -177,19 +176,35 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextButton(
                         onPressed: () async {
                           _submitForm();
-                          // await AuthMethods().signInAnonymously();
-                          // if (FirebaseAuth.instance.currentUser != null) {
-                          //   Navigator.of(context).pushReplacement(
-                          //     MaterialPageRoute(
-                          //       builder: (context) => const NavigationScreen(),
-                          //     ),
-                          //   );
-                          // }
                         },
                         child: Text(
                           _authMode == AuthMode.login ? 'Login' : 'Signup',
                           style: TextStyle(
                             fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Text('or'),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextButton(
+                        onPressed: () async {
+                          await AuthMethods().signInAnonymously();
+                        },
+                        child: Text('Continue as Guest',
+                          style: TextStyle(
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),

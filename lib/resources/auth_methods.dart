@@ -7,12 +7,15 @@ class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final AnalyticsMethods _analytics = AnalyticsMethods();
 
-  Future<void> signInAnonymously() async {
+  Future<String> signInAnonymously() async {
+    String res = 'success';
     try {
-      await _auth.signInAnonymously();
-    } on FirebaseAuthException catch (e) {
-      print(e);
+      UserCredential cred = await _auth.signInAnonymously();
+      await _analytics.setUserProperties(cred.user!.uid);
+    } on FirebaseAuthException catch (res) {
+      return res.message.toString();
     }
+    return res;
   }
 
   Future<String> login(String email, String password) async {
