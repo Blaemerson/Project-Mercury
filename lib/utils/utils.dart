@@ -1,6 +1,4 @@
 
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 
 showSnackBar(String content, BuildContext context) {
