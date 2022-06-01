@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 
+import '../resources/analytics_methods.dart';
+import '../resources/locator.dart';
 import '../utils/utils.dart';
 
 enum AuthMode { signup, login }
@@ -13,6 +15,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final AuthMethods _auth = locator.get<AuthMethods>();
+  final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -28,30 +32,23 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login() async {
-    String res = await AuthMethods()
-        .login(_emailController.text, _passwordController.text);
+    String res = await _auth.login(
+      _emailController.text,
+      _passwordController.text,
+    );
     if (res != 'success') {
       showSnackBar(res, context);
     }
   }
 
   void signup() async {
-    String res = await AuthMethods().signup(_emailController.text,
-        _passwordController.text, _displayNameController.text);
+    String res = await _auth.signup(
+      _emailController.text,
+      _passwordController.text,
+      _displayNameController.text,
+    );
     if (res != 'success') {
       showSnackBar(res, context);
-    }
-  }
-
-  void _submitForm() {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    if (_authMode == AuthMode.login) {
-      login();
-    } else {
-      signup();
     }
   }
 
@@ -92,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildDisplayNameField() {
+    _analytics.setCurrentScreen('Login');
     return TextFormField(
       decoration: const InputDecoration(
         labelText: 'Username',
@@ -175,7 +173,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextButton(
                         onPressed: () async {
-                          _submitForm();
+                          if (!_formKey.currentState!.validate()) {
+                            return;
+                          }
+                          if (_authMode == AuthMode.login) {
+                            login();
+                          } else {
+                            signup();
+                          }
                         },
                         child: Text(
                           _authMode == AuthMode.login ? 'Login' : 'Signup',
@@ -200,9 +205,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextButton(
                         onPressed: () async {
-                          await AuthMethods().signInAnonymously();
+                          await _auth.signInAnonymously();
                         },
-                        child: Text('Continue as Guest',
+                        child: Text(
+                          'Continue as Guest',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
+import 'package:projectmercury/models/transaction.dart';
+import 'package:projectmercury/resources/auth_methods.dart';
+import 'package:projectmercury/resources/firestore_methods.dart';
+import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
+import 'package:uuid/uuid.dart';
 
 class StoreItemCard extends StatelessWidget {
   final StoreItem storeItem;
@@ -8,6 +13,9 @@ class StoreItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+    AuthMethods _auth = locator.get<AuthMethods>();
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: FittedBox(
@@ -22,10 +30,22 @@ class StoreItemCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(storeItem.name),
-              storeItem.icon,
+              Icon(IconData(storeItem.icon, fontFamily: 'MaterialIcons')),
               Text(formatCurrency.format(storeItem.price)),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  String id = const Uuid().v1();
+                  _firestore.buyItem(_auth.currentUser.uid, storeItem);
+                  _firestore.transaction.add(
+                    id,
+                    Transaction(
+                      description: 'Purchased ${storeItem.name}',
+                      amount: -storeItem.price,
+                      timeStamp: DateTime.now(),
+                      id: id,
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),

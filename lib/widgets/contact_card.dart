@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import '../models/contact.dart';
 
 class ContactCard extends StatelessWidget {
-  final Map<String, dynamic> snap;
+  final Contact contact;
   const ContactCard({
     Key? key,
-    required this.snap,
+    required this.contact,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Contact contact = Contact.fromSnap(snap);
-
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Container(

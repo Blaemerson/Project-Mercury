@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:projectmercury/resources/firestore_methods.dart';
+import 'package:projectmercury/resources/locator.dart';
 
+import '../models/contact.dart';
 import '../widgets/contact_card.dart';
 
 class ContactsPage extends StatelessWidget {
@@ -8,6 +11,7 @@ class ContactsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Contacts'),
@@ -17,13 +21,8 @@ class ContactsPage extends StatelessWidget {
           Flexible(
             child: Scrollbar(
               child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('contacts')
-                      .orderBy('name')
-                      .snapshots(),
-                  builder: (context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                          snapshot) {
+                  stream: _firestore.contact.stream,
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -31,7 +30,8 @@ class ContactsPage extends StatelessWidget {
                     }
                     return ListView.builder(
                       itemBuilder: (context, index) => ContactCard(
-                        snap: snapshot.data!.docs[index].data(),
+                        contact: Contact.fromSnap(snapshot.data!.docs[index]
+                            .data() as Map<String, dynamic>),
                       ),
                       itemCount: snapshot.data!.docs.length,
                     );

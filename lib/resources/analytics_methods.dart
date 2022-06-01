@@ -9,4 +9,8 @@ class AnalyticsMethods {
   Future setUserProperties(String userId) async {
     await _analytics.setUserId(id: userId);
   }
+
+  Future setCurrentScreen(String screenName) async {
+    await _analytics.setCurrentScreen(screenName: screenName);
+  }
 }

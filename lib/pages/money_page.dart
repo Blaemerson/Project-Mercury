@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:projectmercury/models/transaction.dart';
+import 'package:projectmercury/resources/firestore_methods.dart';
+import 'package:projectmercury/resources/locator.dart';
 
 import '../utils/global_variables.dart';
 import '../widgets/transaction_card.dart';
@@ -12,32 +14,9 @@ class MoneyPage extends StatefulWidget {
 }
 
 class _MoneyPageState extends State<MoneyPage> {
-  double _currentBalance = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    calculateBalance();
-  }
-
-  void calculateBalance() {
-    setState(() {
-      for (var transact in transactions) {
-        if (transact.state == transactionState.approved) {
-          _currentBalance += transact.amount;
-        }
-      }
-    });
-  }
-
-  updateBalance(double amount) {
-    setState(() {
-      _currentBalance += amount;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Money'),
@@ -52,13 +31,23 @@ class _MoneyPageState extends State<MoneyPage> {
                   'Account Balance:',
                   style: TextStyle(fontSize: 24),
                 ),
-                Text(
-                  formatCurrency.format(_currentBalance),
-                  style: const TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                StreamBuilder(
+                    stream: _firestore.user.stream,
+                    builder:
+                        (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Text(
+                        formatCurrency.format(snapshot.data!.get('balance')),
+                        style: const TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }),
               ],
             ),
           ),
@@ -85,15 +74,24 @@ class _MoneyPageState extends State<MoneyPage> {
           ),
           Flexible(
             child: Scrollbar(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return TransactionCard(
-                    transaction: transactions.reversed.toList()[index],
-                    updateFunction: updateBalance,
-                  );
-                },
-                itemCount: transactions.length,
-              ),
+              child: StreamBuilder(
+                  stream: _firestore.transaction.stream,
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return ListView.builder(
+                      itemBuilder: (context, index) {
+                        return TransactionCard(
+                          snap: snapshot.data!.docs[index].data()
+                              as Map<String, dynamic>,
+                        );
+                      },
+                      itemCount: snapshot.data!.docs.length,
+                    );
+                  }),
             ),
           ),
         ],

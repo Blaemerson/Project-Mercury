@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
+import 'package:projectmercury/resources/firestore_methods.dart';
+import 'package:projectmercury/resources/locator.dart';
 
-import '../utils/global_variables.dart';
 import '../widgets/store_item_card.dart';
 
 class StorePage extends StatelessWidget {
@@ -11,6 +13,8 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+
     return Column(
       children: [
         Container(
@@ -64,15 +68,28 @@ class StorePage extends StatelessWidget {
         // ),
         SizedBox(
           height: 300,
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return StoreItemCard(
-                storeItem: storeItems[index],
-              );
-            },
-            itemCount: storeItems.length,
-            scrollDirection: Axis.horizontal,
-          ),
+          child: StreamBuilder(
+              stream: _firestore.store.stream,
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return const Center(child: Text('Error loading store.'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    return StoreItemCard(
+                      storeItem: StoreItem.fromSnap(snapshot.data!.docs[index]
+                          .data() as Map<String, dynamic>),
+                    );
+                  },
+                  itemCount: snapshot.data!.docs.length,
+                  scrollDirection: Axis.horizontal,
+                );
+              }),
         ),
       ],
     );

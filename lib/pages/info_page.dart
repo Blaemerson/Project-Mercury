@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 
 class InfoPage extends StatelessWidget {
@@ -6,6 +7,8 @@ class InfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthMethods _auth = GetIt.I.get<AuthMethods>();
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Info'),
@@ -15,7 +18,7 @@ class InfoPage extends StatelessWidget {
             color: Theme.of(context).colorScheme.primaryContainer,
             child: TextButton(
               onPressed: () async {
-                await AuthMethods().signout();
+                await _auth.signout();
               },
               child: const Text('SignOut'),
             ),

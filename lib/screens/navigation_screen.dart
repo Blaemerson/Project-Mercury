@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
-import 'package:projectmercury/utils/global_variables.dart';
+import 'package:projectmercury/resources/analytics_methods.dart';
+import 'package:projectmercury/resources/locator.dart';
+
+import '../pages/contacts_page.dart';
+import '../pages/home_page.dart';
+import '../pages/info_page.dart';
+import '../pages/messages_page.dart';
+import '../pages/money_page.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({Key? key}) : super(key: key);
@@ -10,14 +17,9 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
+  final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
   int _pageSelected = 0;
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
+  final PageController _pageController = PageController();
 
   @override
   void dispose() {
@@ -40,11 +42,18 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _analytics.setCurrentScreen("Home");
     return Scaffold(
       body: PageView(
         controller: _pageController,
         onPageChanged: onPageChanged,
-        children: navBarPages,
+        children: const [
+          HomePage(),
+          MoneyPage(),
+          ContactsPage(),
+          MessagesPage(),
+          InfoPage(),
+        ],
         physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: Container(

@@ -1,4 +1,4 @@
-enum messageState {
+enum MessageState {
   actionNeeded,
   infoDenied,
   infoGiven,
@@ -11,7 +11,7 @@ class Message {
   final String request;
   final DateTime timeSent;
   DateTime? timeActed;
-  messageState state;
+  MessageState state;
 
   Message({
     required this.photo,
@@ -20,6 +20,6 @@ class Message {
     required this.request,
     required this.timeSent,
     this.timeActed,
-    this.state = messageState.actionNeeded,
+    this.state = MessageState.actionNeeded,
   });
 }

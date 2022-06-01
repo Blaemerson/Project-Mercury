@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/resources/firestore_methods.dart';
+import 'package:projectmercury/resources/locator.dart';
 
 import '../models/transaction.dart';
 import '../utils/global_variables.dart';
 
 class TransactionCard extends StatefulWidget {
-  final Transaction transaction;
-  final ValueChanged<double> updateFunction;
+  final Map<String, dynamic> snap;
   const TransactionCard({
     Key? key,
-    required this.transaction,
-    required this.updateFunction,
+    required this.snap,
   }) : super(key: key);
 
   @override
@@ -19,6 +19,8 @@ class TransactionCard extends StatefulWidget {
 class _TransactionCardState extends State<TransactionCard> {
   @override
   Widget build(BuildContext context) {
+    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+    Transaction transaction = Transaction.fromSnap(widget.snap);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -44,13 +46,13 @@ class _TransactionCardState extends State<TransactionCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        formatDate.format(widget.transaction.timeStamp),
+                        formatDate.format(transaction.timeStamp),
                         style: const TextStyle(
                           fontSize: 12,
                         ),
                       ),
                       Text(
-                        widget.transaction.description,
+                        transaction.description,
                         style: const TextStyle(
                           fontSize: 20,
                         ),
@@ -58,8 +60,8 @@ class _TransactionCardState extends State<TransactionCard> {
                     ],
                   ),
                   Text(
-                    (widget.transaction.amount > 0 ? '+' : '') +
-                        formatCurrency.format(widget.transaction.amount),
+                    (transaction.amount > 0 ? '+' : '') +
+                        formatCurrency.format(transaction.amount),
                     style: const TextStyle(
                       fontSize: 32,
                     ),
@@ -67,7 +69,7 @@ class _TransactionCardState extends State<TransactionCard> {
                 ],
               ),
             ),
-            widget.transaction.state == transactionState.actionNeeded
+            transaction.state == TransactionState.actionNeeded
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -104,10 +106,9 @@ class _TransactionCardState extends State<TransactionCard> {
                                   TextButton(
                                     onPressed: () {
                                       Navigator.pop(context);
-                                      setState(() {
-                                        widget.transaction.state =
-                                            transactionState.disputed;
-                                      });
+                                      _firestore.transaction.update(
+                                          transaction.id,
+                                          {'state': 'disputed'});
                                     },
                                     child: const Text(
                                       'Dispute',
@@ -163,13 +164,9 @@ class _TransactionCardState extends State<TransactionCard> {
                                   TextButton(
                                     onPressed: () {
                                       Navigator.pop(context);
-                                      setState(() {
-                                        widget.transaction.state =
-                                            transactionState.approved;
-                                        widget.updateFunction(
-                                          widget.transaction.amount,
-                                        );
-                                      });
+                                      _firestore.transaction.update(
+                                          transaction.id,
+                                          {'state': 'approved'});
                                     },
                                     child: const Text(
                                       'Approve',
@@ -194,7 +191,7 @@ class _TransactionCardState extends State<TransactionCard> {
                       ),
                     ],
                   )
-                : widget.transaction.state == transactionState.approved
+                : transaction.state == TransactionState.approved
                     ? const Text(
                         'Approved',
                         style: TextStyle(
