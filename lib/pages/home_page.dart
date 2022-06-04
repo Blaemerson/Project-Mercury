@@ -17,32 +17,39 @@ class HomePage extends StatelessWidget {
       ),
       body: Consumer<List<PurchasedItem>>(
         builder: (_, items, __) {
-          return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+          return Center(
+            child: Stack(
               children: [
-                Wrap(children: [
-                  for (PurchasedItem item in items)
-                    /* Create a new draggable element for each item */
-                    Draggable(
-                      data: item.name,
-                      /* TODO: change representation of purchased furniture from their icon */
-                      child: Icon(
-                        IconData(item.icon, fontFamily: 'MaterialIcons'),
-                        size: 50,
-                      ),
-                      feedback: Icon(
-                        IconData(item.icon, fontFamily: 'MaterialIcons'),
-                        size: 70,
-                      ),
-                      childWhenDragging: Container(),
+                /* Position each tile correctly */
+                /* TODO: Make this clearer, and remove the hardcoded values */
+                for (double i = 0, j = 0;
+                    i < 16;
+                    i++, (i % 4 == 0) ? j += 42.426 / 2 : j += 0)
+                  Tile(
+                      tileSize: 30,
+                      offsetX: i * 42.426 / 2 - (j * 3),
+                      offsetY: i * 42.426 / 2 - (j * 5)),
+                      Column(children: [
+                for (PurchasedItem item in items)
+                  /* Create a new draggable element for each item */
+                  Draggable(
+                    data: item,
+                    /* TODO: change representation of purchased furniture from their icon */
+                    child: Icon(
+                      IconData(item.icon, fontFamily: 'MaterialIcons'),
+                      size: 50,
                     ),
-                    const Tile(depth: 50, offsetX: -100, offsetY: -100),
-                    const Tile(depth: 50, offsetX: -50, offsetY: -75),
-                    const Tile(depth: 50, offsetX: -150, offsetY: -75),
-                    const Tile(depth: 50, offsetX: -100, offsetY: -50),
-                ]),
-              ]);
+                    feedback: Icon(
+                      IconData(item.icon, fontFamily: 'MaterialIcons'),
+                      size: 70,
+                    ),
+                    childWhenDragging: Container(),
+                  ),
+
+                      ],)
+              ],
+            ),
+          );
         },
       ),
       floatingActionButton: SizedBox(
@@ -70,11 +77,16 @@ class HomePage extends StatelessWidget {
   }
 }
 
+// TODO: See if this must be stateful
 class Tile extends StatefulWidget {
-  const Tile({Key? key, this.child, required this.depth, required this.offsetX, required this.offsetY}) : super(key: key);
+  const Tile(
+      {Key? key,
+      required this.tileSize,
+      required this.offsetX,
+      required this.offsetY})
+      : super(key: key);
 
-  final Widget? child;
-  final double depth;
+  final double tileSize;
   final double offsetX;
   final double offsetY;
 
@@ -86,56 +98,56 @@ class _TileState extends State<Tile> {
   bool _occupied = false;
   String _occupyingFurniture = '';
   int _tileRotation = 0;
+  PurchasedItem _furniture = PurchasedItem();
 
   @override
   Widget build(BuildContext context) {
-    return DragTarget(
-      builder: ((context, candidateData, rejectedData) {
-        return CustomPaint(
-          painter: IsometricTilePainter(depth: widget.depth, offsetX: widget.offsetX, offsetY: widget.offsetY),
-        );
-      }),
-      onWillAccept: (data) {
-        /* TODO: Only accept furniture if there is space for it on the floor. */
-        return data == data;
-      },
-      onAccept: (data) {
-        setState(() {
-          /* TODO: Move item to the house when dragged there. */
-          showSnackBar(
-              'Added ${data.toString().toLowerCase()} to home.', context);
-          /* _occupyingFurniture = data.toString(); */
-        });
-      },
+    Color _color = Colors.lightBlueAccent;
+    return Transform.translate(
+      offset: Offset(widget.offsetX, widget.offsetY),
+      child: Transform.rotate(
+        angle: 3.1415 / 4,
+        child: DragTarget(
+          builder: ((context, candidateData, rejectedData) {
+            return Container(
+              height: widget.tileSize,
+              width: widget.tileSize,
+              /* color: Colors.grey, */
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueAccent),
+                color: _color,
+              ),
+              child:
+                  Icon(IconData(_furniture.icon, fontFamily: 'MaterialIcons')),
+            );
+          }),
+          onLeave: (PurchasedItem? data) {
+            _color = Colors.lightBlueAccent;
+          },
+          onWillAccept: (PurchasedItem? data) {
+            /* TODO: Only accept furniture if there is space for it on the floor. */
+            _color = Colors.red;
+            return true;
+          },
+          onAccept: (PurchasedItem data) {
+            setState(() {
+              if (_occupied == false) {
+                showSnackBar(
+                    'Added ${data.name.toLowerCase()} to home.', context);
+
+                _furniture = data;
+                _occupied = true;
+                _occupyingFurniture = data.name;
+              } else {
+                showSnackBar('Failed', context);
+                _furniture = PurchasedItem();
+                _occupied = false;
+                _occupyingFurniture = '';
+              }
+            });
+          },
+        ),
+      ),
     );
   }
-}
-
-class IsometricTilePainter extends CustomPainter {
-  const IsometricTilePainter({required this.depth, required this.offsetY, required this.offsetX});
-  final double depth;
-  final double offsetY;
-  final double offsetX;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    double x = size.width / 2;
-    double y = size.height / 2;
-    final floor = Path()
-      ..moveTo(x - offsetX, y - offsetY)
-      ..lineTo(x - offsetX - depth, y - offsetY - depth * 0.5)
-      ..lineTo(x - offsetX - depth + depth, (y - offsetY) - (depth * 0.5 + depth * 0.5))
-      ..lineTo(x - offsetX + depth, (y - offsetY) - (depth * 0.5))
-      ..close();
-    final fill = Paint()
-      ..color = Color.fromARGB(100, 150, 150, 150)
-      ..style = PaintingStyle.fill;
-    canvas.translate(size.width / 2, size.height / 2);
-    canvas.save();
-    canvas.drawPath(floor, fill);
-    canvas.restore();
-  }
-
-  @override
-  bool shouldRepaint(IsometricTilePainter oldDelegate) => false;
 }
