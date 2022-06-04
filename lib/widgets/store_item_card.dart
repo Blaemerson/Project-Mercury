@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
-import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
+import 'package:projectmercury/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 
 class StoreItemCard extends StatelessWidget {
@@ -13,15 +13,35 @@ class StoreItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-    AuthMethods _auth = locator.get<AuthMethods>();
+    final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+
+    buyItem() async {
+      num currentBalance =
+          await _firestore.user.getUser.then((value) => value.balance);
+      if (currentBalance > storeItem.price) {
+        String id = const Uuid().v1();
+        _firestore.userItem.add(storeItem);
+        _firestore.userTransaction.add(
+          id,
+          Transaction(
+            description: 'Purchased ${storeItem.name}',
+            amount: -storeItem.price,
+            timeStamp: DateTime.now(),
+            id: id,
+          ),
+        );
+      } else {
+        showSnackBar('Not enough funds.', context);
+      }
+      Navigator.pop(context);
+    }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: FittedBox(
         fit: BoxFit.fitHeight,
         child: Container(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             color: Theme.of(context).colorScheme.primaryContainer,
@@ -33,18 +53,16 @@ class StoreItemCard extends StatelessWidget {
               Icon(IconData(storeItem.icon, fontFamily: 'MaterialIcons')),
               Text(formatCurrency.format(storeItem.price)),
               ElevatedButton(
-                onPressed: () {
-                  String id = const Uuid().v1();
-                  _firestore.buyItem(_auth.currentUser.uid, storeItem);
-                  _firestore.transaction.add(
-                    id,
-                    Transaction(
-                      description: 'Purchased ${storeItem.name}',
-                      amount: -storeItem.price,
-                      timeStamp: DateTime.now(),
-                      id: id,
-                    ),
-                  );
+                onPressed: () async {
+                  bool result = await showConfirmation(
+                        context: context,
+                        title: 'Confirmation',
+                        text: 'Purchase this item?',
+                      ) ??
+                      false;
+                  if (result == true) {
+                    buyItem();
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

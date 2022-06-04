@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/global_variables.dart';
 import '../widgets/transaction_card.dart';
@@ -17,6 +19,7 @@ class _MoneyPageState extends State<MoneyPage> {
   @override
   Widget build(BuildContext context) {
     FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Money'),
@@ -74,24 +77,18 @@ class _MoneyPageState extends State<MoneyPage> {
           ),
           Flexible(
             child: Scrollbar(
-              child: StreamBuilder(
-                  stream: _firestore.transaction.stream,
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+              child: Consumer<List<model.Transaction>>(
+                builder: (_, userTransactions, __) {
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return TransactionCard(
+                        transaction: userTransactions[index],
                       );
-                    }
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        return TransactionCard(
-                          snap: snapshot.data!.docs[index].data()
-                              as Map<String, dynamic>,
-                        );
-                      },
-                      itemCount: snapshot.data!.docs.length,
-                    );
-                  }),
+                    },
+                    itemCount: userTransactions.length,
+                  );
+                },
+              ),
             ),
           ),
         ],

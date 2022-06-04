@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
+import 'package:projectmercury/resources/timeController.dart';
 
 import '../pages/contacts_page.dart';
 import '../pages/home_page.dart';
@@ -18,43 +19,49 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
+  final TimerController _timer = locator.get<TimerController>();
+
   int _pageSelected = 0;
-  final PageController _pageController = PageController();
+  List<Widget> pages = const [
+    HomePage(),
+    MoneyPage(),
+    ContactsPage(),
+    MessagesPage(),
+    InfoPage(),
+  ];
+  List<String> pageTitles = const [
+    '/home',
+    '/money',
+    '/contacts',
+    '/mail',
+    '/info',
+  ];
+
+  void onNavTapped(int index) {
+    setState(() {
+      _analytics.setCurrentScreen(pageTitles[index]);
+      _pageSelected = index;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _timer.start();
+  }
 
   @override
   void dispose() {
     super.dispose();
-    _pageController.dispose();
-  }
-
-  void onPageChanged(int index) {
-    setState(() {
-      _pageSelected = index;
-    });
-  }
-
-  void onNavTapped(int index) {
-    setState(() {
-      _pageSelected = index;
-      _pageController.jumpToPage(index);
-    });
+    _timer.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    _analytics.setCurrentScreen("Home");
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: onPageChanged,
-        children: const [
-          HomePage(),
-          MoneyPage(),
-          ContactsPage(),
-          MessagesPage(),
-          InfoPage(),
-        ],
-        physics: const NeverScrollableScrollPhysics(),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 100),
+        child: pages[_pageSelected],
       ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(

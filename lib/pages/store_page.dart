@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
-import 'package:projectmercury/resources/firestore_methods.dart';
-import 'package:projectmercury/resources/locator.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/store_item_card.dart';
 
@@ -11,10 +9,9 @@ class StorePage extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+// better store layout .. separate items by type?
   @override
   Widget build(BuildContext context) {
-    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-
     return Column(
       children: [
         Container(
@@ -39,57 +36,21 @@ class StorePage extends StatelessWidget {
             ),
           ),
         ),
-        // Flexible(
-        //   child: ListView.builder(
-        //     itemBuilder: (context, index) {
-        //       return Padding(
-        //         padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-        //         child: FittedBox(
-        //           child: Column(
-        //             children: [
-        //               Container(
-        //                   decoration: BoxDecoration(
-        //                     shape: BoxShape.circle,
-        //                       color: Theme.of(context).colorScheme.primaryContainer,
-        //                     ),
-        //                   child: IconButton(
-        //                     onPressed: () {},
-        //                     icon: const Icon(Icons.bed),
-        //                   )),
-        //                   Text(itemType.values[index].name + 's'),
-        //             ],
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //     itemCount: itemType.values.length,
-        //     scrollDirection: Axis.horizontal,
-        //   ),
-        // ),
         SizedBox(
           height: 300,
-          child: StreamBuilder(
-              stream: _firestore.store.stream,
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return const Center(child: Text('Error loading store.'));
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+          child: Consumer<List<StoreItem>>(
+            builder: (_, storeItems, __) {
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  return StoreItemCard(
+                    storeItem: storeItems[index],
                   );
-                }
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    return StoreItemCard(
-                      storeItem: StoreItem.fromSnap(snapshot.data!.docs[index]
-                          .data() as Map<String, dynamic>),
-                    );
-                  },
-                  itemCount: snapshot.data!.docs.length,
-                  scrollDirection: Axis.horizontal,
-                );
-              }),
+                },
+                itemCount: storeItems.length,
+                scrollDirection: Axis.horizontal,
+              );
+            },
+          ),
         ),
       ],
     );

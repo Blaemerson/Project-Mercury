@@ -22,7 +22,6 @@ class AuthMethods {
     try {
       UserCredential cred = await _auth.signInAnonymously();
       await _analytics.setUserProperties(cred.user!.uid);
-      await locator.get<FirestoreMethods>().user.initialize(cred.user!);
     } on FirebaseAuthException catch (res) {
       return res.message.toString();
     }
@@ -39,8 +38,7 @@ class AuthMethods {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       await _analytics.setUserProperties(cred.user!.uid);
-      await cred.user!.updateDisplayName(displayName).then((value) =>
-          locator.get<FirestoreMethods>().user.initialize(cred.user!));
+      await cred.user!.updateDisplayName(displayName);
     } on FirebaseAuthException catch (e) {
       return e.message.toString();
     } catch (e) {

@@ -7,37 +7,43 @@ enum TransactionState {
 }
 
 class Transaction {
+  final String id;
   final String description;
   final num amount;
   final DateTime timeStamp;
+  DateTime? timeActed;
   TransactionState state;
-  final String id;
 
   Transaction({
+    required this.id,
     required this.description,
     required this.amount,
     required this.timeStamp,
+    this.timeActed,
     this.state = TransactionState.actionNeeded,
-    required this.id,
   });
 
   Map<String, dynamic> toJson() {
     return ({
+      'id': id,
       'description': description,
       'amount': amount,
       'timeStamp': timeStamp,
+      'timeActed': timeActed,
       'state': state.name,
-      'id': id,
     });
   }
 
   factory Transaction.fromSnap(Map<String, dynamic> snap) {
     return Transaction(
+      id: snap['id'],
       description: snap['description'],
       amount: snap['amount'],
       timeStamp: (snap['timeStamp'] as Timestamp).toDate(),
+      timeActed: snap['timeActed'] != null
+          ? (snap['timeActed'] as Timestamp).toDate()
+          : null,
       state: TransactionState.values.byName(snap['state']),
-      id: snap['id'],
     );
   }
 }

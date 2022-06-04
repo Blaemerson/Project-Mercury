@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projectmercury/utils/global_variables.dart';
+import 'package:provider/provider.dart';
 
+import '../models/message.dart';
 import '../widgets/message_card.dart';
 
 class MessagesPage extends StatelessWidget {
@@ -15,14 +16,16 @@ class MessagesPage extends StatelessWidget {
       body: Column(
         children: [
           Flexible(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return MessageCard(
-                  message: messages[index],
-                );
-              },
-              itemCount: messages.length,
-            ),
+            child: Consumer<List<Message>>(builder: (_, messages, __) {
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  return MessageCard(
+                    message: messages[index],
+                  );
+                },
+                itemCount: messages.length,
+              );
+            }),
           ),
         ],
       ),

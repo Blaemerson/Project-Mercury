@@ -2,7 +2,7 @@ class User {
   final String uid;
   String name;
   int score;
-  double balance;
+  num balance;
 
   User({
     required this.uid,

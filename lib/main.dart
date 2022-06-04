@@ -2,11 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:projectmercury/firebase_options.dart';
+import 'package:projectmercury/models/contact.dart';
+import 'package:projectmercury/models/message.dart';
 import 'package:projectmercury/models/store_item.dart';
+import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
+import 'package:projectmercury/resources/timeController.dart';
 import 'package:projectmercury/screens/login_screen.dart';
 import 'package:projectmercury/screens/navigation_screen.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +20,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  setup();
+  setupLocator();
   runApp(const MyApp());
 }
 
@@ -28,13 +32,32 @@ class MyApp extends StatelessWidget {
     final AuthMethods _auth = locator.get<AuthMethods>();
     final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+    final TimerController _timer = locator.get<TimerController>();
 
     return MultiProvider(
+      // TODO: move each provider down widget tree
       providers: [
-        StreamProvider<List<PurchasedItem>>(
-          create: (context) => _firestore.itemStream,
+        StreamProvider<List<Transaction>>(
+          create: (context) => _firestore.userTransaction.stream,
           initialData: const [],
-        )
+        ),
+        StreamProvider<List<PurchasedItem>>(
+          create: (context) => _firestore.userItem.stream,
+          initialData: const [],
+        ),
+        StreamProvider<List<StoreItem>>(
+          create: (context) => _firestore.store.stream,
+          initialData: const [],
+        ),
+        StreamProvider<List<Contact>>(
+          create: ((context) => _firestore.contact.stream),
+          initialData: const [],
+        ),
+        StreamProvider<List<Message>>(
+          create: (context) => _firestore.userMessage.stream,
+          initialData: const [],
+        ),
+        ChangeNotifierProvider<TimerController>.value(value: _timer),
       ],
       child: MaterialApp(
         title: 'Project Mercury',
@@ -64,6 +87,7 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
                 _firestore.user.initialize(_auth.currentUser);
+                _analytics.setCurrentScreen('/home');
                 return const NavigationScreen();
               } else if (snapshot.hasError) {
                 return Center(
@@ -78,6 +102,7 @@ class MyApp extends StatelessWidget {
               );
             }
             // return login screen in user not logged in
+            _analytics.setCurrentScreen('/login');
             return const LoginScreen();
           },
         ),

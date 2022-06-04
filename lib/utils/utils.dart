@@ -1,10 +1,59 @@
-
 import 'package:flutter/material.dart';
 
-showSnackBar(String content, BuildContext context) {
+// shows pop-up with yes/no options. Returns true if 'yes' selected; else false.
+Future<bool?> showConfirmation({
+  required BuildContext context,
+  String? title,
+  String? text,
+}) async {
+  bool? result = false;
+  result = await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: title != null
+          ? Text(
+              title,
+              style: const TextStyle(fontSize: 24),
+            )
+          : null,
+      content: text != null
+          ? Text(
+              text,
+              style: const TextStyle(fontSize: 20),
+            )
+          : null,
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+          child: const Text(
+            'no',
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+          child: const Text(
+            'yes',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+  return result;
+}
+
+// shows a snackbar with content message
+void showSnackBar(String text, BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(content),
+      content: Text(text),
     ),
   );
 }

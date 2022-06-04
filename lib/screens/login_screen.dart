@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 
-import '../resources/analytics_methods.dart';
 import '../resources/locator.dart';
 import '../utils/utils.dart';
 
@@ -16,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final AuthMethods _auth = locator.get<AuthMethods>();
-  final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -31,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+// call AuthMethod login
   void login() async {
     String res = await _auth.login(
       _emailController.text,
@@ -41,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+// call AuthMethod signup
   void signup() async {
     String res = await _auth.signup(
       _emailController.text,
@@ -52,6 +52,24 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // name text input field (signup only)
+  Widget _buildDisplayNameField() {
+    return TextFormField(
+      decoration: const InputDecoration(
+        labelText: 'Username',
+      ),
+      controller: _displayNameController,
+      keyboardType: TextInputType.name,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Please enter a username.";
+        }
+        return null;
+      },
+    );
+  }
+
+// email text input field
   Widget _buildEmailField() {
     return TextFormField(
       decoration: const InputDecoration(
@@ -68,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+// password text input field
   Widget _buildPasswordField() {
     return TextFormField(
       obscureText: true,
@@ -82,23 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         if (value.length < 6) {
           return "Password must have at least 6 characters.";
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildDisplayNameField() {
-    _analytics.setCurrentScreen('Login');
-    return TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Username',
-      ),
-      controller: _displayNameController,
-      keyboardType: TextInputType.name,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Please enter a username.";
         }
         return null;
       },

@@ -4,12 +4,13 @@ import 'package:projectmercury/resources/locator.dart';
 
 import '../models/transaction.dart';
 import '../utils/global_variables.dart';
+import '../utils/utils.dart';
 
 class TransactionCard extends StatefulWidget {
-  final Map<String, dynamic> snap;
+  final Transaction transaction;
   const TransactionCard({
     Key? key,
-    required this.snap,
+    required this.transaction,
   }) : super(key: key);
 
   @override
@@ -20,9 +21,22 @@ class _TransactionCardState extends State<TransactionCard> {
   @override
   Widget build(BuildContext context) {
     FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-    Transaction transaction = Transaction.fromSnap(widget.snap);
+
+// TODO: only add score when right decision made
+    _approve() async {
+      await _firestore.userTransaction
+          .updateState(widget.transaction.id, TransactionState.approved);
+      _firestore.user.updateScore(1);
+    }
+
+    _dispute() async {
+      await _firestore.userTransaction
+          .updateState(widget.transaction.id, TransactionState.disputed);
+      _firestore.user.updateScore(1);
+    }
+
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
@@ -46,13 +60,13 @@ class _TransactionCardState extends State<TransactionCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        formatDate.format(transaction.timeStamp),
+                        formatDate.format(widget.transaction.timeStamp),
                         style: const TextStyle(
                           fontSize: 12,
                         ),
                       ),
                       Text(
-                        transaction.description,
+                        widget.transaction.description,
                         style: const TextStyle(
                           fontSize: 20,
                         ),
@@ -60,8 +74,8 @@ class _TransactionCardState extends State<TransactionCard> {
                     ],
                   ),
                   Text(
-                    (transaction.amount > 0 ? '+' : '') +
-                        formatCurrency.format(transaction.amount),
+                    (widget.transaction.amount > 0 ? '+' : '') +
+                        formatCurrency.format(widget.transaction.amount),
                     style: const TextStyle(
                       fontSize: 32,
                     ),
@@ -69,129 +83,62 @@ class _TransactionCardState extends State<TransactionCard> {
                 ],
               ),
             ),
-            transaction.state == TransactionState.actionNeeded
+            widget.transaction.state == TransactionState.actionNeeded
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Row(
                         children: [
-                          IconButton(
-                            onPressed: () => showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text(
-                                  'Confirmation',
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                  ),
-                                ),
-                                content: const Text(
-                                  'Dispute this transaction?',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      _firestore.transaction.update(
-                                          transaction.id,
-                                          {'state': 'disputed'});
-                                    },
-                                    child: const Text(
-                                      'Dispute',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                          ElevatedButton.icon(
+                              onPressed: () async {
+                                bool result = await showConfirmation(
+                                      context: context,
+                                      title: 'Confirmation',
+                                      text: 'Dispute this transaction?',
+                                    ) ??
+                                    false;
+                                if (result == true) {
+                                  _dispute();
+                                }
+                              },
+                              icon: const Icon(Icons.close, size: 32),
+                              label: const Text(
+                                'Dispute',
+                                style: TextStyle(fontSize: 18),
                               ),
-                            ),
-                            icon: const Icon(Icons.cancel),
-                            iconSize: 50,
-                            color: Colors.red,
-                            padding: const EdgeInsets.all(8),
-                          ),
-                          const Text(
-                            'Dispute',
-                            style: TextStyle(fontSize: 20, color: Colors.red),
-                          ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.red[700],
+                              )),
                         ],
                       ),
                       Row(
                         children: [
-                          IconButton(
-                            onPressed: () => showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text(
-                                  'Confirmation',
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                  ),
-                                ),
-                                content: const Text(
-                                  'Approve this transaction?',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      _firestore.transaction.update(
-                                          transaction.id,
-                                          {'state': 'approved'});
-                                    },
-                                    child: const Text(
-                                      'Approve',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          ElevatedButton.icon(
+                            onPressed: () async {
+                              bool result = await showConfirmation(
+                                    context: context,
+                                    title: 'Confirmation',
+                                    text: 'Appove this transaction?',
+                                  ) ??
+                                  false;
+                              if (result == true) {
+                                _approve();
+                              }
+                            },
+                            icon: const Icon(Icons.check, size: 36),
+                            label: const Text(
+                              'Approve',
+                              style: TextStyle(fontSize: 18),
                             ),
-                            icon: const Icon(Icons.check_circle),
-                            iconSize: 50,
-                            color: Colors.green,
-                            padding: const EdgeInsets.all(8),
-                          ),
-                          const Text(
-                            'Approve',
-                            style: TextStyle(fontSize: 20, color: Colors.green),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.green[700],
+                            ),
                           ),
                         ],
                       ),
                     ],
                   )
-                : transaction.state == TransactionState.approved
+                : widget.transaction.state == TransactionState.approved
                     ? const Text(
                         'Approved',
                         style: TextStyle(
