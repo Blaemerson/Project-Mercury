@@ -5,7 +5,7 @@ import 'package:projectmercury/firebase_options.dart';
 import 'package:projectmercury/models/contact.dart';
 import 'package:projectmercury/models/message.dart';
 import 'package:projectmercury/models/store_item.dart';
-import 'package:projectmercury/pages/home_page.dart';
+import 'package:projectmercury/models/tile.dart';
 import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
