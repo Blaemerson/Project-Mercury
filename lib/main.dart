@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:projectmercury/firebase_options.dart';
 import 'package:projectmercury/models/store_item.dart';
+import 'package:projectmercury/pages/home_page.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         StreamProvider<List<PurchasedItem>>(
           create: (context) => _firestore.itemStream,
           initialData: const [],
+        ),
+        Provider<List<Tile>>(
+          create: (context) => List.generate(25, (index) => Tile()),
         )
       ],
       child: MaterialApp(
