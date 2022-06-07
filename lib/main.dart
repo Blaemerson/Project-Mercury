@@ -5,6 +5,7 @@ import 'package:projectmercury/firebase_options.dart';
 import 'package:projectmercury/models/contact.dart';
 import 'package:projectmercury/models/message.dart';
 import 'package:projectmercury/models/store_item.dart';
+import 'package:projectmercury/models/tile.dart';
 import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
@@ -56,6 +57,13 @@ class MyApp extends StatelessWidget {
           create: (context) => _firestore.userMessage.stream,
           initialData: const [],
         ),
+<<<<<<< HEAD
+=======
+        ChangeNotifierProvider<TimerController>.value(value: _timer),
+        Provider<List<Tile>>(
+          create: (context) => List.generate(25, (index) => Tile()),
+        )
+>>>>>>> 39f41f3663cf88ec033ee1c206b96aa93371307e
       ],
       child: MaterialApp(
         title: 'Project Mercury',

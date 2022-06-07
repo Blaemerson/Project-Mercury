@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/store_page.dart';
+import 'package:projectmercury/widgets/home_floor_tile.dart';
+import 'package:projectmercury/models/tile.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
-import '../models/store_item.dart';
+import 'package:projectmercury/models/store_item.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,27 +16,55 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: Consumer<List<PurchasedItem>>(
-        builder: (_, items, __) {
-          return SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Wrap(
-                  children: [
-                    for (PurchasedItem item in items)
-                      Icon(
-                        IconData(item.icon, fontFamily: 'MaterialIcons'),
-                        size: 50,
-                      )
-                  ],
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Consumer<List<Tile>>(builder: (_, tiles, __) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(45.0),
+                child: Transform(
+                  alignment: AlignmentDirectional.center,
+                  transform: Matrix4.rotationX(math.pi / 3),
+                  child: Transform(
+                    transform: Matrix4.rotationZ(math.pi / 4),
+                    alignment: AlignmentDirectional.center,
+                    child: GridView.count(
+                      crossAxisCount: 5,
+                      primary: false,
+                      shrinkWrap: true,
+                      children: [
+                        for (Tile tile in tiles) HomeFloorTile(tile: tile),
+                      ],
+                    ),
+                  ),
                 ),
+              ),
+            );
+          }),
+          Consumer<List<PurchasedItem>>(builder: (_, items, __) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (PurchasedItem item in items)
+                  /* Create a new draggable element for each item */
+                  Draggable(
+                    data: item,
+                    /* TODO: change representation of purchased furniture from their icon */
+                    child: Icon(
+                      IconData(item.icon, fontFamily: 'MaterialIcons'),
+                      size: 50,
+                    ),
+                    feedback: Icon(
+                      IconData(item.icon, fontFamily: 'MaterialIcons'),
+                      size: 50,
+                    ),
+                    childWhenDragging: Container(),
+                  ),
               ],
-            ),
-          );
-        },
+            );
+          })
+        ],
       ),
       floatingActionButton: SizedBox(
         width: 64,
