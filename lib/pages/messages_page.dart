@@ -15,17 +15,25 @@ class MessagesPage extends StatelessWidget {
       ),
       body: Column(
         children: [
+          // TODO: remove when done
+          const Text(
+            '*Notice: message below resets after 3 seconds for testing*',
+            style: TextStyle(fontSize: 24),
+          ),
           Flexible(
-            child: Consumer<List<Message>>(builder: (_, messages, __) {
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  return MessageCard(
-                    message: messages[index],
-                  );
-                },
-                itemCount: messages.length,
-              );
-            }),
+            child: Consumer<List<Message>>(
+              builder: (_, messages, __) {
+                return ListView.builder(
+                  reverse: true,
+                  itemBuilder: (context, index) {
+                    return MessageCard(
+                      message: messages[index],
+                    );
+                  },
+                  itemCount: messages.length,
+                );
+              },
+            ),
           ),
         ],
       ),

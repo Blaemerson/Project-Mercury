@@ -116,7 +116,7 @@ class _UserItemMethods extends FirestoreMethods {
   ) async {
     await ref
         .doc()
-        .set(storeItem.toJson())
+        .set(storeItem.toJson()..addAll({'timeBought': DateTime.now()}))
         .then((value) => debugPrint('Added item data.'))
         .onError((error, stackTrace) =>
             debugPrint('Failed to add item data: $error'));
@@ -151,10 +151,34 @@ class _UserMessageMethods extends FirestoreMethods {
             debugPrint('Failed to add new message: $error'));
   }
 
+  Future<void> updateState(String id, MessageState state) async {
+    await ref
+        .doc(id)
+        .update({'state': state.name, 'timeActed': DateTime.now()})
+        .then((value) => debugPrint('Updated message state.'))
+        .onError((error, stackTrace) =>
+            debugPrint('Failed to update message state: $error'));
+    await Future.delayed(
+      const Duration(seconds: 1),
+      () => ref.doc(id).update({'displayState': FieldValue.increment(1)}),
+    );
+    await Future.delayed(
+      const Duration(seconds: 2),
+      () => ref.doc(id).update({'displayState': FieldValue.increment(1)}),
+    );
+    await Future.delayed(
+      const Duration(seconds: 3),
+      () => ref.doc(id).update({'displayState': 0, 'state': 'actionNeeded'}),
+    );
+  }
+
 // stream of messages
-  Stream<List<Message>> get stream => ref.snapshots().map((list) => list.docs
-      .map((snap) => Message.fromSnap(snap.data() as Map<String, dynamic>))
-      .toList());
+  Stream<List<Message>> get stream => ref
+      .orderBy('timeSent', descending: true)
+      .snapshots()
+      .map((list) => list.docs
+          .map((snap) => Message.fromSnap(snap.data() as Map<String, dynamic>))
+          .toList());
 }
 
 // firestore methods for transaction data
@@ -176,7 +200,6 @@ class _UserTransactionMethods extends FirestoreMethods {
         .then((value) => debugPrint('Added new transaction.'))
         .onError((error, stackTrace) =>
             debugPrint('Failed to add new transaction: $error'));
-    user.updateBalance(transaction.amount);
   }
 
 // update state of transaction
@@ -219,7 +242,7 @@ class _StoreMethods extends FirestoreMethods {
             debugPrint('Failed to add item data: $error'));
   }
 
-// stram of store items
+// stream of store items
   Stream<List<StoreItem>> get stream {
     return ref.orderBy('type').orderBy('price').snapshots().map((list) => list
         .docs

@@ -32,10 +32,9 @@ class MyApp extends StatelessWidget {
     final AuthMethods _auth = locator.get<AuthMethods>();
     final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-    final TimerController _timer = locator.get<TimerController>();
 
     return MultiProvider(
-      // TODO: move each provider down widget tree
+      // TODO: move each provider down the widget tree as necessary
       providers: [
         StreamProvider<List<Transaction>>(
           create: (context) => _firestore.userTransaction.stream,
@@ -57,7 +56,6 @@ class MyApp extends StatelessWidget {
           create: (context) => _firestore.userMessage.stream,
           initialData: const [],
         ),
-        ChangeNotifierProvider<TimerController>.value(value: _timer),
       ],
       child: MaterialApp(
         title: 'Project Mercury',

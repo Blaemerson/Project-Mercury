@@ -6,11 +6,11 @@ class AnalyticsMethods {
   FirebaseAnalyticsObserver getAnalyticObserver() =>
       FirebaseAnalyticsObserver(analytics: _analytics);
 
-  Future setUserProperties(String userId) async {
+  Future<void> setUserProperties(String userId) async {
     await _analytics.setUserId(id: userId);
   }
 
-  Future setCurrentScreen(String screenName) async {
+  Future<void> setCurrentScreen(String screenName) async {
     await _analytics.setCurrentScreen(screenName: screenName);
   }
 }

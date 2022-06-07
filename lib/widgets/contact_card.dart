@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/utils/utils.dart';
 
 import '../models/contact.dart';
 
@@ -14,17 +15,7 @@ class ContactCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 5,
-              color: Theme.of(context).colorScheme.onBackground,
-              offset: const Offset(0, 2),
-            ),
-          ],
-          borderRadius: BorderRadius.circular(8),
-        ),
+        decoration: elevatedCardDecor(context),
         child: Column(
           children: [
             Padding(

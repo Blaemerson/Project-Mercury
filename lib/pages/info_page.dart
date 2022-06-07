@@ -12,43 +12,59 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPageState extends State<InfoPage> {
+  // TODO: add session progress bar
   @override
   Widget build(BuildContext context) {
     final AuthMethods _auth = locator.get<AuthMethods>();
-    TimerController _timer = Provider.of<TimerController>(context);
+    final TimerController _timer = locator.get<TimerController>();
 
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Info'),
-        ),
-        body: SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Consumer<TimerController>(
-                builder: (context, value, child) {
-                  return Column(
-                    children: [
-                      const Text('Total time:'),
-                      Text(_timer.totalTime),
-                      const Text('Time this session:'),
-                      Text(_timer.sessionTime),
-                    ],
-                  );
-                },
-              ),
-              Container(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: TextButton(
-                  onPressed: () async {
-                    await _auth.signout();
-                  },
-                  child: const Text('SignOut'),
-                ),
-              ),
-            ],
+    return ChangeNotifierProvider.value(
+      value: _timer,
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Info'),
           ),
-        ));
+          body: SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Consumer<TimerController>(
+                  builder: (context, value, child) {
+                    return Column(
+                      children: [
+                        const Text(
+                          'Total time on app:',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                        Text(
+                          _timer.totalTime,
+                          style: const TextStyle(fontSize: 24),
+                        ),
+                        const Text(
+                          'Time this session:',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                        Text(
+                          _timer.sessionTime,
+                          style: const TextStyle(fontSize: 24),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                Container(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  child: TextButton(
+                    onPressed: () async {
+                      await _auth.signout();
+                    },
+                    child: const Text('SignOut'),
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
   }
 }

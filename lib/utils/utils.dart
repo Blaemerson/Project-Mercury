@@ -54,6 +54,21 @@ void showSnackBar(String text, BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(text),
+      duration: const Duration(seconds: 1),
     ),
+  );
+}
+
+BoxDecoration elevatedCardDecor(BuildContext context) {
+  return BoxDecoration(
+    color: Theme.of(context).colorScheme.background,
+    boxShadow: [
+      BoxShadow(
+        blurRadius: 5,
+        color: Theme.of(context).colorScheme.onBackground,
+        offset: const Offset(0, 2),
+      ),
+    ],
+    borderRadius: BorderRadius.circular(8),
   );
 }

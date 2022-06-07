@@ -28,6 +28,7 @@ class TimerController with ChangeNotifier {
       _sessionTime += 1;
       incrementLocalTime('totalTime');
       incrementLocalTime('sessionTime');
+      debugPrint('tick $_sessionTime');
       notifyListeners();
     });
   }

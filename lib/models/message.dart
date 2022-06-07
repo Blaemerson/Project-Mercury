@@ -16,6 +16,7 @@ class Message {
   final DateTime timeSent;
   DateTime? timeActed;
   MessageState state;
+  int displayState;
 
   Message({
     required this.id,
@@ -26,6 +27,7 @@ class Message {
     required this.timeSent,
     this.timeActed,
     this.state = MessageState.actionNeeded,
+    this.displayState = 0,
   });
 
   Map<String, dynamic> toJson() {
@@ -38,20 +40,23 @@ class Message {
       'timeSent': timeSent,
       'timeActed': timeActed,
       'state': state.name,
+      'displayState': displayState,
     });
   }
 
   static Message fromSnap(Map<String, dynamic> snap) {
     return Message(
-        id: snap['id'],
-        photo: snap['photo'],
-        name: snap['name'],
-        text: snap['text'],
-        requestedItem: snap['request'],
-        timeSent: (snap['timeSent'] as Timestamp).toDate(),
-        timeActed: snap['timeActed'] != null
-            ? (snap['timeActed'] as Timestamp).toDate()
-            : null,
-        state: MessageState.values.byName(snap['state']));
+      id: snap['id'],
+      photo: snap['photo'],
+      name: snap['name'],
+      text: snap['text'],
+      requestedItem: snap['requestedItem'],
+      timeSent: (snap['timeSent'] as Timestamp).toDate(),
+      timeActed: snap['timeActed'] != null
+          ? (snap['timeActed'] as Timestamp).toDate()
+          : null,
+      state: MessageState.values.byName(snap['state']),
+      displayState: snap['displayState'],
+    );
   }
 }
