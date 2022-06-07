@@ -200,6 +200,7 @@ class _UserTransactionMethods extends FirestoreMethods {
         .then((value) => debugPrint('Added new transaction.'))
         .onError((error, stackTrace) =>
             debugPrint('Failed to add new transaction: $error'));
+    user.updateBalance(transaction.amount);
   }
 
 // update state of transaction

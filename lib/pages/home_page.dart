@@ -16,54 +16,69 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: Stack(
-        fit: StackFit.expand,
+      body: Column(
         children: [
-          Consumer<List<Tile>>(builder: (_, tiles, __) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(45.0),
-                child: Transform(
-                  alignment: AlignmentDirectional.center,
-                  transform: Matrix4.rotationX(math.pi / 3),
-                  child: Transform(
-                    transform: Matrix4.rotationZ(math.pi / 4),
-                    alignment: AlignmentDirectional.center,
-                    child: GridView.count(
-                      crossAxisCount: 5,
-                      primary: false,
-                      shrinkWrap: true,
-                      children: [
-                        for (Tile tile in tiles) HomeFloorTile(tile: tile),
-                      ],
-                    ),
-                  ),
+          Consumer<List<PurchasedItem>>(
+            builder: (_, items, __) {
+              return SizedBox(
+                height: 100,
+                child: ListView.builder(
+                  itemCount: items.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: ((context, index) {
+                    /* Create a new draggable element for each item */
+                    return LongPressDraggable(
+                      delay: const Duration(milliseconds: 250),
+                      feedbackOffset: Offset(0, 1000),
+                      data: items[index],
+                      /* TODO: change representation of purchased furniture from their icon */
+                      child: Icon(
+                        IconData(items[index].icon,
+                            fontFamily: 'MaterialIcons'),
+                        size: 50,
+                      ),
+                      feedback: Icon(
+                        IconData(items[index].icon,
+                            fontFamily: 'MaterialIcons'),
+                        size: 50,
+                      ),
+                      childWhenDragging: Container(),
+                    );
+                  }),
                 ),
+              );
+            },
+          ),
+          Stack(
+            children: [
+              Consumer<List<Tile>>(
+                builder: (_, tiles, __) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(45.0),
+                      child: Transform(
+                        alignment: AlignmentDirectional.center,
+                        transform: Matrix4.rotationX(math.pi / 3),
+                        child: Transform(
+                          transform: Matrix4.rotationZ(math.pi / 4),
+                          alignment: AlignmentDirectional.center,
+                          child: GridView.count(
+                            crossAxisCount: 5,
+                            primary: false,
+                            shrinkWrap: true,
+                            children: [
+                              for (Tile tile in tiles)
+                                HomeFloorTile(tile: tile),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          }),
-          Consumer<List<PurchasedItem>>(builder: (_, items, __) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (PurchasedItem item in items)
-                  /* Create a new draggable element for each item */
-                  Draggable(
-                    data: item,
-                    /* TODO: change representation of purchased furniture from their icon */
-                    child: Icon(
-                      IconData(item.icon, fontFamily: 'MaterialIcons'),
-                      size: 50,
-                    ),
-                    feedback: Icon(
-                      IconData(item.icon, fontFamily: 'MaterialIcons'),
-                      size: 50,
-                    ),
-                    childWhenDragging: Container(),
-                  ),
-              ],
-            );
-          })
+            ],
+          ),
         ],
       ),
       floatingActionButton: SizedBox(

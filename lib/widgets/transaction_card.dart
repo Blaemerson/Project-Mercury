@@ -21,7 +21,6 @@ class TransactionCard extends StatelessWidget {
     _approve() async {
       await _firestore.userTransaction
           .updateState(transaction.id, TransactionState.approved);
-      _firestore.user.updateBalance(transaction.amount);
 
       _firestore.user.updateScore(1);
     }
@@ -29,8 +28,6 @@ class TransactionCard extends StatelessWidget {
     _dispute() async {
       await _firestore.userTransaction
           .updateState(transaction.id, TransactionState.disputed);
-      _firestore.user.updateBalance(transaction.amount);
-
       _firestore.user.updateScore(1);
     }
 

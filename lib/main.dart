@@ -11,7 +11,6 @@ import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/resources/timeController.dart';
 import 'package:projectmercury/screens/login_screen.dart';
 import 'package:projectmercury/screens/navigation_screen.dart';
 import 'package:provider/provider.dart';
@@ -57,13 +56,9 @@ class MyApp extends StatelessWidget {
           create: (context) => _firestore.userMessage.stream,
           initialData: const [],
         ),
-<<<<<<< HEAD
-=======
-        ChangeNotifierProvider<TimerController>.value(value: _timer),
         Provider<List<Tile>>(
           create: (context) => List.generate(25, (index) => Tile()),
         )
->>>>>>> 39f41f3663cf88ec033ee1c206b96aa93371307e
       ],
       child: MaterialApp(
         title: 'Project Mercury',

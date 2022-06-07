@@ -6,11 +6,13 @@ import 'package:projectmercury/models/tile.dart';
 
 class HomeFloorTile extends StatefulWidget {
   final Tile tile;
-  const HomeFloorTile({Key? key, required this.tile,}) : super(key: key);
+  const HomeFloorTile({
+    Key? key,
+    required this.tile,
+  }) : super(key: key);
 
   @override
   State<HomeFloorTile> createState() => _HomeFloorTileState();
-
 }
 
 class _HomeFloorTileState extends State<HomeFloorTile> {
@@ -31,15 +33,18 @@ class _HomeFloorTileState extends State<HomeFloorTile> {
               alignment: AlignmentDirectional.center,
               transform: Matrix4.rotationY(math.pi / 3),
               child: widget.tile.occupied
-                  ? Draggable(
+                  ? LongPressDraggable(
+                      delay: const Duration(milliseconds: 250),
                       data: widget.tile.furniture,
                       /* TODO: change representation of purchased furniture from their icon */
                       child: Icon(
-                        IconData(widget.tile.furniture!.icon, fontFamily: 'MaterialIcons'),
+                        IconData(widget.tile.furniture!.icon,
+                            fontFamily: 'MaterialIcons'),
                         size: 50,
                       ),
                       feedback: Icon(
-                        IconData(widget.tile.furniture!.icon, fontFamily: 'MaterialIcons'),
+                        IconData(widget.tile.furniture!.icon,
+                            fontFamily: 'MaterialIcons'),
                         size: 50,
                       ),
                       childWhenDragging: Container(),
@@ -65,10 +70,10 @@ class _HomeFloorTileState extends State<HomeFloorTile> {
           widget.tile.furniture = data;
           widget.tile.occupied = true;
           _color = const Color.fromARGB(100, 200, 200, 200);
-          print('Added ${data.name} to tile.');
+          debugPrint('Added ${data.name} to tile.');
           /* showSnackBar('Added ${data.name.toLowerCase()} to home. (Occupied: $_occupied)', context); */
         } else {
-          print(
+          debugPrint(
               'Furniture not added to tile; tile is occupied by ${widget.tile.furniture!.name}');
         }
       },

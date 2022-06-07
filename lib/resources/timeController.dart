@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TimerController with ChangeNotifier {
   late SharedPreferences prefs;
-  late final String uid = locator.get<AuthMethods>().currentUser.uid;
+  final String uid = locator.get<AuthMethods>().currentUser.uid;
 
   int _totalTime = 0;
   int _sessionTime = 0;
@@ -28,7 +28,6 @@ class TimerController with ChangeNotifier {
       _sessionTime += 1;
       incrementLocalTime('totalTime');
       incrementLocalTime('sessionTime');
-      debugPrint('tick $_sessionTime');
       notifyListeners();
     });
   }
