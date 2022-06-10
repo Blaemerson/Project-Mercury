@@ -58,6 +58,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Navigator.canPop(context) ? Navigator.pop(context) : null;
     return Scaffold(
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 100),

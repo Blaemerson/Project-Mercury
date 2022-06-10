@@ -5,7 +5,6 @@ import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
 import 'package:projectmercury/utils/utils.dart';
-import 'package:uuid/uuid.dart';
 
 class StoreItemCard extends StatelessWidget {
   final StoreItem storeItem;
@@ -19,15 +18,11 @@ class StoreItemCard extends StatelessWidget {
       num currentBalance =
           await _firestore.user.getUser.then((value) => value.balance);
       if (currentBalance > storeItem.price) {
-        String id = const Uuid().v1();
         _firestore.userItem.add(storeItem);
         _firestore.userTransaction.add(
-          id,
           Transaction(
             description: 'Purchased ${storeItem.name}',
             amount: -storeItem.price,
-            timeStamp: DateTime.now(),
-            id: id,
           ),
         );
       } else {

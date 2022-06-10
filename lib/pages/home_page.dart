@@ -29,7 +29,6 @@ class HomePage extends StatelessWidget {
                     /* Create a new draggable element for each item */
                     return LongPressDraggable(
                       delay: const Duration(milliseconds: 250),
-                      feedbackOffset: Offset(0, 1000),
                       data: items[index],
                       /* TODO: change representation of purchased furniture from their icon */
                       child: Icon(

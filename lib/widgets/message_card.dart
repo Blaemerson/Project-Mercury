@@ -3,6 +3,7 @@ import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 
 import '../models/message.dart';
+import '../utils/global_variables.dart';
 import '../utils/utils.dart';
 
 class MessageCard extends StatelessWidget {
@@ -32,6 +33,44 @@ class MessageCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       child: Column(
         children: [
+          Row(
+            children: [
+              Expanded(
+                child: Divider(
+                  thickness: 3,
+                  endIndent: 10,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text.rich(
+                TextSpan(
+                  text: message.state == MessageState.actionNeeded
+                      ? '(New) '
+                      : '',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: timeAgo(message.timeSent!),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Divider(
+                  thickness: 3,
+                  indent: 10,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
           _chatBubble(message.text, false, context),
           const SizedBox(height: 12),
           if (message.state == MessageState.actionNeeded) ...[

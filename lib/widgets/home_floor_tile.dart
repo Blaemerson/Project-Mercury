@@ -49,7 +49,7 @@ class _HomeFloorTileState extends State<HomeFloorTile> {
                       ),
                       childWhenDragging: Container(),
                       onDragStarted: () {
-                        print('Picked up ${widget.tile.furniture!.name}');
+                        debugPrint('Picked up ${widget.tile.furniture!.name}');
                         widget.tile.occupied = false;
                       },
                     )

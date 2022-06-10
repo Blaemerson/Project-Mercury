@@ -11,7 +11,7 @@ import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/screens/login_screen.dart';
+import 'package:projectmercury/screens/welcome_screen.dart';
 import 'package:projectmercury/screens/navigation_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +32,10 @@ class MyApp extends StatelessWidget {
     final AuthMethods _auth = locator.get<AuthMethods>();
     final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+
+    ColorScheme _color = ColorScheme.fromSeed(
+      seedColor: Colors.red,
+    );
 
     return MultiProvider(
       // TODO: move each provider down the widget tree as necessary
@@ -68,14 +72,17 @@ class MyApp extends StatelessWidget {
           _analytics.getAnalyticObserver(),
         ],
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.red,
+          colorScheme: _color,
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(_color.primary),
+                foregroundColor: MaterialStateProperty.all(_color.onPrimary)),
           ),
           appBarTheme: AppBarTheme(
             centerTitle: true,
             titleTextStyle: TextStyle(
               fontSize: 36,
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: _color.onPrimary,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -102,9 +109,9 @@ class MyApp extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
-            // return login screen in user not logged in
+            // return login screen if user not logged in
             _analytics.setCurrentScreen('/login');
-            return const LoginScreen();
+            return const WelcomeScreen();
           },
         ),
       ),

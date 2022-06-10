@@ -7,18 +7,18 @@ enum TransactionState {
 }
 
 class Transaction {
-  final String id;
+  String id;
   final String description;
   final num amount;
-  final DateTime timeStamp;
+  DateTime? timeStamp;
   DateTime? timeActed;
   TransactionState state;
 
   Transaction({
-    required this.id,
+    this.id = '',
     required this.description,
     required this.amount,
-    required this.timeStamp,
+    this.timeStamp,
     this.timeActed,
     this.state = TransactionState.actionNeeded,
   });
@@ -39,7 +39,9 @@ class Transaction {
       id: snap['id'],
       description: snap['description'],
       amount: snap['amount'],
-      timeStamp: (snap['timeStamp'] as Timestamp).toDate(),
+      timeStamp: snap['timeStamp'] != null
+          ? (snap['timeStamp'] as Timestamp).toDate()
+          : null,
       timeActed: snap['timeActed'] != null
           ? (snap['timeActed'] as Timestamp).toDate()
           : null,

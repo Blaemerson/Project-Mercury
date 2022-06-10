@@ -46,7 +46,7 @@ class TransactionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        formatDate.format(transaction.timeStamp),
+                        formatDate.format(transaction.timeStamp!),
                         style: const TextStyle(
                           fontSize: 12,
                         ),

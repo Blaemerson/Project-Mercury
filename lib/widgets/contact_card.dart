@@ -21,12 +21,19 @@ class ContactCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(12),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
-                    child: CircleAvatar(
-                      radius: 36,
-                      backgroundImage: NetworkImage(contact.photo),
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          image: NetworkImage(contact.photo),
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -38,12 +45,6 @@ class ContactCard extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          contact.phoneNo,
-                          style: const TextStyle(
-                            fontSize: 26,
                           ),
                         ),
                         Text.rich(
@@ -62,6 +63,8 @@ class ContactCard extends StatelessWidget {
                               ),
                             ],
                           ),
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),

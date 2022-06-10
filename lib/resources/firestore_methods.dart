@@ -61,11 +61,11 @@ class _UserMethods extends FirestoreMethods {
     }
     if (!(await collectionExists(
         await ref.collection('transactions').limit(1).get()))) {
-      userTransaction.add(initialTransactions[0].id, initialTransactions[0]);
+      userTransaction.add(initialTransactions[0]);
     }
     if (!(await collectionExists(
         await ref.collection('messages').limit(1).get()))) {
-      userMessage.add(initialMessages[0].id, initialMessages[0]);
+      userMessage.add(initialMessages[0]);
     }
   }
 
@@ -140,15 +140,14 @@ class _UserMessageMethods extends FirestoreMethods {
 
 // add new message data
   Future<void> add(
-    String id,
     Message message,
   ) async {
     await ref
-        .doc(id)
-        .set(message.toJson())
+        .add(message.toJson()..addAll({'timeSent': DateTime.now()}))
+        .then((doc) => doc.update({'id': doc.id}))
         .then((value) => debugPrint('Added new message.'))
-        .onError((error, stackTrace) =>
-            debugPrint('Failed to add new message: $error'));
+        .onError(
+            (error, stackTrace) => debugPrint('Failed to add new message.'));
   }
 
   Future<void> updateState(String id, MessageState state) async {
@@ -161,15 +160,19 @@ class _UserMessageMethods extends FirestoreMethods {
     await Future.delayed(
       const Duration(seconds: 1),
       () => ref.doc(id).update({'displayState': FieldValue.increment(1)}),
-    );
-    await Future.delayed(
-      const Duration(seconds: 2),
-      () => ref.doc(id).update({'displayState': FieldValue.increment(1)}),
-    );
-    await Future.delayed(
-      const Duration(seconds: 3),
-      () => ref.doc(id).update({'displayState': 0, 'state': 'actionNeeded'}),
-    );
+    )
+        .then(
+          (value) => Future.delayed(
+            const Duration(seconds: 2),
+            () => ref.doc(id).update({'displayState': FieldValue.increment(1)}),
+          ),
+        )
+        .then(
+          (value) => Future.delayed(
+            const Duration(seconds: 2),
+            () => userMessage.add(initialMessages[0]),
+          ),
+        );
   }
 
 // stream of messages
@@ -191,15 +194,14 @@ class _UserTransactionMethods extends FirestoreMethods {
 
 // add new transaction data
   Future<void> add(
-    String id,
     model.Transaction transaction,
   ) async {
     await ref
-        .doc(id)
-        .set(transaction.toJson())
+        .add(transaction.toJson()..addAll({'timeStamp': DateTime.now()}))
+        .then((doc) => doc.update({'id': doc.id}))
         .then((value) => debugPrint('Added new transaction.'))
         .onError((error, stackTrace) =>
-            debugPrint('Failed to add new transaction: $error'));
+            debugPrint('Failed to add new transaction.'));
     user.updateBalance(transaction.amount);
   }
 

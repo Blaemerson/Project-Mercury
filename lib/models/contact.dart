@@ -1,7 +1,6 @@
 class Contact {
   final String photo;
   final String name;
-  final String phoneNo;
   final String relationship;
   final String description;
   final List<dynamic> trustedWith;
@@ -9,7 +8,6 @@ class Contact {
   Contact({
     required this.photo,
     required this.name,
-    required this.phoneNo,
     required this.relationship,
     required this.description,
     required this.trustedWith,
@@ -19,7 +17,6 @@ class Contact {
     return ({
       'photo': photo,
       'name': name,
-      'phoneNo': phoneNo,
       'relationship': relationship,
       'description': description,
       'trustedWith': trustedWith,
@@ -30,7 +27,6 @@ class Contact {
     return Contact(
       photo: snap['photo'],
       name: snap['name'],
-      phoneNo: snap['phoneNo'],
       relationship: snap['relationship'],
       description: snap['description'],
       trustedWith: snap['trustedWith'],

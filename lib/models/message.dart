@@ -8,23 +8,23 @@ enum MessageState {
 }
 
 class Message {
-  final String id;
+  String id;
   final String photo;
   final String name;
   final String text;
   String? requestedItem;
-  final DateTime timeSent;
+  DateTime? timeSent;
   DateTime? timeActed;
   MessageState state;
   int displayState;
 
   Message({
-    required this.id,
+    this.id = '',
     required this.photo,
     required this.name,
     required this.text,
     this.requestedItem,
-    required this.timeSent,
+    this.timeSent,
     this.timeActed,
     this.state = MessageState.actionNeeded,
     this.displayState = 0,
@@ -51,7 +51,9 @@ class Message {
       name: snap['name'],
       text: snap['text'],
       requestedItem: snap['requestedItem'],
-      timeSent: (snap['timeSent'] as Timestamp).toDate(),
+      timeSent: snap['timeSent'] != null
+          ? (snap['timeSent'] as Timestamp).toDate()
+          : null,
       timeActed: snap['timeActed'] != null
           ? (snap['timeActed'] as Timestamp).toDate()
           : null,
