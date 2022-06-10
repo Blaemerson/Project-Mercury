@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/store_page.dart';
-import 'package:projectmercury/widgets/home_floor_tile.dart';
-import 'package:projectmercury/models/tile.dart';
+import 'package:projectmercury/widgets/interior_cube.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 import 'package:projectmercury/models/store_item.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Offset _offset = Offset.zero;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +26,7 @@ class HomePage extends StatelessWidget {
           Consumer<List<PurchasedItem>>(
             builder: (_, items, __) {
               return SizedBox(
-                height: 100,
+                height: 80,
                 child: ListView.builder(
                   itemCount: items.length,
                   scrollDirection: Axis.horizontal,
@@ -49,35 +54,31 @@ class HomePage extends StatelessWidget {
               );
             },
           ),
-          Stack(
-            children: [
-              Consumer<List<Tile>>(
-                builder: (_, tiles, __) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(45.0),
-                      child: Transform(
-                        alignment: AlignmentDirectional.center,
-                        transform: Matrix4.rotationX(math.pi / 3),
-                        child: Transform(
-                          transform: Matrix4.rotationZ(math.pi / 4),
-                          alignment: AlignmentDirectional.center,
-                          child: GridView.count(
-                            crossAxisCount: 5,
-                            primary: false,
-                            shrinkWrap: true,
-                            children: [
-                              for (Tile tile in tiles)
-                                HomeFloorTile(tile: tile),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
+          // TODO: Make two buttons (possibly slider?) for controlling room rotation.
+          GestureDetector(
+            /* onPanUpdate: (details) { */
+            /*   setState(() { */
+            /*     if (details.delta.dx > 2.0 || details.delta.dx < -2.0) { */
+            /*       if (_offset.dx < -360.0 || _offset.dx > 360.0) { */
+            /*         _offset = Offset(0.0, _offset.dy); */
+            /*       } */
+            /*       if (_offset.dy < -360.0 || _offset.dy > 360.0) { */
+            /*         _offset = Offset(_offset.dx, 0.0); */
+            /*       } */
+            /*       _offset += details.delta; */
+            /*       debugPrint("$_offset"); */
+            /*     } */
+            /*   }); */
+            /* }, */
+            child: const Center(
+              child: InteriorCube(
+                width: 200,
+                height: 200,
+                depth: 200,
+                rotateY: 45 * math.pi / 180,
+                rotateX: 0.3,
               ),
-            ],
+            ),
           ),
         ],
       ),
