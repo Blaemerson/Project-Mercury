@@ -8,6 +8,7 @@ class InteriorCube extends StatelessWidget {
   final double depth;
   final double rotateX;
   final double rotateY;
+  final double fov;
 
   const InteriorCube({
     Key? key,
@@ -16,6 +17,7 @@ class InteriorCube extends StatelessWidget {
     required this.depth,
     this.rotateX = 0.0,
     rotateY = 0.0,
+    this.fov = 0.001,
   })  : rotateY = rotateY % (math.pi * 2),
         super(key: key);
 
@@ -29,37 +31,48 @@ class InteriorCube extends StatelessWidget {
     late final back = _buildSide(side: 4);
     late final front = _buildSide(side: 5);
 
+    // field of view
+    double xFov = width / 200 * fov;
+    double yFov = depth / 200 * fov;
+    double zFov = height / 200 * fov;
+
     // Determine the layer order based on `rotateY`, divided into 45 degree
-    // sections. Layer order is determined as if you are viewing from inside 
-    // the cube; i.e., if the cube is tilted down towards the viewer, they 
+    // sections. Layer order is determined as if you are viewing from inside
+    // the cube; i.e., if the cube is tilted down towards the viewer, they
     // would see the bottom instead of the top.
-    if (rotateY < math.pi / 4) {
-      children = [back, left];
-    } else if (rotateY < math.pi / 2) {
-      children = [back, left];
-    } else if (rotateY < 3 * math.pi / 4) {
+
+    // Still not perfoect for diagonal view
+    if (rotateY < xFov) {
+      children = [left, back, right];
+    } else if (rotateY < math.pi / 2 - yFov) {
+      children = [left, back];
+    } else if (rotateY < math.pi / 2 + yFov) {
+      children = [front, left, back];
+    } else if (rotateY < math.pi - xFov) {
       children = [front, left];
-    } else if (rotateY < math.pi) {
-      children = [front, left];
-    } else if (rotateY < 5 * math.pi / 4) {
-      children = [front, right];
-    } else if (rotateY < 3 * math.pi / 2) {
-      children = [front, right];
-    } else if (rotateY < 7 * math.pi / 4) {
-      children = [right, back];
+    } else if (rotateY < math.pi + xFov) {
+      children = [right, front, left];
+    } else if (rotateY < 3 * math.pi / 2 - yFov) {
+      children = [right, front];
+    } else if (rotateY < 3 * math.pi / 2 + yFov) {
+      children = [back, right, front];
+    } else if (rotateY < 2 * math.pi - xFov) {
+      children = [back, right];
     } else {
-      children = [right, back];
+      children = [left, back, right];
     }
-    if (rotateX > 0.0) {
-      // TODO: not perfect - does not consider perspective:
-      children.add(bottom);
-    } else {
+
+    if (rotateX < -zFov) {
       children.add(top);
+    } else if (rotateX < zFov && rotateX > -zFov) {
+      children.addAll([bottom, top]);
+    } else if (rotateX <= math.pi / 2) {
+      children.add(bottom);
     }
 
     return Transform(
       transform: Matrix4.identity()
-        ..setEntry(3, 2, 0.0001)
+        ..setEntry(3, 2, fov / 100)
         ..rotateX(rotateX)
         ..rotateY(rotateY),
       alignment: Alignment.center,
@@ -112,6 +125,7 @@ class InteriorCube extends StatelessWidget {
 
     // TODO: Assign textures based on room id.
     final BoxDecoration dec = BoxDecoration(
+      border: Border.all(color: Colors.brown),
       image: DecorationImage(
         image: topOrBottom
             ? const AssetImage('assets/board.png')
@@ -125,11 +139,14 @@ class InteriorCube extends StatelessWidget {
       transform: transform,
       alignment: Alignment.center,
       child: Center(
-        child: Container(
-          width: topOrBottom || frontOrBack ? width : depth,
-          height: topOrBottom ? depth : height,
-          decoration: dec,
-          /* color: Colors.purple, */
+        child: SizedBox(
+          child: Container(
+            width: topOrBottom || frontOrBack ? width : depth,
+            // depth does not go over 200 for topOrBottom
+            height: topOrBottom ? depth : height,
+            decoration: dec,
+            /* color: Colors.purple, */
+          ),
         ),
       ),
     );
