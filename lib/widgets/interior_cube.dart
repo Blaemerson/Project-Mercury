@@ -33,8 +33,8 @@ class InteriorCube extends StatelessWidget {
 
     // field of view
     double xFov = width / 200 * fov;
-    double yFov = depth / 200 * fov;
-    double zFov = height / 200 * fov;
+    double yFov = height / 200 * fov;
+    double zFov = depth / 200 * fov;
 
     // Determine the layer order based on `rotateY`, divided into 45 degree
     // sections. Layer order is determined as if you are viewing from inside
