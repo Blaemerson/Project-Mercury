@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
-import 'package:provider/provider.dart';
 
 import '../models/message.dart';
 import '../resources/locator.dart';
@@ -30,19 +29,6 @@ class MessagesPage extends StatelessWidget {
               pageSize: 2,
               reverse: true,
             ),
-            // Consumer<List<Message>>(
-            //   builder: (_, messages, __) {
-            //     return ListView.builder(
-            //       reverse: true,
-            //       itemBuilder: (context, index) {
-            //         return MessageCard(
-            //           message: messages[index],
-            //         );
-            //       },
-            //       itemCount: messages.length,
-            //     );
-            //   },
-            // ),
           ),
         ],
       ),

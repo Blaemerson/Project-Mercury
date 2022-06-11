@@ -194,13 +194,6 @@ class _UserMessageMethods extends FirestoreMethods {
   }
 
 // stream of messages
-  Stream<List<Message>> get stream => ref
-      .orderBy('timeSent', descending: true)
-      .snapshots()
-      .map((list) => list.docs
-          .map((snap) => Message.fromSnap(snap.data() as Map<String, dynamic>))
-          .toList());
-
   Query<Message> get query =>
       ref.orderBy('timeSent', descending: true).withConverter(
           fromFirestore: (snapshot, _) => Message.fromSnap(snapshot.data()!),
