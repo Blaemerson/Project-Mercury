@@ -138,6 +138,24 @@ class _UserMessageMethods extends FirestoreMethods {
     ref = _firestore.collection('users').doc(userId).collection('messages');
   }
 
+  Future<void> action(Message message, bool give) async {
+    if (give == true) {
+      await userMessage.updateState(message.id, MessageState.infoGiven);
+      if (message.sender.trustedWith.contains(message.requestedItem)) {
+        user.updateScore(1);
+      } else {
+        //penalty?
+      }
+    } else {
+      if (!message.sender.trustedWith.contains(message.requestedItem)) {
+        await userMessage.updateState(message.id, MessageState.infoDenied);
+        user.updateScore(1);
+      } else {
+        //penalty?
+      }
+    }
+  }
+
 // add new message data
   Future<void> add(
     Message message,
@@ -163,7 +181,7 @@ class _UserMessageMethods extends FirestoreMethods {
     )
         .then(
           (value) => Future.delayed(
-            const Duration(seconds: 2),
+            const Duration(seconds: 1),
             () => ref.doc(id).update({'displayState': FieldValue.increment(1)}),
           ),
         )
@@ -182,6 +200,11 @@ class _UserMessageMethods extends FirestoreMethods {
       .map((list) => list.docs
           .map((snap) => Message.fromSnap(snap.data() as Map<String, dynamic>))
           .toList());
+
+  Query<Message> get query =>
+      ref.orderBy('timeSent', descending: true).withConverter(
+          fromFirestore: (snapshot, _) => Message.fromSnap(snapshot.data()!),
+          toFirestore: (message, _) => message.toJson());
 }
 
 // firestore methods for transaction data
@@ -190,6 +213,29 @@ class _UserTransactionMethods extends FirestoreMethods {
   final String userId = locator.get<AuthMethods>().currentUser.uid;
   _UserTransactionMethods() {
     ref = _firestore.collection('users').doc(userId).collection('transactions');
+  }
+
+  Future<void> action(model.Transaction transaction, bool approve) async {
+    if (approve == true) {
+      await userTransaction.updateState(
+          transaction.id, model.TransactionState.approved);
+      if (transaction.overcharge == 0) {
+        user.updateScore(1);
+      }
+    } else {
+      await userTransaction.updateState(
+          transaction.id, model.TransactionState.disputed);
+      if (transaction.overcharge != 0) {
+        userTransaction.add(
+          model.Transaction(
+            description: 'Refund:',
+            amount: transaction.overcharge,
+            state: model.TransactionState.approved,
+          ),
+        );
+        user.updateScore(1);
+      }
+    }
   }
 
 // add new transaction data
@@ -216,14 +262,13 @@ class _UserTransactionMethods extends FirestoreMethods {
   }
 
 // stream of transacitons
-  Stream<List<model.Transaction>> get stream {
-    return ref.orderBy('timeStamp', descending: true).snapshots().map((list) =>
-        list
-            .docs
-            .map((snap) =>
-                model.Transaction.fromSnap(snap.data() as Map<String, dynamic>))
-            .toList());
-  }
+  Query<model.Transaction> get query => ref
+      .orderBy('timeStamp', descending: true)
+      .withConverter<model.Transaction>(
+        fromFirestore: (snapshot, _) =>
+            model.Transaction.fromSnap(snapshot.data()!),
+        toFirestore: (transaction, _) => transaction.toJson(),
+      );
 }
 
 // firestore methods for store data

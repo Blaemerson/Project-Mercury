@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:provider/provider.dart';
 
-import '../utils/global_variables.dart';
+import '../utils/utils.dart';
 import '../widgets/transaction_card.dart';
 
 class MoneyPage extends StatefulWidget {
@@ -77,17 +77,13 @@ class _MoneyPageState extends State<MoneyPage> {
           ),
           Flexible(
             child: Scrollbar(
-              child: Consumer<List<model.Transaction>>(
-                builder: (_, userTransactions, __) {
-                  return ListView.builder(
-                    itemBuilder: (context, index) {
-                      return TransactionCard(
-                        transaction: userTransactions[index],
-                      );
-                    },
-                    itemCount: userTransactions.length,
-                  );
+              child: FirestoreListView<model.Transaction>(
+                query: _firestore.userTransaction.query,
+                itemBuilder: (context, snapshot) {
+                  model.Transaction transaction = snapshot.data();
+                  return TransactionCard(transaction: transaction);
                 },
+                pageSize: 5,
               ),
             ),
           ),

@@ -39,10 +39,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       // TODO: move each provider down the widget tree as necessary
       providers: [
-        StreamProvider<List<Transaction>>(
-          create: (context) => _firestore.userTransaction.stream,
-          initialData: const [],
-        ),
         StreamProvider<List<PurchasedItem>>(
           create: (context) => _firestore.userItem.stream,
           initialData: const [],

@@ -1,9 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/utils/global_variables.dart';
 import 'package:projectmercury/utils/utils.dart';
 
 class StoreItemCard extends StatelessWidget {
@@ -19,12 +20,24 @@ class StoreItemCard extends StatelessWidget {
           await _firestore.user.getUser.then((value) => value.balance);
       if (currentBalance > storeItem.price) {
         _firestore.userItem.add(storeItem);
-        _firestore.userTransaction.add(
-          Transaction(
-            description: 'Purchased ${storeItem.name}',
-            amount: -storeItem.price,
-          ),
-        );
+        bool overcharge = Random().nextBool();
+        if (overcharge == false) {
+          _firestore.userTransaction.add(
+            Transaction(
+              description: 'Purchased ${storeItem.name}',
+              amount: -storeItem.price,
+            ),
+          );
+        } else {
+          int overAmount = (Random().nextInt(29) + 1) * 10;
+          _firestore.userTransaction.add(
+            Transaction(
+              description: 'Purchased ${storeItem.name}',
+              amount: -(storeItem.price + overAmount),
+              overcharge: overAmount,
+            ),
+          );
+        }
       } else {
         showSnackBar('Not enough funds.', context);
       }

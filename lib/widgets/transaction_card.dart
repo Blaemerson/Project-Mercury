@@ -3,7 +3,6 @@ import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 
 import '../models/transaction.dart';
-import '../utils/global_variables.dart';
 import '../utils/utils.dart';
 
 class TransactionCard extends StatelessWidget {
@@ -16,20 +15,6 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-
-// TODO: only add score when right decision made
-    _approve() async {
-      await _firestore.userTransaction
-          .updateState(transaction.id, TransactionState.approved);
-
-      _firestore.user.updateScore(1);
-    }
-
-    _dispute() async {
-      await _firestore.userTransaction
-          .updateState(transaction.id, TransactionState.disputed);
-      _firestore.user.updateScore(1);
-    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -83,7 +68,7 @@ class TransactionCard extends StatelessWidget {
                           ) ??
                           false;
                       if (result == true) {
-                        _dispute();
+                        _firestore.userTransaction.action(transaction, false);
                       }
                     },
                     icon: const Icon(Icons.close, size: 32),
@@ -104,7 +89,7 @@ class TransactionCard extends StatelessWidget {
                           ) ??
                           false;
                       if (result == true) {
-                        _approve();
+                        _firestore.userTransaction.action(transaction, true);
                       }
                     },
                     icon: const Icon(Icons.check, size: 36),

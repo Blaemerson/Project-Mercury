@@ -17,7 +17,7 @@ class InteriorCube extends StatelessWidget {
     required this.depth,
     this.rotateX = 0.0,
     rotateY = 0.0,
-    this.fov = 0.001,
+    this.fov = 0.0,
   })  : rotateY = rotateY % (math.pi * 2),
         super(key: key);
 

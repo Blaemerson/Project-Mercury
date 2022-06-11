@@ -3,7 +3,6 @@ import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 
 import '../models/message.dart';
-import '../utils/global_variables.dart';
 import '../utils/utils.dart';
 
 class MessageCard extends StatelessWidget {
@@ -16,18 +15,6 @@ class MessageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-// TODO: only add score when right decision made
-    _give() async {
-      await _firestore.userMessage
-          .updateState(message.id, MessageState.infoGiven);
-      _firestore.user.updateScore(1);
-    }
-
-    _deny() async {
-      await _firestore.userMessage
-          .updateState(message.id, MessageState.infoDenied);
-      _firestore.user.updateScore(1);
-    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
@@ -75,7 +62,7 @@ class MessageCard extends StatelessWidget {
           const SizedBox(height: 12),
           if (message.state == MessageState.actionNeeded) ...[
             Text(
-              'Give *${message.requestedItem}* to ${message.name}?',
+              'Give *${message.requestedItem}* to ${message.sender.name}?',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -90,11 +77,11 @@ class MessageCard extends StatelessWidget {
                     bool result = await showConfirmation(
                           context: context,
                           title: 'Confirmation',
-                          text: "Deny ${message.name}'s request?",
+                          text: "Deny ${message.sender.name}'s request?",
                         ) ??
                         false;
                     if (result == true) {
-                      _deny();
+                      _firestore.userMessage.action(message, false);
                     }
                   },
                   icon: const Icon(Icons.close, size: 32),
@@ -111,11 +98,11 @@ class MessageCard extends StatelessWidget {
                     bool result = await showConfirmation(
                           context: context,
                           title: 'Confirmation',
-                          text: 'Give information to ${message.name}?',
+                          text: 'Give information to ${message.sender.name}?',
                         ) ??
                         false;
                     if (result == true) {
-                      _give();
+                      _firestore.userMessage.action(message, true);
                     }
                   },
                   icon: const Icon(Icons.check, size: 36),
@@ -159,7 +146,7 @@ class MessageCard extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 8),
                 child: CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(message.photo),
+                  backgroundImage: NetworkImage(message.sender.photo),
                 ),
               ),
         Expanded(
@@ -175,7 +162,7 @@ class MessageCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${you ? 'You' : message.name}:',
+                      '${you ? 'You' : message.sender.name}:',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

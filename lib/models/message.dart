@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectmercury/utils/global_variables.dart';
+
+import 'contact.dart';
 
 enum MessageState {
   static,
@@ -8,9 +11,8 @@ enum MessageState {
 }
 
 class Message {
+  final Contact sender;
   String id;
-  final String photo;
-  final String name;
   final String text;
   String? requestedItem;
   DateTime? timeSent;
@@ -19,9 +21,8 @@ class Message {
   int displayState;
 
   Message({
+    required this.sender,
     this.id = '',
-    required this.photo,
-    required this.name,
     required this.text,
     this.requestedItem,
     this.timeSent,
@@ -32,9 +33,8 @@ class Message {
 
   Map<String, dynamic> toJson() {
     return ({
+      'sender': sender.toJson(),
       'id': id,
-      'photo': photo,
-      'name': name,
       'text': text,
       'requestedItem': requestedItem,
       'timeSent': timeSent,
@@ -46,9 +46,10 @@ class Message {
 
   static Message fromSnap(Map<String, dynamic> snap) {
     return Message(
+      sender: snap['sender'] != null
+          ? Contact.fromSnap(snap['sender'] as Map<String, dynamic>)
+          : fillerContact,
       id: snap['id'],
-      photo: snap['photo'],
-      name: snap['name'],
       text: snap['text'],
       requestedItem: snap['requestedItem'],
       timeSent: snap['timeSent'] != null
