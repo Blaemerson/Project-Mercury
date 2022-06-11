@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 // TODO: Implement Rooms, which have id and assigned textures
-class InteriorCube extends StatelessWidget {
+class Cube extends StatelessWidget {
   final double width;
   final double height;
   final double depth;
   final double rotateX;
   final double rotateY;
   final double fov;
+  final bool isInterior;
 
-  const InteriorCube({
+  const Cube({
     Key? key,
     required this.width,
     required this.height,
     required this.depth,
     this.rotateX = 0.0,
+    this.isInterior = false,
     rotateY = 0.0,
     this.fov = 0.0,
   })  : rotateY = rotateY % (math.pi * 2),
@@ -24,9 +26,9 @@ class InteriorCube extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children;
-    late final top = _buildSide(side: 0);
-    late final right = _buildSide(side: 1);
-    late final bottom = _buildSide(side: 2);
+    late final bottom = _buildSide(side: 0);
+    late final top = _buildSide(side: 1);
+    late final right = _buildSide(side: 2);
     late final left = _buildSide(side: 3);
     late final back = _buildSide(side: 4);
     late final front = _buildSide(side: 5);
@@ -41,33 +43,33 @@ class InteriorCube extends StatelessWidget {
     // the cube; i.e., if the cube is tilted down towards the viewer, they
     // would see the bottom instead of the top.
 
-    // Still not perfoect for diagonal view
+    // Still not perfect for diagonal view
     if (rotateY < xFov) {
-      children = [left, back, right];
+      children = isInterior ? [left, back, right] : [front];
     } else if (rotateY < math.pi / 2 - yFov) {
-      children = [left, back];
+      children = isInterior ? [left, back] : [front, right];
     } else if (rotateY < math.pi / 2 + yFov) {
-      children = [front, left, back];
+      children = isInterior ? [front, left, back] : [right];
     } else if (rotateY < math.pi - xFov) {
-      children = [front, left];
+      children = isInterior ? [front, left] : [right, back];
     } else if (rotateY < math.pi + xFov) {
-      children = [right, front, left];
+      children = isInterior ? [right, front, left] : [back];
     } else if (rotateY < 3 * math.pi / 2 - yFov) {
-      children = [right, front];
+      children = isInterior ? [right, front] : [back, left];
     } else if (rotateY < 3 * math.pi / 2 + yFov) {
-      children = [back, right, front];
+      children = isInterior ? [back, right, front] : [left];
     } else if (rotateY < 2 * math.pi - xFov) {
-      children = [back, right];
+      children = isInterior ? [back, right] : [left, front];
     } else {
-      children = [left, back, right];
+      children = isInterior ? [left, back, right] : [front];
     }
 
     if (rotateX < -zFov) {
-      children.add(top);
+      children.add(isInterior ? top : bottom);
     } else if (rotateX < zFov && rotateX > -zFov) {
-      children.addAll([bottom, top]);
+      children.addAll(isInterior ? [bottom, top] : []);
     } else if (rotateX <= math.pi / 2) {
-      children.add(bottom);
+      children.add(isInterior ? bottom : top);
     }
 
     return Transform(
@@ -84,16 +86,16 @@ class InteriorCube extends StatelessWidget {
   Widget _buildSide({required int side}) {
     final double translate;
     switch (side) {
-      case 0: // top
-        translate = height / -2;
-        break;
-      case 1: // starboard
-        translate = width / 2;
-        break;
-      case 2: // bottom
+      case 0: // bottom
         translate = height / 2;
         break;
-      case 3: // port
+      case 1: // top
+        translate = height / -2;
+        break;
+      case 2: // right
+        translate = width / 2;
+        break;
+      case 3: // left
         translate = width / -2;
         break;
       case 4: // back
@@ -106,7 +108,7 @@ class InteriorCube extends StatelessWidget {
         throw Exception('Invalid side: $side');
     }
 
-    final bool topOrBottom = side == 0 || side == 2;
+    final bool topOrBottom = side == 0 || side == 1;
     final bool frontOrBack = side == 4 || side == 5;
     final Matrix4 transform;
 
@@ -130,7 +132,7 @@ class InteriorCube extends StatelessWidget {
         image: topOrBottom
             ? const AssetImage('assets/board.png')
             : const AssetImage('assets/wall.jpg'),
-        repeat: ImageRepeat.repeatX,
+        repeat: ImageRepeat.repeat,
         fit: BoxFit.fill,
       ),
     );
@@ -151,10 +153,6 @@ class InteriorCube extends StatelessWidget {
       ),
     );
 
-    return !frontOrBack
-        ? Positioned.fill(
-            child: face,
-          )
-        : face;
+    return face;
   }
 }
