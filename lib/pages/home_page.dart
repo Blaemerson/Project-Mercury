@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/store_page.dart';
-import 'package:projectmercury/widgets/interior_cube.dart';
-import 'package:provider/provider.dart';
+import 'package:projectmercury/widgets/cube.dart';
 import 'dart:math' as math;
-
-import 'package:projectmercury/models/store_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Offset _offset = Offset.zero;
+  bool _isInterior = true;
   double _x = 0;
   double _y = 0;
   double _fov = 15;
@@ -104,28 +101,20 @@ class _HomePageState extends State<HomePage> {
           const Spacer(),
           // TODO: Make two buttons (possibly slider?) for controlling room rotation.
           GestureDetector(
-            /* onPanUpdate: (details) { */
-            /*   setState(() { */
-            /*     if (details.delta.dx > 2.0 || details.delta.dx < -2.0) { */
-            /*       if (_offset.dx < -360.0 || _offset.dx > 360.0) { */
-            /*         _offset = Offset(0.0, _offset.dy); */
-            /*       } */
-            /*       if (_offset.dy < -360.0 || _offset.dy > 360.0) { */
-            /*         _offset = Offset(_offset.dx, 0.0); */
-            /*       } */
-            /*       _offset += details.delta; */
-            /*       debugPrint("$_offset"); */
-            /*     } */
-            /*   }); */
-            /* }, */
+            onTap: () {
+              setState(() {
+                _isInterior = !_isInterior;
+              });
+            },
             child: Center(
-              child: InteriorCube(
+              child: Cube(
                 width: 300,
                 height: 200,
                 depth: 200,
                 rotateY: _y * math.pi / 180,
                 rotateX: _x * math.pi / 180,
                 fov: _fov * math.pi / 180,
+                isInterior: _isInterior,
               ),
             ),
           ),
