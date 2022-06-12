@@ -13,6 +13,7 @@ class StorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
           alignment: Alignment.center,
@@ -25,19 +26,19 @@ class StorePage extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(2.0),
             child: Text(
               'Furniture Store',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimary,
-                fontSize: 36,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
         ),
         SizedBox(
-          height: 300,
+          height: 200,
           child: Consumer<List<StoreItem>>(
             builder: (_, storeItems, __) {
               return ListView.builder(

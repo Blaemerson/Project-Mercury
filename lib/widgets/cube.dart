@@ -130,10 +130,10 @@ class Cube extends StatelessWidget {
       border: Border.all(color: Colors.brown),
       image: DecorationImage(
         image: topOrBottom
-            ? const AssetImage('assets/board.png')
-            : const AssetImage('assets/wall.jpg'),
+            ? const AssetImage('assets/wood_floor.jpg')
+            : const AssetImage('assets/kitchen_wall.jpg'),
         repeat: ImageRepeat.repeat,
-        fit: BoxFit.fill,
+        fit: BoxFit.contain,
       ),
     );
 
