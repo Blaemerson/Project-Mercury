@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 
-import '../models/message.dart';
-import '../utils/utils.dart';
+import 'package:projectmercury/models/message.dart';
+import 'package:projectmercury/utils/utils.dart';
 
 class MessageCard extends StatelessWidget {
   final Message message;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/store_item_card.dart';
+import 'package:projectmercury/pages/storePage/store_item_card.dart';
 
 class StorePage extends StatelessWidget {
   const StorePage({
