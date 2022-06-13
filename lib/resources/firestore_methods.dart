@@ -6,6 +6,7 @@ import 'package:projectmercury/models/message.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/models/user.dart' as model;
 import 'package:projectmercury/resources/auth_methods.dart';
+import 'package:projectmercury/resources/badge_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
 
@@ -67,6 +68,7 @@ class _UserMethods extends FirestoreMethods {
         await ref.collection('messages').limit(1).get()))) {
       userMessage.add(initialMessages[0]);
     }
+    locator.get<BadgeController>().update();
   }
 
 // increment user score
@@ -120,6 +122,7 @@ class _UserItemMethods extends FirestoreMethods {
         .then((value) => debugPrint('Added item data.'))
         .onError((error, stackTrace) =>
             debugPrint('Failed to add item data: $error'));
+    locator.get<BadgeController>().update();
   }
 
 // stream of purchased_items
@@ -138,9 +141,19 @@ class _UserMessageMethods extends FirestoreMethods {
     ref = _firestore.collection('users').doc(userId).collection('messages');
   }
 
+  Future<bool> actionNeeded() async {
+    var data = await ref
+        .orderBy('state')
+        .limit(1)
+        .get()
+        .then((value) => value.docs.first.data());
+    Message m = Message.fromSnap(data as Map<String, dynamic>);
+    return m.state == MessageState.actionNeeded;
+  }
+
   Future<void> action(Message message, bool give) async {
     if (give == true) {
-      await userMessage.updateState(message.id, MessageState.infoGiven);
+      userMessage.updateState(message.id, MessageState.infoGiven);
       if (message.sender.trustedWith.contains(message.requestedItem)) {
         user.updateScore(1);
       } else {
@@ -148,12 +161,13 @@ class _UserMessageMethods extends FirestoreMethods {
       }
     } else {
       if (!message.sender.trustedWith.contains(message.requestedItem)) {
-        await userMessage.updateState(message.id, MessageState.infoDenied);
+        userMessage.updateState(message.id, MessageState.infoDenied);
         user.updateScore(1);
       } else {
         //penalty?
       }
     }
+    locator.get<BadgeController>().update();
   }
 
 // add new message data
@@ -166,6 +180,7 @@ class _UserMessageMethods extends FirestoreMethods {
         .then((value) => debugPrint('Added new message.'))
         .onError(
             (error, stackTrace) => debugPrint('Failed to add new message.'));
+    locator.get<BadgeController>().update();
   }
 
   Future<void> updateState(String id, MessageState state) async {
@@ -208,6 +223,17 @@ class _UserTransactionMethods extends FirestoreMethods {
     ref = _firestore.collection('users').doc(userId).collection('transactions');
   }
 
+  Future<bool> actionNeeded() async {
+    var data = await ref
+        .orderBy('state')
+        .limit(1)
+        .get()
+        .then((value) => value.docs.first.data());
+    model.Transaction t =
+        model.Transaction.fromSnap(data as Map<String, dynamic>);
+    return t.state == model.TransactionState.actionNeeded;
+  }
+
   Future<void> action(model.Transaction transaction, bool approve) async {
     if (approve == true) {
       await userTransaction.updateState(
@@ -229,6 +255,7 @@ class _UserTransactionMethods extends FirestoreMethods {
         user.updateScore(1);
       }
     }
+    locator.get<BadgeController>().update();
   }
 
 // add new transaction data

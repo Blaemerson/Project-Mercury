@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
+import 'package:projectmercury/resources/badge_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/resources/timeController.dart';
+import 'package:projectmercury/resources/time_controller.dart';
 import 'package:provider/provider.dart';
 
 class InfoPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class _InfoPageState extends State<InfoPage> {
   Widget build(BuildContext context) {
     final AuthMethods _auth = locator.get<AuthMethods>();
     final TimerController _timer = locator.get<TimerController>();
+    final BadgeController _badge = locator.get<BadgeController>();
 
     return ChangeNotifierProvider.value(
       value: _timer,
@@ -30,7 +32,7 @@ class _InfoPageState extends State<InfoPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Consumer<TimerController>(
-                  builder: (context, value, child) {
+                  builder: (_, timer, __) {
                     return Column(
                       children: [
                         const Text(
@@ -38,7 +40,7 @@ class _InfoPageState extends State<InfoPage> {
                           style: TextStyle(fontSize: 24),
                         ),
                         Text(
-                          _timer.totalTime,
+                          timer.totalTime,
                           style: const TextStyle(fontSize: 24),
                         ),
                         const Text(
@@ -46,7 +48,7 @@ class _InfoPageState extends State<InfoPage> {
                           style: TextStyle(fontSize: 24),
                         ),
                         Text(
-                          _timer.sessionTime,
+                          timer.sessionTime,
                           style: const TextStyle(fontSize: 24),
                         ),
                       ],
@@ -61,6 +63,12 @@ class _InfoPageState extends State<InfoPage> {
                     },
                     child: const Text('SignOut'),
                   ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _badge.update();
+                  },
+                  child: const Text('SignOut'),
                 ),
               ],
             ),

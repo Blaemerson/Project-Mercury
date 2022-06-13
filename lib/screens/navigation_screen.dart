@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
+import 'package:projectmercury/resources/badge_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/resources/timeController.dart';
+import 'package:projectmercury/resources/time_controller.dart';
+import 'package:provider/provider.dart';
 
 import '../pages/contacts_page.dart';
 import '../pages/home_page.dart';
@@ -20,6 +22,7 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
   final TimerController _timer = locator.get<TimerController>();
+  final BadgeController _badge = locator.get<BadgeController>();
 
   int _pageSelected = 0;
   List<Widget> pages = const [
@@ -59,74 +62,103 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   Widget build(BuildContext context) {
     Navigator.canPop(context) ? Navigator.pop(context) : null;
-    return Scaffold(
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 100),
-        child: pages[_pageSelected],
-      ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: Colors.black,
-              width: 1,
-            ),
-          ),
+    return ChangeNotifierProvider.value(
+      value: _badge,
+      child: Scaffold(
+        body: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 100),
+          child: pages[_pageSelected],
         ),
-        child: BottomNavigationBar(
-          currentIndex: _pageSelected,
-          iconSize: 50,
-          showUnselectedLabels: true,
-          type: BottomNavigationBarType.fixed,
-          selectedLabelStyle: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: Colors.black,
+                width: 1,
+              ),
+            ),
           ),
-          unselectedLabelStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+          child: Consumer<BadgeController>(
+            builder: (_, badge, __) {
+              return BottomNavigationBar(
+                currentIndex: _pageSelected,
+                iconSize: 50,
+                showUnselectedLabels: true,
+                type: BottomNavigationBarType.fixed,
+                selectedLabelStyle: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                unselectedLabelStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Badge(
+                      showBadge: badge.showBadge[0],
+                      badgeContent: Icon(
+                        Icons.notification_important,
+                        size: 28,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      child: const Icon(Icons.home),
+                    ),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Badge(
+                      showBadge: badge.showBadge[1],
+                      badgeContent: Icon(
+                        Icons.notification_important,
+                        size: 28,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      child: const Icon(Icons.money),
+                    ),
+                    label: 'Money',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Badge(
+                      showBadge: badge.showBadge[2],
+                      badgeContent: Icon(
+                        Icons.notification_important,
+                        size: 28,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      child: const Icon(Icons.people),
+                    ),
+                    label: 'Contacts',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Badge(
+                      showBadge: badge.showBadge[3],
+                      badgeContent: Icon(
+                        Icons.notification_important,
+                        size: 28,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      child: const Icon(Icons.mail),
+                    ),
+                    label: 'Mail',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Badge(
+                      showBadge: badge.showBadge[4],
+                      badgeContent: Icon(
+                        Icons.notification_important,
+                        size: 28,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      child: const Icon(Icons.info),
+                    ),
+                    label: 'Info',
+                  ),
+                ],
+                onTap: onNavTapped,
+              );
+            },
           ),
-          items: [
-            BottomNavigationBarItem(
-              icon: Badge(
-                showBadge: false,
-                badgeContent: const Text(''),
-                child: const Icon(Icons.home),
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Badge(
-                badgeContent: const Text(''),
-                child: const Icon(Icons.money),
-              ),
-              label: 'Money',
-            ),
-            BottomNavigationBarItem(
-              icon: Badge(
-                badgeContent: const Text(''),
-                child: const Icon(Icons.people),
-              ),
-              label: 'Contacts',
-            ),
-            BottomNavigationBarItem(
-              icon: Badge(
-                showBadge: false,
-                badgeContent: const Text(''),
-                child: const Icon(Icons.mail),
-              ),
-              label: 'Mail',
-            ),
-            BottomNavigationBarItem(
-              icon: Badge(
-                showBadge: false,
-                badgeContent: const Text(''),
-                child: const Icon(Icons.info),
-              ),
-              label: 'Info',
-            ),
-          ],
-          onTap: onNavTapped,
         ),
       ),
     );

@@ -4,8 +4,8 @@ import 'package:projectmercury/utils/global_variables.dart';
 import 'contact.dart';
 
 enum MessageState {
-  static,
   actionNeeded,
+  static,
   infoDenied,
   infoGiven,
 }
