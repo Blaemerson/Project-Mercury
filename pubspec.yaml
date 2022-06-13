@@ -60,7 +60,7 @@ flutter:
   assets: #note - assets are temporary placeholders
     - assets/logo.png
     - assets/kitchen_floor.png
-    - assets/kitchen_wall.jpg
+    - assets/floral_wall.jpg
     - assets/wood_floor.jpg
     - assets/table.png
     - assets/fireplace.png

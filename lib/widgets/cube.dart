@@ -10,6 +10,8 @@ class Cube extends StatelessWidget {
   final double rotateY;
   final double fov;
   final bool isInterior;
+  final AssetImage wallTexture;
+  final AssetImage floorTexture;
 
   const Cube({
     Key? key,
@@ -17,7 +19,9 @@ class Cube extends StatelessWidget {
     required this.height,
     required this.depth,
     this.rotateX = 0.0,
-    this.isInterior = false,
+    this.isInterior = true,
+    required this.wallTexture,
+    required this.floorTexture,
     rotateY = 0.0,
     this.fov = 0.0,
   })  : rotateY = rotateY % (math.pi * 2),
@@ -130,8 +134,8 @@ class Cube extends StatelessWidget {
       border: Border.all(color: Colors.brown),
       image: DecorationImage(
         image: topOrBottom
-            ? const AssetImage('assets/wood_floor.jpg')
-            : const AssetImage('assets/kitchen_wall.jpg'),
+            ? floorTexture
+            : wallTexture,
         repeat: ImageRepeat.repeat,
         fit: BoxFit.contain,
       ),

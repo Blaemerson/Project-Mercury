@@ -24,7 +24,8 @@ class _LivingRoomState extends State<LivingRoom> {
           rotateY: 45 * math.pi / 180,
           rotateX: 45 * math.pi / 180,
           fov: 0 * math.pi / 180,
-          isInterior: true,
+          floorTexture: AssetImage('assets/wood_floor.jpg'),
+          wallTexture: AssetImage('assets/floral_wall.jpg'),
         ),
         Positioned(
           bottom: 20,
