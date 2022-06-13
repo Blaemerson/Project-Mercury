@@ -45,13 +45,14 @@ class StoreItemCard extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(4.0),
       child: FittedBox(
         fit: BoxFit.fitHeight,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.brown),
             color: Theme.of(context).colorScheme.primaryContainer,
           ),
           child: Column(

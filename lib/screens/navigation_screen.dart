@@ -73,7 +73,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           decoration: const BoxDecoration(
             border: Border(
               top: BorderSide(
-                color: Colors.black,
+                color: Colors.grey,
                 width: 1,
               ),
             ),

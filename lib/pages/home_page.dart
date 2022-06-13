@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/store_page.dart';
-import 'package:projectmercury/widgets/cube.dart';
-import 'dart:math' as math;
+
+import 'package:projectmercury/widgets/living_room.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,115 +11,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isInterior = true;
-  double _x = 0;
-  double _y = 0;
-  double _fov = 15;
+  /* double _x = 20; */
+  /* double _y = 0; */
+  /* double _fov = 10; */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: Column(
-        children: [
-          // Consumer<List<PurchasedItem>>(
-          //   builder: (_, items, __) {
-          //     return SizedBox(
-          //       height: 80,
-          //       child: ListView.builder(
-          //         itemCount: items.length,
-          //         scrollDirection: Axis.horizontal,
-          //         itemBuilder: ((context, index) {
-          //           /* Create a new draggable element for each item */
-          //           return LongPressDraggable(
-          //             delay: const Duration(milliseconds: 250),
-          //             data: items[index],
-          //             /* TODO: change representation of purchased furniture from their icon */
-          //             child: Icon(
-          //               IconData(items[index].icon,
-          //                   fontFamily: 'MaterialIcons'),
-          //               size: 50,
-          //             ),
-          //             feedback: Icon(
-          //               IconData(items[index].icon,
-          //                   fontFamily: 'MaterialIcons'),
-          //               size: 50,
-          //             ),
-          //             childWhenDragging: Container(),
-          //           );
-          //         }),
-          //       ),
-          //     );
-          //   },
-          // ),
-          Row(
-            children: [
-              const Text('Fov'),
-              Expanded(
-                child: Slider(
-                    value: _fov,
-                    min: 0,
-                    max: 30,
-                    onChanged: (fov) => setState(() {
-                          _fov = fov;
-                        })),
-              ),
-              Text(_x.toStringAsPrecision(3)),
-            ],
-          ),
-          Row(
-            children: [
-              const Text('X'),
-              Expanded(
-                child: Slider(
-                    value: _x,
-                    min: -90,
-                    max: 90,
-                    onChanged: (x) => setState(() {
-                          _x = x;
-                        })),
-              ),
-              Text(_x.toStringAsPrecision(3)),
-            ],
-          ),
-          Row(
-            children: [
-              const Text('Y'),
-              Expanded(
-                child: Slider(
-                    value: _y,
-                    min: 0,
-                    max: 360,
-                    onChanged: (y) => setState(() {
-                          _y = y;
-                        })),
-              ),
-              Text(_y.toStringAsPrecision(3)),
-            ],
-          ),
-          const Spacer(),
-          // TODO: Make two buttons (possibly slider?) for controlling room rotation.
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _isInterior = !_isInterior;
-              });
-            },
-            child: Center(
-              child: Cube(
-                width: 300,
-                height: 200,
-                depth: 200,
-                rotateY: _y * math.pi / 180,
-                rotateX: _x * math.pi / 180,
-                fov: _fov * math.pi / 180,
-                isInterior: _isInterior,
-              ),
+      body: InteractiveViewer(
+        boundaryMargin: const EdgeInsets.all(30.0),
+        /* scrollDirection: Axis.horizontal, */
+        minScale: 1.0,
+        maxScale: 2.0,
+        child: const Center(
+          child: FittedBox(
+            child: SizedBox(
+              width: 300,
+              height: 300,
+              child: LivingRoom(),
             ),
           ),
-          const Spacer(),
-        ],
+        ),
       ),
       floatingActionButton: SizedBox(
         width: 64,
@@ -136,7 +50,10 @@ class _HomePageState extends State<HomePage> {
               ),
               context: context,
               builder: (context) {
-                return const StorePage();
+                return const SizedBox(
+                  height: 232,
+                  child: StorePage(),
+                );
               },
             );
           },
