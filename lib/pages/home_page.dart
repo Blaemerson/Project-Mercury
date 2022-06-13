@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/store_page.dart';
 
-import 'package:projectmercury/widgets/dining_room.dart';
+import 'package:projectmercury/widgets/living_room.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,63 +20,20 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: Column(
-        children: const [
-          /* Row( */
-          /*   children: [ */
-          /*     const Text('Fov'), */
-          /*     Expanded( */
-          /*       child: Slider( */
-          /*         value: _fov, */
-          /*         min: 0, */
-          /*         max: 30, */
-          /*         onChanged: (fov) => setState(() { */
-          /*           _fov = fov; */
-          /*         }), */
-          /*       ), */
-          /*     ), */
-          /*     Text(_fov.toStringAsPrecision(3)), */
-          /*   ], */
-          /* ), */
-          /* Row( */
-          /*   children: [ */
-          /*     const Text('X'), */
-          /*     Expanded( */
-          /*       child: Slider( */
-          /*         value: _x, */
-          /*         min: -90, */
-          /*         max: 90, */
-          /*         onChanged: (x) => setState(() { */
-          /*           _x = x; */
-          /*         }), */
-          /*       ), */
-          /*     ), */
-          /*     Text(_x.toStringAsPrecision(3)), */
-          /*   ], */
-          /* ), */
-          /* Row( */
-          /*   children: [ */
-          /*     const Text('Y'), */
-          /*     Expanded( */
-          /*       child: Slider( */
-          /*         value: _y, */
-          /*         min: 0, */
-          /*         max: 360, */
-          /*         onChanged: (y) => setState(() { */
-          /*           _y = y; */
-          /*         }), */
-          /*       ), */
-          /*     ), */
-          /*     Text(_y.toStringAsPrecision(3)), */
-          /*   ], */
-          /* ), */
-          /* Spacer(), */
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: LivingRoom(),
+      body: InteractiveViewer(
+        boundaryMargin: const EdgeInsets.all(30.0),
+        /* scrollDirection: Axis.horizontal, */
+        minScale: 1.0,
+        maxScale: 2.0,
+        child: const Center(
+          child: FittedBox(
+            child: SizedBox(
+              width: 300,
+              height: 300,
+              child: LivingRoom(),
+            ),
           ),
-          Spacer(),
-        ],
+        ),
       ),
       floatingActionButton: SizedBox(
         width: 64,
