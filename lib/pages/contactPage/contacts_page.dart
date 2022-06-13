@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/contact.dart';
-import '../widgets/contact_card.dart';
+import '../../models/contact.dart';
+import 'contact_card.dart';
 
-class ContactsPage extends StatelessWidget {
-  const ContactsPage({Key? key}) : super(key: key);
+class ContactPage extends StatelessWidget {
+  const ContactPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

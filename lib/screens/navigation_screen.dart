@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
+import 'package:projectmercury/pages/contactPage/contacts_page.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/badge_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/resources/time_controller.dart';
 import 'package:provider/provider.dart';
 
-import '../pages/contacts_page.dart';
-import '../pages/home_page.dart';
+import '../pages/homePage/home_page.dart';
 import '../pages/info_page.dart';
-import '../pages/messages_page.dart';
-import '../pages/money_page.dart';
+import '../pages/messagePage/messages_page.dart';
+import '../pages/moneyPage/money_page.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({Key? key}) : super(key: key);
@@ -28,8 +28,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
   List<Widget> pages = const [
     HomePage(),
     MoneyPage(),
-    ContactsPage(),
-    MessagesPage(),
+    ContactPage(),
+    MessagePage(),
     InfoPage(),
   ];
   List<String> pageTitles = const [

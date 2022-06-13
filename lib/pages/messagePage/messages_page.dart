@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 
-import '../models/message.dart';
-import '../resources/locator.dart';
-import '../widgets/message_card.dart';
+import '../../models/message.dart';
+import '../../resources/locator.dart';
+import 'message_card.dart';
 
-class MessagesPage extends StatelessWidget {
-  const MessagesPage({Key? key}) : super(key: key);
+class MessagePage extends StatelessWidget {
+  const MessagePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
