@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 
-import '../models/transaction.dart';
-import '../utils/utils.dart';
+import '../../utils/utils.dart';
 
 class TransactionCard extends StatelessWidget {
   final Transaction transaction;

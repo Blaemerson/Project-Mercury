@@ -8,7 +8,7 @@ import 'package:projectmercury/resources/time_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../pages/homePage/home_page.dart';
-import '../pages/info_page.dart';
+import '../pages/infoPage/info_page.dart';
 import '../pages/messagePage/messages_page.dart';
 import '../pages/moneyPage/money_page.dart';
 

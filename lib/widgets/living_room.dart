@@ -22,7 +22,7 @@ class _LivingRoomState extends State<LivingRoom> {
           height: 170,
           depth: 300,
           rotateY: 45 * math.pi / 180,
-          rotateX: 45 * math.pi / 180,
+          rotateX: 35.264 * math.pi / 180,
           fov: 0 * math.pi / 180,
           floorTexture: AssetImage('assets/wood_floor.jpg'),
           wallTexture: AssetImage('assets/floral_wall.jpg'),
@@ -37,7 +37,7 @@ class _LivingRoomState extends State<LivingRoom> {
           ),
         ),
         Positioned(
-          top: 50,
+          top: 60,
           child: SizedBox(
             height: 150,
             width: 150,
@@ -45,13 +45,44 @@ class _LivingRoomState extends State<LivingRoom> {
           ),
         ),
         Positioned(
-          top: 30,
+          top: 60,
           left: 120,
           child: SizedBox(
             height: 100,
-            width: 75,
+            width: 100,
             child: Furniture(type: "chair", variant: 0),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class Room extends StatelessWidget {
+  final double width;
+  final double depth;
+  String floorTexture;
+  String wallTexture;
+  Room({
+    Key? key,
+    this.floorTexture = 'assets/wood_floor.jpg',
+    this.wallTexture = 'assets/floral_wall.jpg',
+    required this.width,
+    required this.depth,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Cube(
+          rotateY: 45 * math.pi / 180,
+          rotateX: 35.264 * math.pi / 180,
+          width: width,
+          height: 180,
+          depth: depth,
+          floorTexture: AssetImage(floorTexture),
+          wallTexture: AssetImage(wallTexture),
         ),
       ],
     );

@@ -8,7 +8,6 @@ class Furniture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: Different furniture image based on variant
     DecorationImage img = DecorationImage(
       image: AssetImage('assets/$type.png'),

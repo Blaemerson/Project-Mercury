@@ -18,7 +18,6 @@ class _InfoPageState extends State<InfoPage> {
   Widget build(BuildContext context) {
     final AuthMethods _auth = locator.get<AuthMethods>();
     final TimerController _timer = locator.get<TimerController>();
-    final BadgeController _badge = locator.get<BadgeController>();
 
     return ChangeNotifierProvider.value(
       value: _timer,
@@ -63,12 +62,6 @@ class _InfoPageState extends State<InfoPage> {
                     },
                     child: const Text('SignOut'),
                   ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _badge.update();
-                  },
-                  child: const Text('SignOut'),
                 ),
               ],
             ),

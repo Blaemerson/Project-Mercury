@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectmercury/pages/store_page.dart';
+import 'package:projectmercury/pages/storePage/store_page.dart';
 
 import 'package:projectmercury/widgets/living_room.dart';
 
@@ -25,12 +25,13 @@ class _HomePageState extends State<HomePage> {
         /* scrollDirection: Axis.horizontal, */
         minScale: 1.0,
         maxScale: 2.0,
-        child: const Center(
+        child: Center(
           child: FittedBox(
-            child: SizedBox(
+            child: Container(
+              color: Colors.blue,
               width: 300,
               height: 300,
-              child: LivingRoom(),
+              child: Room(width: 200, depth: 200),
             ),
           ),
         ),

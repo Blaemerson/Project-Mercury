@@ -6,8 +6,8 @@ import 'package:projectmercury/resources/badge_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 
-import '../utils/utils.dart';
-import '../widgets/transaction_card.dart';
+import '../../utils/utils.dart';
+import 'transaction_card.dart';
 
 class MoneyPage extends StatefulWidget {
   const MoneyPage({Key? key}) : super(key: key);

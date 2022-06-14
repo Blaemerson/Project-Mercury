@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/utils/utils.dart';
 
-import '../models/contact.dart';
+import '../../models/contact.dart';
 
 class ContactCard extends StatelessWidget {
   final Contact contact;

@@ -133,11 +133,10 @@ class Cube extends StatelessWidget {
     final BoxDecoration dec = BoxDecoration(
       border: Border.all(color: Colors.brown),
       image: DecorationImage(
-        image: topOrBottom
-            ? floorTexture
-            : wallTexture,
+        image: topOrBottom ? floorTexture : wallTexture,
         repeat: ImageRepeat.repeat,
-        fit: BoxFit.contain,
+        scale: 4,
+        fit: BoxFit.none,
       ),
     );
 
@@ -148,7 +147,6 @@ class Cube extends StatelessWidget {
         child: SizedBox(
           child: Container(
             width: topOrBottom || frontOrBack ? width : depth,
-            // depth does not go over 200 for topOrBottom
             height: topOrBottom ? depth : height,
             decoration: dec,
             /* color: Colors.purple, */
