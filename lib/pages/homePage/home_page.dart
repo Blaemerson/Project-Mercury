@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/storePage/store_page.dart';
+import 'package:projectmercury/widgets/rooms/bedroom.dart';
 
-import 'package:projectmercury/widgets/living_room.dart';
+import 'package:projectmercury/widgets/rooms/living_room.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.blue,
               width: 300,
               height: 300,
-              child: Room(width: 200, depth: 200),
+              child: BedRoom(),
             ),
           ),
         ),

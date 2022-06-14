@@ -5,8 +5,7 @@ import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/resources/badge_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-
-import '../../utils/utils.dart';
+import 'package:projectmercury/utils/utils.dart';
 import 'transaction_card.dart';
 
 class MoneyPage extends StatefulWidget {
