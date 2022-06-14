@@ -19,7 +19,8 @@ class Furniture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _debugBox = true;
+    // show container boundaries
+    bool _debugBox = false;
     // TODO: Different furniture image based on variant
     Image img = Image(image: AssetImage('assets/${type}.png'));
 

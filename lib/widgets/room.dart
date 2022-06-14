@@ -18,7 +18,7 @@ class Room extends StatelessWidget {
     required this.items,
   }) : super(key: key);
 
-// TODO: make rooms loadable from firebase
+// TODO: load furnitures from firebase and place in correct location
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -26,6 +26,8 @@ class Room extends StatelessWidget {
       children: [
         Cube(
           rotateY: 45 * math.pi / 180,
+          // 35.264 <- true isometric view angle
+          // 30 <- most commonly used isometric view angle
           rotateX: 35.264 * math.pi / 180,
           width: width,
           height: 180,
