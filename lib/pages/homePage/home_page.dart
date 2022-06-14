@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/storePage/store_page.dart';
+import 'package:projectmercury/widgets/room.dart';
 import 'package:projectmercury/widgets/rooms/bedroom.dart';
 
-import 'package:projectmercury/widgets/rooms/living_room.dart';
+import 'package:projectmercury/widgets/rooms/livingroom.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,9 +13,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  /* double _x = 20; */
-  /* double _y = 0; */
-  /* double _fov = 10; */
+  final List<Widget> _rooms = const [
+    BedRoom(),
+    LivingRoom(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,11 +31,10 @@ class _HomePageState extends State<HomePage> {
         maxScale: 2.0,
         child: Center(
           child: FittedBox(
-            child: Container(
-              color: Colors.blue,
+            child: SizedBox(
               width: 300,
               height: 300,
-              child: BedRoom(),
+              child: _rooms[1],
             ),
           ),
         ),

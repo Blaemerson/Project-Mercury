@@ -1,30 +1,41 @@
 import 'package:flutter/material.dart';
 
 class Furniture extends StatelessWidget {
-  final int variant;
+  final double width;
+  final double height;
+  final double positionX;
+  final double positionY;
   final String type;
-  const Furniture({Key? key, required this.type, required this.variant})
-      : super(key: key);
+  final String? variant;
+  const Furniture({
+    Key? key,
+    required this.width,
+    required this.height,
+    required this.positionX,
+    required this.positionY,
+    required this.type,
+    this.variant,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool _debugBox = true;
     // TODO: Different furniture image based on variant
-    DecorationImage img = DecorationImage(
-      image: AssetImage('assets/$type.png'),
-      /* fit: BoxFit.fitWidth, */
-    );
-    return Center(
-      child: Container(
-        alignment: Alignment.center,
-        /* width: 100, */
-        /* height: 100, */
-        decoration: BoxDecoration(
-          /* border: Border.all(color: Colors.black), */
-          borderRadius: BorderRadius.circular(16),
-          /* color: Colors.white, */
-          image: img,
-        ),
-      ),
+    Image img = Image(image: AssetImage('assets/${type}.png'));
+
+    return Positioned(
+      width: width,
+      height: height,
+      left: positionX,
+      bottom: positionY,
+      child: variant != null
+          ? Container(
+              color: _debugBox
+                  ? Color.fromARGB(67, 255, 7, 7)
+                  : Colors.transparent,
+              child: img,
+            )
+          : Container(),
     );
   }
 }
