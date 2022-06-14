@@ -22,7 +22,7 @@ class Furniture extends StatelessWidget {
     // show container boundaries
     bool _debugBox = false;
     // TODO: Different furniture image based on variant
-    Image img = Image(image: AssetImage('assets/${type}.png'));
+    Image img = Image(image: AssetImage('assets/$type.png'));
 
     return Positioned(
       width: width,

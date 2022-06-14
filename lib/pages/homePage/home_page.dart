@@ -26,16 +26,11 @@ class _HomePageState extends State<HomePage> {
       ),
       body: InteractiveViewer(
         boundaryMargin: const EdgeInsets.all(30.0),
-        /* scrollDirection: Axis.horizontal, */
         minScale: 1.0,
         maxScale: 2.0,
         child: Center(
           child: FittedBox(
-            child: SizedBox(
-              width: 300,
-              height: 300,
-              child: _rooms[1],
-            ),
+            child: _rooms[1],
           ),
         ),
       ),
