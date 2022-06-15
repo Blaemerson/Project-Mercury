@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Furniture extends StatelessWidget {
+class Furniture {
   final double width;
   final double height;
   final double positionX;
   final double positionY;
   final String type;
-  final String? variant;
-  const Furniture({
+  String? variant;
+  Furniture({
     Key? key,
     required this.width,
     required this.height,
@@ -15,9 +15,12 @@ class Furniture extends StatelessWidget {
     required this.positionY,
     required this.type,
     this.variant,
-  }) : super(key: key);
+  });
 
-  @override
+  void set(String variant) {
+    this.variant;
+  }
+
   Widget build(BuildContext context) {
     // show container boundaries
     bool _debugBox = false;

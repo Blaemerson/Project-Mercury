@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:projectmercury/models/contact.dart';
 import 'package:projectmercury/models/message.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/models/user.dart' as model;
 import 'package:projectmercury/resources/auth_methods.dart';
-import 'package:projectmercury/resources/badge_controller.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
 
@@ -19,7 +18,6 @@ class FirestoreMethods {
   _UserTransactionMethods get userTransaction => _UserTransactionMethods();
   _UserMessageMethods get userMessage => _UserMessageMethods();
   _UserItemMethods get userItem => _UserItemMethods();
-  _ContactMethods get contact => _ContactMethods();
   _StoreMethods get store => _StoreMethods();
   _UserMethods get user => _UserMethods();
 
@@ -62,13 +60,13 @@ class _UserMethods extends FirestoreMethods {
     }
     if (!(await collectionExists(
         await ref.collection('transactions').limit(1).get()))) {
-      userTransaction.add(initialTransactions[0]);
+      userTransaction.add(initialTransaction[0]);
     }
     if (!(await collectionExists(
         await ref.collection('messages').limit(1).get()))) {
       userMessage.add(initialMessages[0]);
     }
-    locator.get<BadgeController>().update();
+    locator.get<EventController>().update();
   }
 
 // increment user score
@@ -122,7 +120,7 @@ class _UserItemMethods extends FirestoreMethods {
         .then((value) => debugPrint('Added item data.'))
         .onError((error, stackTrace) =>
             debugPrint('Failed to add item data: $error'));
-    locator.get<BadgeController>().update();
+    locator.get<EventController>().update();
   }
 
 // stream of purchased_items
@@ -142,13 +140,12 @@ class _UserMessageMethods extends FirestoreMethods {
   }
 
   Future<bool> actionNeeded() async {
-    var data = await ref
-        .orderBy('state')
+    int data = await ref
+        .where('state', isEqualTo: 'actionNeeded')
         .limit(1)
         .get()
-        .then((value) => value.docs.first.data());
-    Message m = Message.fromSnap(data as Map<String, dynamic>);
-    return m.state == MessageState.actionNeeded;
+        .then((value) => value.docs.length);
+    return data > 0;
   }
 
   Future<void> action(Message message, bool give) async {
@@ -167,7 +164,7 @@ class _UserMessageMethods extends FirestoreMethods {
         //penalty?
       }
     }
-    locator.get<BadgeController>().update();
+    locator.get<EventController>().update();
   }
 
 // add new message data
@@ -180,7 +177,7 @@ class _UserMessageMethods extends FirestoreMethods {
         .then((value) => debugPrint('Added new message.'))
         .onError(
             (error, stackTrace) => debugPrint('Failed to add new message.'));
-    locator.get<BadgeController>().update();
+    locator.get<EventController>().update();
   }
 
   Future<void> updateState(String id, MessageState state) async {
@@ -193,19 +190,11 @@ class _UserMessageMethods extends FirestoreMethods {
     await Future.delayed(
       const Duration(seconds: 1),
       () => ref.doc(id).update({'displayState': FieldValue.increment(1)}),
-    )
-        .then(
-          (value) => Future.delayed(
-            const Duration(seconds: 1),
-            () => ref.doc(id).update({'displayState': FieldValue.increment(1)}),
-          ),
-        )
-        .then(
-          (value) => Future.delayed(
-            const Duration(seconds: 2),
-            () => userMessage.add(initialMessages[0]),
-          ),
-        );
+    );
+    await Future.delayed(
+      const Duration(seconds: 2),
+      () => ref.doc(id).update({'displayState': FieldValue.increment(1)}),
+    );
   }
 
 // stream of messages
@@ -224,14 +213,12 @@ class _UserTransactionMethods extends FirestoreMethods {
   }
 
   Future<bool> actionNeeded() async {
-    var data = await ref
-        .orderBy('state')
+    int data = await ref
+        .where('state', isEqualTo: 'actionNeeded')
         .limit(1)
         .get()
-        .then((value) => value.docs.first.data());
-    model.Transaction t =
-        model.Transaction.fromSnap(data as Map<String, dynamic>);
-    return t.state == model.TransactionState.actionNeeded;
+        .then((value) => value.docs.length);
+    return data > 0;
   }
 
   Future<void> action(model.Transaction transaction, bool approve) async {
@@ -255,7 +242,7 @@ class _UserTransactionMethods extends FirestoreMethods {
         user.updateScore(1);
       }
     }
-    locator.get<BadgeController>().update();
+    locator.get<EventController>().update();
   }
 
 // add new transaction data
@@ -315,34 +302,6 @@ class _StoreMethods extends FirestoreMethods {
     return ref.orderBy('type').orderBy('price').snapshots().map((list) => list
         .docs
         .map((snap) => StoreItem.fromSnap(snap.data() as Map<String, dynamic>))
-        .toList());
-  }
-}
-
-// firestore methods for contact data
-class _ContactMethods extends FirestoreMethods {
-  late CollectionReference ref;
-  _ContactMethods() {
-    ref = _firestore.collection('contacts');
-  }
-
-// add new contact data
-  Future<void> add(
-    Contact contact,
-  ) async {
-    await _firestore
-        .collection('contacts')
-        .doc()
-        .set(contact.toJson())
-        .then((value) => debugPrint('Added contact data.'))
-        .onError((error, stackTrace) =>
-            debugPrint('Failed to add contact data: $error'));
-  }
-
-// stream of contacts
-  Stream<List<Contact>> get stream {
-    return ref.orderBy('name').snapshots().map((list) => list.docs
-        .map((snap) => Contact.fromSnap(snap.data() as Map<String, dynamic>))
         .toList());
   }
 }

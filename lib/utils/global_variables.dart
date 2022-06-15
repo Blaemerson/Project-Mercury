@@ -1,10 +1,20 @@
 import 'package:projectmercury/models/contact.dart';
+import 'package:projectmercury/pages/contactPage/contact_list.dart';
 
 import '../models/message.dart';
 import '../models/transaction.dart';
 
+//Transaction setting
+const double overchargeFrequency = 0.5;
+const int maxOvercharge = 30; // * 10
+const int minOvercharge = 1; // * 10
+
+//Message setting
+const int messageMaxDelay = 30; //seconds
+const int messageMinDelay = 10; //seconds
+
 // Transactions
-List<Transaction> initialTransactions = [
+List<Transaction> initialTransaction = [
   Transaction(
     description: 'Initial Deposit',
     amount: 12000,
@@ -13,18 +23,9 @@ List<Transaction> initialTransactions = [
   ),
 ];
 
-Contact fillerContact = Contact(
-  description: 'No information',
-  name: 'Unknown',
-  relationship: 'Stranger',
-  photo:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/813px-Unknown_person.jpg?20200423155822',
-  trustedWith: [],
-);
-
 List<Message> initialMessages = [
   Message(
-    sender: fillerContact,
+    sender: contacts[0],
     text: 'Hi, can I have your social security number?',
     requestedItem: 'social security number',
   ),

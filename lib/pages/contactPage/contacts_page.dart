@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/pages/contactPage/contact_list.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/contact.dart';
@@ -17,14 +18,12 @@ class ContactPage extends StatelessWidget {
         children: [
           Flexible(
             child: Scrollbar(
-              child: Consumer<List<Contact>>(builder: (_, contacts, __) {
-                return ListView.builder(
-                  itemBuilder: (context, index) => ContactCard(
-                    contact: contacts[index],
-                  ),
-                  itemCount: contacts.length,
-                );
-              }),
+              child: ListView.builder(
+                itemBuilder: (context, index) => ContactCard(
+                  contact: contacts[index],
+                ),
+                itemCount: contacts.length,
+              ),
             ),
           ),
         ],

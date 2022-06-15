@@ -36,7 +36,7 @@ class Room extends StatelessWidget {
           wallTexture: AssetImage(wallTexture),
         ),
         for (Furniture item in items) ...[
-          item,
+          item.build(context),
         ]
       ],
     );

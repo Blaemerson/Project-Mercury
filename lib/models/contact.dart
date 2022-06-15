@@ -1,3 +1,5 @@
+import 'package:projectmercury/pages/contactPage/contact_list.dart';
+
 class Contact {
   final String photo;
   final String name;
@@ -5,7 +7,7 @@ class Contact {
   final String description;
   final List<dynamic> trustedWith;
 
-  Contact({
+  const Contact({
     required this.photo,
     required this.name,
     required this.relationship,
@@ -15,21 +17,22 @@ class Contact {
 
   Map<String, dynamic> toJson() {
     return ({
-      'photo': photo,
       'name': name,
       'relationship': relationship,
-      'description': description,
       'trustedWith': trustedWith,
     });
   }
 
   static Contact fromSnap(Map<String, dynamic> snap) {
-    return Contact(
-      photo: snap['photo'],
-      name: snap['name'],
-      relationship: snap['relationship'],
-      description: snap['description'],
-      trustedWith: snap['trustedWith'],
-    );
+    return contacts.firstWhere((contact) => contact.name == snap['name'],
+        orElse: () => tempContact);
+
+    // Contact(
+    //   photo: snap['photo'],
+    //   name: snap['name'],
+    //   relationship: snap['relationship'],
+    //   description: snap['description'],
+    //   trustedWith: snap['trustedWith'],
+    // );
   }
 }

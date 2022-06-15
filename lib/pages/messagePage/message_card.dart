@@ -145,7 +145,8 @@ class MessageCard extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 8),
                 child: CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(message.sender.photo),
+                  backgroundImage:
+                      AssetImage('assets/contacts/${message.sender.photo}'),
                 ),
               ),
         Expanded(

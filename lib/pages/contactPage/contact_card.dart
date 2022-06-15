@@ -30,7 +30,8 @@ class ContactCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
-                          image: NetworkImage(contact.photo),
+                          fit: BoxFit.cover,
+                          image: AssetImage('assets/contacts/${contact.photo}'),
                         ),
                       ),
                     ),

@@ -45,10 +45,6 @@ class MyApp extends StatelessWidget {
           create: (context) => _firestore.store.stream,
           initialData: const [],
         ),
-        StreamProvider<List<Contact>>(
-          create: ((context) => _firestore.contact.stream),
-          initialData: const [],
-        ),
       ],
       child: MaterialApp(
         title: 'Project Mercury',

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:projectmercury/pages/contactPage/contacts_page.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
-import 'package:projectmercury/resources/badge_controller.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/resources/time_controller.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
   final TimerController _timer = locator.get<TimerController>();
-  final BadgeController _badge = locator.get<BadgeController>();
+  final EventController _badge = locator.get<EventController>();
 
   int _pageSelected = 0;
   List<Widget> pages = const [
@@ -77,7 +77,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
             ),
           ),
-          child: Consumer<BadgeController>(
+          child: Consumer<EventController>(
             builder: (_, badge, __) {
               return BottomNavigationBar(
                 currentIndex: _pageSelected,

@@ -14,7 +14,7 @@ class LivingRoom extends StatefulWidget {
 class _LivingRoomState extends State<LivingRoom> {
   @override
   Widget build(BuildContext context) {
-    return const Room(
+    return Room(
       width: 250,
       depth: 300,
       items: [

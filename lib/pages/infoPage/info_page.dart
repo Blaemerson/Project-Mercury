@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
-import 'package:projectmercury/resources/badge_controller.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/resources/time_controller.dart';
 import 'package:provider/provider.dart';
