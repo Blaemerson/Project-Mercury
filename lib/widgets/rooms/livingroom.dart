@@ -30,61 +30,19 @@ class _LivingRoomState extends State<LivingRoom> {
           width: 150,
           height: 150,
           positionX: 0,
-          positionY: 90,
+          positionY: 95,
           type: 'fireplace',
           variant: '',
         ),
         Furniture(
           width: 100,
           height: 100,
-          positionX: 110,
-          positionY: 140,
+          positionX: 140,
+          positionY: 170,
           type: 'chair',
           variant: '',
         ),
       ],
     );
-//     Stack(
-//       children: const [
-//         Cube(
-//           width: 250,
-//           height: 170,
-//           depth: 300,
-//           rotateY: 45 * math.pi / 180,
-//           rotateX: 35.264 * math.pi / 180,
-//           fov: 0 * math.pi / 180,
-//           floorTexture: AssetImage('assets/wood_floor.jpg'),
-//           wallTexture: AssetImage('assets/floral_wall.jpg'),
-//         ),
-//         Positioned(
-//           bottom: 20,
-//           right: 30,
-//           child: SizedBox(
-//             height: 100,
-//             width: 100,
-//             child: Furniture(type: "table", variant: 0),
-//           ),
-//         ),
-//         Positioned(
-//           top: 60,
-//           child: SizedBox(
-//             height: 150,
-//             width: 150,
-//             child: Furniture(type: "fireplace", variant: 0),
-//           ),
-//         ),
-//         Positioned(
-//           top: 60,
-//           left: 110,
-//           child: SizedBox(
-//             height: 100,
-//             width: 100,
-//             child: Furniture(type: "chair", variant: 0),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
   }
 }

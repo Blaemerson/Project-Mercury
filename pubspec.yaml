@@ -62,6 +62,8 @@ flutter:
     - assets/kitchen_floor.png
     - assets/floral_wall.jpg
     - assets/wood_floor.jpg
+    - assets/grey_wall.jpg
+    - assets/light_wood.jpg
     - assets/table.png
     - assets/fireplace.png
     - assets/chair.png

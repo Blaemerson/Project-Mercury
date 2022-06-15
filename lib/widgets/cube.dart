@@ -144,13 +144,11 @@ class Cube extends StatelessWidget {
       transform: transform,
       alignment: Alignment.center,
       child: Center(
-        child: SizedBox(
-          child: Container(
-            width: topOrBottom || frontOrBack ? width : depth,
-            height: topOrBottom ? depth : height,
-            decoration: dec,
-            /* color: Colors.purple, */
-          ),
+        child: Container(
+          width: topOrBottom || frontOrBack ? width : depth,
+          height: topOrBottom ? depth : height,
+          decoration: dec,
+          /* color: Colors.purple, */
         ),
       ),
     );
