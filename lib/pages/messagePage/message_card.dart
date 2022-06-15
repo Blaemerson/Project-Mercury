@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/pages/contactPage/contact_data.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/models/message.dart';
@@ -118,13 +119,16 @@ class MessageCard extends StatelessWidget {
           ] else if (message.state != MessageState.static) ...[
             if (message.displayState > 0) ...[
               message.state == MessageState.infoGiven
-                  ? _chatBubble("My ${message.requestedItem} is ***-**-****",
-                      true, context)
+                  ? _chatBubble(
+                      "My ${message.requestedItem} is ${shareableInfo[message.requestedItem]}",
+                      true,
+                      context)
                   : _chatBubble("You can't have my ${message.requestedItem}",
                       true, context),
               const SizedBox(height: 12),
             ],
             if (message.displayState > 1) ...[
+              // TODO: change response based on contact
               message.state == MessageState.infoGiven
                   ? _chatBubble('Thank you!', false, context)
                   : _chatBubble(':(', false, context)

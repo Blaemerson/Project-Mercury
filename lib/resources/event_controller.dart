@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
-import 'package:projectmercury/pages/contactPage/contact_list.dart';
+import 'package:projectmercury/pages/contactPage/contact_data.dart';
+import 'package:projectmercury/pages/messagePage/message_data.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/utils/global_variables.dart';
 
@@ -28,9 +29,8 @@ class EventController with ChangeNotifier {
   void deployMessage() async {
     int delay =
         Random().nextInt(messageMaxDelay - messageMinDelay) + messageMinDelay;
-    int randomContact = Random().nextInt(contacts.length);
     Future.delayed(Duration(seconds: delay), () {
-      _firestore.userMessage.add(initialMessages[0]);
+      _firestore.userMessage.add(randomMessage);
     });
   }
 }

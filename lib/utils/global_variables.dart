@@ -1,5 +1,5 @@
 import 'package:projectmercury/models/contact.dart';
-import 'package:projectmercury/pages/contactPage/contact_list.dart';
+import 'package:projectmercury/pages/contactPage/contact_data.dart';
 
 import '../models/message.dart';
 import '../models/transaction.dart';
@@ -14,19 +14,9 @@ const int messageMaxDelay = 30; //seconds
 const int messageMinDelay = 10; //seconds
 
 // Transactions
-List<Transaction> initialTransaction = [
-  Transaction(
-    description: 'Initial Deposit',
-    amount: 12000,
-    timeStamp: DateTime.now(),
-    state: TransactionState.approved,
-  ),
-];
-
-List<Message> initialMessages = [
-  Message(
-    sender: contacts[0],
-    text: 'Hi, can I have your social security number?',
-    requestedItem: 'social security number',
-  ),
-];
+Transaction initialTransaction = Transaction(
+  description: 'Initial Deposit',
+  amount: 12000,
+  timeStamp: DateTime.now(),
+  state: TransactionState.approved,
+);

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:projectmercury/pages/contactPage/contact_list.dart';
+import 'package:projectmercury/pages/contactPage/contact_data.dart';
 import 'package:projectmercury/utils/global_variables.dart';
 
 import 'contact.dart';

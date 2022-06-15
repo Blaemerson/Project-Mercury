@@ -1,4 +1,4 @@
-import 'package:projectmercury/pages/contactPage/contact_list.dart';
+import 'package:projectmercury/pages/contactPage/contact_data.dart';
 
 class Contact {
   final String photo;
@@ -26,13 +26,5 @@ class Contact {
   static Contact fromSnap(Map<String, dynamic> snap) {
     return contacts.firstWhere((contact) => contact.name == snap['name'],
         orElse: () => tempContact);
-
-    // Contact(
-    //   photo: snap['photo'],
-    //   name: snap['name'],
-    //   relationship: snap['relationship'],
-    //   description: snap['description'],
-    //   trustedWith: snap['trustedWith'],
-    // );
   }
 }

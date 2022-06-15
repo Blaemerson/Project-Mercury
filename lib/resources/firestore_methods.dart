@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:projectmercury/models/message.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/models/user.dart' as model;
+import 'package:projectmercury/pages/messagePage/message_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
@@ -60,11 +61,11 @@ class _UserMethods extends FirestoreMethods {
     }
     if (!(await collectionExists(
         await ref.collection('transactions').limit(1).get()))) {
-      userTransaction.add(initialTransaction[0]);
+      userTransaction.add(initialTransaction);
     }
     if (!(await collectionExists(
         await ref.collection('messages').limit(1).get()))) {
-      userMessage.add(initialMessages[0]);
+      userMessage.add(messages[0]);
     }
     locator.get<EventController>().update();
   }
