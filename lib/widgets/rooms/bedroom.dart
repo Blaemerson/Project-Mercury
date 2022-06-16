@@ -15,6 +15,7 @@ class _BedRoomState extends State<BedRoom> {
   @override
   Widget build(BuildContext context) {
     return Room(
+      name: 'bedroom',
       width: 300,
       depth: 300,
       floorTexture: "assets/light_wood.jpg",
@@ -26,7 +27,7 @@ class _BedRoomState extends State<BedRoom> {
           positionX: 50,
           positionY: 120,
           type: 'table',
-          variant: '',
+          variant: '1',
         )
       ],
     );

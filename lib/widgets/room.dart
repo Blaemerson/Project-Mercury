@@ -4,6 +4,7 @@ import 'package:projectmercury/widgets/furniture.dart';
 import 'dart:math' as math;
 
 class Room extends StatelessWidget {
+  final String name;
   final double width;
   final double depth;
   final double height;
@@ -12,6 +13,7 @@ class Room extends StatelessWidget {
   final List<Furniture> items;
   const Room({
     Key? key,
+    required this.name,
     this.floorTexture = 'assets/wood_floor.jpg',
     this.wallTexture = 'assets/floral_wall.jpg',
     required this.width,

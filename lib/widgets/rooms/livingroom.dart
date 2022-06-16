@@ -12,9 +12,11 @@ class LivingRoom extends StatefulWidget {
 
 // TODO: Layout undecided
 class _LivingRoomState extends State<LivingRoom> {
+  update() {}
   @override
   Widget build(BuildContext context) {
     return Room(
+      name: 'livingroom',
       width: 250,
       depth: 300,
       items: [
@@ -24,7 +26,7 @@ class _LivingRoomState extends State<LivingRoom> {
           positionX: 170,
           positionY: 20,
           type: 'table',
-          variant: '',
+          variant: '1',
         ),
         Furniture(
           width: 150,
@@ -40,7 +42,7 @@ class _LivingRoomState extends State<LivingRoom> {
           positionX: 140,
           positionY: 170,
           type: 'chair',
-          variant: '',
+          variant: '1',
         ),
       ],
     );

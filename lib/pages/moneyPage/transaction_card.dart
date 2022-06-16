@@ -47,7 +47,7 @@ class TransactionCard extends StatelessWidget {
                     (transaction.amount > 0 ? '+' : '') +
                         formatCurrency.format(transaction.amount),
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 24,
                     ),
                   ),
                 ],

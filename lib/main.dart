@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:projectmercury/firebase_options.dart';
-import 'package:projectmercury/models/contact.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
@@ -39,10 +38,6 @@ class MyApp extends StatelessWidget {
       providers: [
         StreamProvider<List<PurchasedItem>>(
           create: (context) => _firestore.userItem.stream,
-          initialData: const [],
-        ),
-        StreamProvider<List<StoreItem>>(
-          create: (context) => _firestore.store.stream,
           initialData: const [],
         ),
       ],

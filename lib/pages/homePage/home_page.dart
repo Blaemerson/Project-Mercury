@@ -20,6 +20,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final _currentRoom = _rooms[1];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -30,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         maxScale: 2.0,
         child: Center(
           child: FittedBox(
-            child: _rooms[1],
+            child: _currentRoom,
           ),
         ),
       ),

@@ -62,7 +62,10 @@ class StoreItemCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(storeItem.name),
-              Icon(IconData(storeItem.icon, fontFamily: 'MaterialIcons')),
+              Image.asset(
+                'assets/${storeItem.type}${storeItem.variant}.png',
+                height: 50,
+              ),
               Text(formatCurrency.format(storeItem.price)),
               ElevatedButton(
                 onPressed: () async {

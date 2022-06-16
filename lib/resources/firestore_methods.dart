@@ -19,7 +19,6 @@ class FirestoreMethods {
   _UserTransactionMethods get userTransaction => _UserTransactionMethods();
   _UserMessageMethods get userMessage => _UserMessageMethods();
   _UserItemMethods get userItem => _UserItemMethods();
-  _StoreMethods get store => _StoreMethods();
   _UserMethods get user => _UserMethods();
 
 // checks if firebase document exists
@@ -277,32 +276,4 @@ class _UserTransactionMethods extends FirestoreMethods {
             model.Transaction.fromSnap(snapshot.data()!),
         toFirestore: (transaction, _) => transaction.toJson(),
       );
-}
-
-// firestore methods for store data
-class _StoreMethods extends FirestoreMethods {
-  late CollectionReference ref;
-  _StoreMethods() {
-    ref = _firestore.collection('storeItems');
-  }
-
-// add new item available to store
-  Future<void> add(
-    StoreItem storeItem,
-  ) async {
-    await ref
-        .doc()
-        .set(storeItem.toJson())
-        .then((value) => debugPrint('Added item data.'))
-        .onError((error, stackTrace) =>
-            debugPrint('Failed to add item data: $error'));
-  }
-
-// stream of store items
-  Stream<List<StoreItem>> get stream {
-    return ref.orderBy('type').orderBy('price').snapshots().map((list) => list
-        .docs
-        .map((snap) => StoreItem.fromSnap(snap.data() as Map<String, dynamic>))
-        .toList());
-  }
 }

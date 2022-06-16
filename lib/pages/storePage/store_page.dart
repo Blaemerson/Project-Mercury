@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projectmercury/models/store_item.dart';
-import 'package:projectmercury/pages/storePage/store_item_card.dart';
-import 'package:provider/provider.dart';
+import 'package:projectmercury/pages/storePage/store_card.dart';
+import 'package:projectmercury/pages/storePage/store_data.dart';
 
 class StorePage extends StatelessWidget {
   const StorePage({
@@ -38,18 +37,14 @@ class StorePage extends StatelessWidget {
         ),
         SizedBox(
           height: 200,
-          child: Consumer<List<StoreItem>>(
-            builder: (_, storeItems, __) {
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  return StoreItemCard(
-                    storeItem: storeItems[index],
-                  );
-                },
-                itemCount: storeItems.length,
-                scrollDirection: Axis.horizontal,
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return StoreItemCard(
+                storeItem: storeItems[index],
               );
             },
+            itemCount: storeItems.length,
+            scrollDirection: Axis.horizontal,
           ),
         ),
       ],
