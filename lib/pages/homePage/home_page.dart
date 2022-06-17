@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/pages/storePage/store_page.dart';
-import 'package:projectmercury/widgets/room.dart';
-import 'package:projectmercury/widgets/rooms/bedroom.dart';
-
-import 'package:projectmercury/widgets/rooms/livingroom.dart';
+import 'package:projectmercury/resources/locator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,14 +11,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Widget> _rooms = const [
-    BedRoom(),
-    LivingRoom(),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final _currentRoom = _rooms[1];
+    Rooms _rooms = locator.get<Rooms>();
+    final _currentRoom = _rooms.rooms[1];
 
     return Scaffold(
       appBar: AppBar(
@@ -43,18 +37,16 @@ class _HomePageState extends State<HomePage> {
           child: const Icon(Icons.storefront, size: 42),
           onPressed: () {
             showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(16),
                 ),
               ),
               context: context,
               builder: (context) {
-                return const SizedBox(
-                  height: 232,
-                  child: StorePage(),
-                );
+                return StorePage(room: _currentRoom);
               },
             );
           },

@@ -1,7 +1,3 @@
-import 'package:projectmercury/models/contact.dart';
-import 'package:projectmercury/pages/contactPage/contact_data.dart';
-
-import '../models/message.dart';
 import '../models/transaction.dart';
 
 //Transaction setting

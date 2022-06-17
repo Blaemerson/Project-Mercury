@@ -56,6 +56,7 @@ class PurchasedItem extends StoreItem {
       'price': price,
       'type': type,
       'variant': variant,
+      'room': room,
       'timeBought': timeBought,
     });
   }
@@ -66,6 +67,7 @@ class PurchasedItem extends StoreItem {
       price: snap['price'],
       type: snap['type'],
       variant: snap['variant'],
+      room: snap['room'],
       timeBought: snap['timeBought'] != null
           ? (snap['timeBought'] as Timestamp).toDate()
           : null,

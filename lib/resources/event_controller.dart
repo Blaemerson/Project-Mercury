@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
-import 'package:projectmercury/pages/contactPage/contact_data.dart';
 import 'package:projectmercury/pages/messagePage/message_data.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/utils/global_variables.dart';

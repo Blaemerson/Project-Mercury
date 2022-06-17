@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/furniture_slot.dart';
 
-import 'package:projectmercury/widgets/furniture.dart';
+import 'package:projectmercury/widgets/furniture_card.dart';
 import 'package:projectmercury/widgets/room.dart';
 
 class BedRoom extends StatefulWidget {
@@ -21,7 +22,7 @@ class _BedRoomState extends State<BedRoom> {
       floorTexture: "assets/light_wood.jpg",
       wallTexture: "assets/grey_wall.jpg",
       items: [
-        Furniture(
+        FurnitureSlot(
           width: 100,
           height: 100,
           positionX: 50,

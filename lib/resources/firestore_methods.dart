@@ -78,6 +78,28 @@ class _UserMethods extends FirestoreMethods {
             debugPrint('Failed to update user score: $error'));
   }
 
+// TODO: for testing purposes
+  Future<void> reset() async {
+    ref.update({'score': 0});
+    ref.update({'balance': 0});
+    ref.collection('purchased_items').get().then((value) {
+      for (var doc in value.docs) {
+        doc.reference.delete();
+      }
+    });
+    ref.collection('transactions').get().then((value) {
+      for (var doc in value.docs) {
+        doc.reference.delete();
+      }
+    });
+    await ref.collection('messages').get().then((value) {
+      for (var doc in value.docs) {
+        doc.reference.delete();
+      }
+    });
+    initialize(locator.get<AuthMethods>().currentUser);
+  }
+
 // increment user balance
   Future<void> updateBalance(num amount) async {
     await ref
@@ -113,10 +135,15 @@ class _UserItemMethods extends FirestoreMethods {
 // add new perchased_item data
   Future<void> add(
     StoreItem storeItem,
+    String room,
   ) async {
     await ref
         .doc()
-        .set(storeItem.toJson()..addAll({'timeBought': DateTime.now()}))
+        .set(storeItem.toJson()
+          ..addAll({
+            'timeBought': DateTime.now(),
+            'room': room,
+          }))
         .then((value) => debugPrint('Added item data.'))
         .onError((error, stackTrace) =>
             debugPrint('Failed to add item data: $error'));

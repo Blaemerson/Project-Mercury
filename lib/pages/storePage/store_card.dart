@@ -10,7 +10,12 @@ import 'package:projectmercury/utils/utils.dart';
 
 class StoreItemCard extends StatelessWidget {
   final StoreItem storeItem;
-  const StoreItemCard({Key? key, required this.storeItem}) : super(key: key);
+  final String room;
+  const StoreItemCard({
+    Key? key,
+    required this.storeItem,
+    required this.room,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,7 @@ class StoreItemCard extends StatelessWidget {
       num currentBalance =
           await _firestore.user.getUser.then((value) => value.balance);
       if (currentBalance > storeItem.price) {
-        _firestore.userItem.add(storeItem);
+        _firestore.userItem.add(storeItem, room);
         double overcharge = Random().nextDouble();
         if (overcharge > overchargeFrequency) {
           _firestore.userTransaction.add(
@@ -63,7 +68,7 @@ class StoreItemCard extends StatelessWidget {
             children: [
               Text(storeItem.name),
               Image.asset(
-                'assets/${storeItem.type}${storeItem.variant}.png',
+                'assets/${storeItem.type + storeItem.variant}.png',
                 height: 50,
               ),
               Text(formatCurrency.format(storeItem.price)),
