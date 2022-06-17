@@ -22,7 +22,7 @@ class Rooms {
         positionX: 50,
         positionY: 120,
         type: 'table',
-        variant: '',
+        variant: null,
       )
     ],
   );

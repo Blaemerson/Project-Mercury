@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Rooms _rooms = locator.get<Rooms>();
-    final _currentRoom = _rooms.rooms[1];
+    final _currentRoom = _rooms.rooms[0];
 
     return Scaffold(
       appBar: AppBar(
