@@ -35,6 +35,10 @@ class Room extends StatefulWidget {
 }
 
 class _RoomState extends State<Room> {
+  String get name {
+    return widget.name;
+  }
+
 // TODO: load furnitures from firebase and place in correct location
   @override
   Widget build(BuildContext context) {

@@ -24,7 +24,7 @@ class FurnitureCard extends StatelessWidget {
                   : Colors.transparent,
               child: Image(
                 image: AssetImage(
-                    'assets/${furniture.type + furniture.variant!}.png'),
+                    'assets/furniture/${furniture.type + furniture.variant!}.png'),
               ),
             )
           : Container(),

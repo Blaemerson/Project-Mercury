@@ -68,7 +68,7 @@ class StoreItemCard extends StatelessWidget {
             children: [
               Text(storeItem.name),
               Image.asset(
-                'assets/${storeItem.type + storeItem.variant}.png',
+                'assets/furniture/${storeItem.type + storeItem.variant}.png',
                 height: 50,
               ),
               Text(formatCurrency.format(storeItem.price)),
