@@ -76,6 +76,13 @@ Future<bool?> showConfirmation({
   return result;
 }
 
+String capitalize(String string) {
+  if (string.isEmpty) {
+    return string;
+  }
+  return string[0].toUpperCase() + string.substring(1);
+}
+
 // shows a snackbar with content message
 void showSnackBar(String text, BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(

@@ -21,7 +21,7 @@ class StorePage extends StatelessWidget {
     openSlots = openSlots.toSet().toList();
 
     List<StoreItem> getItemsByType(String type) {
-      return storeItems.where((element) => element.type == type).toList();
+      return storeItems.where((item) => item.type == type).toList();
     }
 
     Widget makeDismissible({required Widget child}) {
@@ -69,7 +69,7 @@ class StorePage extends StatelessWidget {
                     const Divider(),
                     Center(
                       child: Text(
-                        '${type.toUpperCase()}S',
+                        '${type.toUpperCase()} Selection',
                         style: const TextStyle(fontSize: 20),
                       ),
                     ),
@@ -89,8 +89,9 @@ class StorePage extends StatelessWidget {
                   ],
               ] else ...[
                 //TODO: add sell item option
-                const Center(
-                  child: Text('No room left for furniture.'),
+                Center(
+                  child: Text(
+                      'Congratulations! Your ${room.name} is fully furnished.'),
                 ),
               ],
               // SizedBox(

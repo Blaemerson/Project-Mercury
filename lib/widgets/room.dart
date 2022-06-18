@@ -27,7 +27,7 @@ class Room extends StatefulWidget {
   }) : super(key: key);
 
   update(String type, String variant) {
-    items.where((element) => element.type == type).first.set(variant);
+    items.where((item) => item.type == type).first.set(variant);
   }
 
   @override
