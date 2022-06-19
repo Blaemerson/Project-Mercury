@@ -11,7 +11,6 @@ class StorePage extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-// better store layout .. separate items by type?
   @override
   Widget build(BuildContext context) {
     List<String> openSlots = [];

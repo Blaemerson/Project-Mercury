@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              //button on bottom-left: shows list of rooms for navigation.
               SpeedDial(
                 animatedIcon: AnimatedIcons.menu_close,
                 switchLabelPosition: true,
@@ -67,12 +68,14 @@ class _HomePageState extends State<HomePage> {
                   ]
                 ],
               ),
+              // Text showing current room name.
               Text(
                 _currentRoom != null
                     ? capitalize(_currentRoom!.name)
                     : 'Full View',
                 style: const TextStyle(fontSize: 30),
               ),
+              // button on bottom-right: opens store page.
               FloatingActionButton(
                 heroTag: null,
                 child: const Icon(Icons.storefront, size: 42),
