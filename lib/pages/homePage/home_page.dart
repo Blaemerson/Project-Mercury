@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   SpeedDialChild(
                     label: 'Full View',
+                    labelStyle: const TextStyle(fontSize: 24),
                     onTap: () {
                       setState(() {
                         _currentRoom = null;
@@ -59,6 +60,7 @@ class _HomePageState extends State<HomePage> {
                   for (Room room in locator.get<Rooms>().rooms) ...[
                     SpeedDialChild(
                       label: capitalize(room.name),
+                      labelStyle: const TextStyle(fontSize: 24),
                       onTap: () {
                         setState(() {
                           _currentRoom = room;

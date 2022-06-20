@@ -3,6 +3,7 @@ import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/storePage/store_card.dart';
 import 'package:projectmercury/pages/storePage/store_data.dart';
 import 'package:projectmercury/widgets/room.dart';
+import 'package:provider/provider.dart';
 
 class StorePage extends StatelessWidget {
   final Room room;
@@ -90,21 +91,44 @@ class StorePage extends StatelessWidget {
                 //TODO: add sell item option
                 Center(
                   child: Text(
-                      'Congratulations! Your ${room.name} is fully furnished.'),
+                    'Congratulations! Your ${room.name} is fully furnished.',
+                    style: const TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
-              // SizedBox(
-              //   height: 200,
-              //   child: ListView.builder(
-              //     itemBuilder: (context, index) {
-              //       return StoreItemCard(
-              //         storeItem: storeItems[index],
-              //       );
-              //     },
-              //     itemCount: storeItems.length,
-              //     scrollDirection: Axis.horizontal,
-              //   ),
-              // ),
+              Consumer<List<PurchasedItem>>(builder: (_, userItems, __) {
+                List<PurchasedItem> roomItems = userItems
+                    .where((element) => element.room == room.name)
+                    .toList();
+                if (roomItems.isNotEmpty) {
+                  return Column(
+                    children: [
+                      const Divider(),
+                      const Center(
+                        child: Text(
+                          'Purchased Furnitures',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            return StoreItemCard(
+                              storeItem: roomItems[index],
+                              room: '',
+                            );
+                          },
+                          itemCount: roomItems.length,
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return Container();
+              }),
             ],
           ),
         ),

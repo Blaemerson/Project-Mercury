@@ -72,30 +72,32 @@ class StoreItemCard extends StatelessWidget {
                 height: 50,
               ),
               Text(formatCurrency.format(storeItem.price)),
-              ElevatedButton(
-                onPressed: () async {
-                  bool result = await showConfirmation(
-                        context: context,
-                        title: 'Confirmation',
-                        text: 'Purchase this item?',
-                      ) ??
-                      false;
-                  if (result == true) {
-                    buyItem();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-                child: Text(
-                  'Buy Item',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-              ),
+              room != ''
+                  ? ElevatedButton(
+                      onPressed: () async {
+                        bool result = await showConfirmation(
+                              context: context,
+                              title: 'Confirmation',
+                              text: 'Purchase this item?',
+                            ) ??
+                            false;
+                        if (result == true) {
+                          buyItem();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: Text(
+                        'Buy Item',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ),

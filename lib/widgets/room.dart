@@ -49,6 +49,12 @@ class _RoomState extends State<Room> {
     bool _debugBox = false; // Show the SizedBox containing the room.
     return Consumer<List<PurchasedItem>>(
       builder: (_, userItems, __) {
+        // reset room
+        for (FurnitureSlot slot in widget.items) {
+          if (slot.variant != '') {
+            slot.set(null);
+          }
+        }
         // place purchased items in room
         List<PurchasedItem> roomItems =
             userItems.where((item) => item.room == widget.name).toList();
