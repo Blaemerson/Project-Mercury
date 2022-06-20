@@ -134,6 +134,7 @@ class Cube extends StatelessWidget {
       border: Border.all(color: Colors.brown),
       image: DecorationImage(
         image: topOrBottom ? floorTexture : wallTexture,
+        opacity: topOrBottom ? 1 : 0.5,
         repeat: ImageRepeat.repeat,
         scale: 4,
         fit: BoxFit.none,

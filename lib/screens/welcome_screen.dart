@@ -18,6 +18,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Column(
           children: [
             const Spacer(),
+            const Text('Welcome to',
+                style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -32,7 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               child: const Image(image: AssetImage('assets/logo.png')),
             ),
             const Text(
-              'Welcome to Project Mercury',
+              'Vestify: Home Simulation',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
             ),
@@ -69,33 +71,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ),
             const Spacer(),
-            // Removed anonymous login (Can't identify who is signed in)
-
-            // const Text('or'),
-            // Container(
-            //   decoration: BoxDecoration(
-            //     color: Theme.of(context).colorScheme.primary,
-            //     borderRadius: const BorderRadius.all(
-            //       Radius.circular(8),
-            //     ),
-            //   ),
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(8.0),
-            //     child: TextButton(
-            //       onPressed: () async {
-            //         await _auth.signInAnonymously();
-            //       },
-            //       child: Text(
-            //         'Continue as Guest',
-            //         style: TextStyle(
-            //           fontSize: 24,
-            //           fontWeight: FontWeight.bold,
-            //           color: Theme.of(context).colorScheme.onPrimary,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

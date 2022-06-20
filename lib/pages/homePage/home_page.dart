@@ -15,10 +15,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Room? _currentRoom = locator.get<Rooms>().rooms[3];
-
   @override
   Widget build(BuildContext context) {
+    Room? _currentRoom = locator.get<Rooms>().room;
     const _homeLayout = FloorPlan();
 
     return Scaffold(
@@ -53,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                     labelStyle: const TextStyle(fontSize: 24),
                     onTap: () {
                       setState(() {
-                        _currentRoom = null;
+                        locator.get<Rooms>().set(null);
                       });
                     },
                   ),
@@ -63,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                       labelStyle: const TextStyle(fontSize: 24),
                       onTap: () {
                         setState(() {
-                          _currentRoom = room;
+                          locator.get<Rooms>().set(room);
                         });
                       },
                     )
@@ -93,11 +92,12 @@ class _HomePageState extends State<HomePage> {
                           ),
                           context: context,
                           builder: (context) {
-                            return StorePage(room: _currentRoom!);
+                            return StorePage(room: _currentRoom);
                           },
                         );
                       }
-                    : null,
+                    : () =>
+                        showSnackBar('Select a room to open store.', context),
               ),
             ],
           ),

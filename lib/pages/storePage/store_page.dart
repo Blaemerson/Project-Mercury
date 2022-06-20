@@ -97,38 +97,40 @@ class StorePage extends StatelessWidget {
                   ),
                 ),
               ],
-              Consumer<List<PurchasedItem>>(builder: (_, userItems, __) {
-                List<PurchasedItem> roomItems = userItems
-                    .where((element) => element.room == room.name)
-                    .toList();
-                if (roomItems.isNotEmpty) {
-                  return Column(
-                    children: [
-                      const Divider(),
-                      const Center(
-                        child: Text(
-                          'Purchased Furnitures',
-                          style: TextStyle(fontSize: 20),
+              Consumer<List<PurchasedItem>>(
+                builder: (_, userItems, __) {
+                  List<PurchasedItem> roomItems = userItems
+                      .where((element) => element.room == room.name)
+                      .toList();
+                  if (roomItems.isNotEmpty) {
+                    return Column(
+                      children: [
+                        const Divider(),
+                        const Center(
+                          child: Text(
+                            'Purchased Furnitures',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return StoreItemCard(
-                              storeItem: roomItems[index],
-                              room: '',
-                            );
-                          },
-                          itemCount: roomItems.length,
-                          scrollDirection: Axis.horizontal,
+                        SizedBox(
+                          height: 120,
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              return StoreItemCard(
+                                storeItem: roomItems[index],
+                                room: '',
+                              );
+                            },
+                            itemCount: roomItems.length,
+                            scrollDirection: Axis.horizontal,
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                }
-                return Container();
-              }),
+                      ],
+                    );
+                  }
+                  return Container();
+                },
+              ),
             ],
           ),
         ),

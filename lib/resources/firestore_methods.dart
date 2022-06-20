@@ -109,6 +109,14 @@ class _UserMethods extends FirestoreMethods {
             debugPrint('Failed to update user balance: $error'));
   }
 
+  Future<void> updateSession() async {
+    await ref
+        .update({'session': FieldValue.increment(1)})
+        .then((value) => debugPrint('Updated user session.'))
+        .onError((error, stackTrace) =>
+            debugPrint('Failed to update user session: $error'));
+  }
+
 // get user model (one time read)
   Future<model.User> get getUser => ref
       .get()

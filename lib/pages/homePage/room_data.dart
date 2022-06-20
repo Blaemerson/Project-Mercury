@@ -2,6 +2,13 @@ import 'package:projectmercury/models/furniture_slot.dart';
 import 'package:projectmercury/widgets/room.dart';
 
 class Rooms {
+  Room? _room;
+  set(Room? room) {
+    _room = room;
+  }
+
+  Room? get room => _room;
+
   final List<Room> _rooms = [
     bedroom,
     livingroom,
@@ -14,6 +21,7 @@ class Rooms {
 }
 
 // variant = null for open slots
+// variant = '' for static slots
 // TODO: Make sure all items are the right scale
 Room bedroom = Room(
   name: 'bedroom',

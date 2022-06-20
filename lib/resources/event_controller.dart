@@ -9,10 +9,13 @@ import 'locator.dart';
 
 class EventController with ChangeNotifier {
   final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+  int session = 1;
+
   final List<bool> _showBadge = [false, false, false, false, false];
   List<bool> get showBadge => _showBadge;
 
   void update() async {
+    session = await _firestore.user.getUser.then((value) => value.session);
     await _firestore.userTransaction.actionNeeded()
         ? _showBadge[1] = true
         : _showBadge[1] = false;

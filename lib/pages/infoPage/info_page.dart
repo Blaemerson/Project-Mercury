@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
@@ -20,7 +21,11 @@ class _InfoPageState extends State<InfoPage> {
   Widget build(BuildContext context) {
     final AuthMethods _auth = locator.get<AuthMethods>();
     final TimerController _timer = locator.get<TimerController>();
+    final EventController _event = locator.get<EventController>();
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+
+// TODO: calculate session progress
+    double progress = 0.5;
 
     return ChangeNotifierProvider.value(
       value: _timer,
@@ -31,55 +36,104 @@ class _InfoPageState extends State<InfoPage> {
         body: SizedBox(
           width: double.infinity,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Consumer<TimerController>(
                 builder: (_, timer, __) {
                   return Column(
                     children: [
-                      const Text(
-                        'Total time on app:',
-                        style: TextStyle(fontSize: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Total time on app:',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          Text(
+                            timer.totalTime,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
                       ),
-                      Text(
-                        timer.totalTime,
-                        style: const TextStyle(fontSize: 24),
-                      ),
-                      const Text(
-                        'Time this session:',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                      Text(
-                        timer.sessionTime,
-                        style: const TextStyle(fontSize: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Time this session:',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          Text(
+                            timer.sessionTime,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
                       ),
                     ],
                   );
                 },
               ),
-              Container(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: TextButton(
-                  onPressed: () async {
-                    await _auth.signout();
-                  },
-                  child: const Text('SignOut'),
-                ),
+              Column(
+                children: [
+                  Text(
+                    'Session ${_event.session} Progress',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(height: 12),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: CircularProgressIndicator(
+                          value: progress,
+                          strokeWidth: 10,
+                        ),
+                      ),
+                      Text(
+                        '${(progress * 100).round()}%',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              //TODO: Reset button for testing
-              Container(
-                color: Theme.of(context).colorScheme.error,
-                child: TextButton(
-                  onPressed: () async {
-                    await _firestore.user.reset();
-                  },
-                  child: Text(
-                    'Reset',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onError,
+              Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_event.session < locator.get<Rooms>().rooms.length) {
+                        _firestore.user.updateSession();
+                        _event.update();
+                      }
+                    },
+                    child: const Text('Finish Session'),
+                  ),
+                  Container(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    child: TextButton(
+                      onPressed: () async {
+                        await _auth.signout();
+                      },
+                      child: const Text('SignOut'),
                     ),
                   ),
-                ),
+                  //TODO: Reset button for testing
+                  Container(
+                    color: Theme.of(context).colorScheme.error,
+                    child: TextButton(
+                      onPressed: () async {
+                        await _firestore.user.reset();
+                      },
+                      child: Text(
+                        'Reset',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onError,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
