@@ -19,10 +19,10 @@ class Room extends StatefulWidget {
   const Room({
     Key? key,
     required this.name,
-    this.floorTexture = 'assets/wood_floor.jpg',
-    this.wallTexture = 'assets/floral_wall.jpg',
+    required this.floorTexture,
+    required this.wallTexture,
     required this.width,
-    this.height = 180,
+    this.height = 150,
     required this.depth,
     required this.unlockOrder,
     required this.items,
