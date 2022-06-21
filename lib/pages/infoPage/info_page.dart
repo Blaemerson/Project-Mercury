@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
@@ -21,11 +20,11 @@ class _InfoPageState extends State<InfoPage> {
   Widget build(BuildContext context) {
     final AuthMethods _auth = locator.get<AuthMethods>();
     final TimerController _timer = locator.get<TimerController>();
-    final EventController _event = locator.get<EventController>();
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
 // TODO: calculate session progress
-    double progress = 0.5;
+    double progress = 1;
+    int session = locator.get<EventController>().session;
 
     return ChangeNotifierProvider.value(
       value: _timer,
@@ -75,10 +74,10 @@ class _InfoPageState extends State<InfoPage> {
               Column(
                 children: [
                   Text(
-                    'Session ${_event.session} Progress',
+                    'Session $session Progress',
                     style: const TextStyle(fontSize: 20),
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Stack(
                     alignment: Alignment.center,
                     children: [
@@ -101,10 +100,12 @@ class _InfoPageState extends State<InfoPage> {
               Column(
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      if (_event.session < locator.get<Rooms>().rooms.length) {
+                    onPressed: () async {
+                      if (locator.get<EventController>().session <
+                          locator.get<Rooms>().rooms.length) {
                         _firestore.user.updateSession();
-                        _event.update();
+                        locator.get<EventController>().nextSession();
+                        setState(() {});
                       }
                     },
                     child: const Text('Finish Session'),
@@ -124,6 +125,7 @@ class _InfoPageState extends State<InfoPage> {
                     child: TextButton(
                       onPressed: () async {
                         await _firestore.user.reset();
+                        setState(() {});
                       },
                       child: Text(
                         'Reset',

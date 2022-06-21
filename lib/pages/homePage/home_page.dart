@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:projectmercury/pages/homePage/floor_plan.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/pages/storePage/store_page.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/utils.dart';
 import 'package:projectmercury/widgets/room.dart';
@@ -59,12 +60,29 @@ class _HomePageState extends State<HomePage> {
                   for (Room room in locator.get<Rooms>().rooms) ...[
                     SpeedDialChild(
                       label: capitalize(room.name),
+                      labelWidget: room.unlockOrder >
+                              locator.get<EventController>().session
+                          ? Row(
+                              children: [
+                                const Icon(Icons.lock),
+                                Column(
+                                  children: [
+                                    const Text('Unlock at'),
+                                    Text('Session ${room.unlockOrder}'),
+                                  ],
+                                ),
+                              ],
+                            )
+                          : null,
                       labelStyle: const TextStyle(fontSize: 24),
-                      onTap: () {
-                        setState(() {
-                          locator.get<Rooms>().set(room);
-                        });
-                      },
+                      onTap: room.unlockOrder <=
+                              locator.get<EventController>().session
+                          ? () {
+                              setState(() {
+                                locator.get<Rooms>().set(room);
+                              });
+                            }
+                          : null,
                     )
                   ]
                 ],

@@ -82,6 +82,7 @@ class _UserMethods extends FirestoreMethods {
   Future<void> reset() async {
     ref.update({'score': 0});
     ref.update({'balance': 0});
+    ref.update({'session': 1});
     ref.collection('purchased_items').get().then((value) {
       for (var doc in value.docs) {
         doc.reference.delete();

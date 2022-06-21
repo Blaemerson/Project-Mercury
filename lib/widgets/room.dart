@@ -12,6 +12,7 @@ class Room extends StatefulWidget {
   final double width;
   final double depth;
   final double height;
+  final int unlockOrder;
   final String floorTexture;
   final String wallTexture;
   final List<FurnitureSlot> items;
@@ -23,6 +24,7 @@ class Room extends StatefulWidget {
     required this.width,
     this.height = 180,
     required this.depth,
+    required this.unlockOrder,
     required this.items,
   }) : super(key: key);
 

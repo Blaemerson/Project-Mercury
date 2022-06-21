@@ -1,4 +1,6 @@
 import 'package:projectmercury/models/furniture_slot.dart';
+import 'package:projectmercury/resources/event_controller.dart';
+import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/widgets/room.dart';
 
 class Rooms {
@@ -27,6 +29,7 @@ Room bedroom = Room(
   name: 'bedroom',
   width: 300,
   depth: 300,
+  unlockOrder: 1,
   floorTexture: "assets/textures/light_wood.jpg",
   wallTexture: "assets/textures/grey_wall.jpg",
   items: [
@@ -53,6 +56,7 @@ Room bathroom = Room(
   name: 'bathroom',
   width: 250,
   depth: 250,
+  unlockOrder: 2,
   floorTexture: "assets/textures/light_wood.jpg",
   wallTexture: "assets/textures/grey_wall.jpg",
   items: [
@@ -78,6 +82,7 @@ Room kitchen = Room(
   name: 'kitchen',
   width: 350,
   depth: 300,
+  unlockOrder: 3,
   floorTexture: "assets/textures/wood_floor.jpg",
   wallTexture: "assets/textures/floral_wall.jpg",
   items: [
@@ -112,6 +117,7 @@ Room livingroom = Room(
   name: 'livingroom',
   width: 250,
   depth: 300,
+  unlockOrder: 4,
   floorTexture: "assets/textures/wood_floor.jpg",
   wallTexture: "assets/textures/floral_wall.jpg",
   items: [
