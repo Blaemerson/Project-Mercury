@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
           ),
           body: InteractiveViewer(
             boundaryMargin: const EdgeInsets.all(30.0),
-            minScale: 1.0,
+            minScale: 1.2,
             maxScale: 3.0,
             child: Center(
               child: FittedBox(
@@ -38,61 +38,112 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
           floatingActionButton: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //button on bottom-left: shows list of rooms for navigation.
-                Consumer<EventController>(
-                  builder:(_, event, __) {
-                    return SpeedDial(
-                      visible: event.session != 0? true:false,
-                      animatedIcon: AnimatedIcons.menu_close,
-                      switchLabelPosition: true,
-                      overlayOpacity: 0.3,
-                      childMargin: const EdgeInsets.symmetric(horizontal: 0),
-                      children: [
-                        SpeedDialChild(
-                          label: 'Full View',
-                          labelStyle: const TextStyle(fontSize: 24),
-                          onTap: () {
-                            setState(() {
-                              locator.get<Rooms>().set(null);
-                            });
-                          },
+                Consumer<EventController>(builder: (_, event, __) {
+                  return SpeedDial(
+                    childPadding: const EdgeInsets.symmetric(vertical: 0),
+                    visible: event.session != 0 ? true : false,
+                    animatedIcon: AnimatedIcons.menu_close,
+                    switchLabelPosition: true,
+                    overlayOpacity: 0.3,
+                    childMargin: const EdgeInsets.symmetric(horizontal: 0),
+                    children: [
+                      SpeedDialChild(
+                        labelWidget: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background,
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: const [
+                              BoxShadow(
+                                blurRadius: 2,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 5),
+                            child: Row(
+                              children: [
+                                _currentRoom == null
+                                    ? const Icon(Icons.arrow_forward)
+                                    : Container(),
+                                const Text(
+                                  'Full View',
+                                  style: TextStyle(fontSize: 24),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        for (Room room in locator.get<Rooms>().rooms) ...[
-                          SpeedDialChild(
-                            label: capitalize(room.name),
-                            labelWidget: room.unlockOrder > event.session
-                                ? Row(
-                                    children: [
-                                      const Icon(Icons.lock),
-                                      Column(
-                                        children: [
-                                          const Text('Unlock at'),
-                                          Text('Session ${room.unlockOrder}'),
-                                        ],
+                        onTap: () {
+                          setState(() {
+                            locator.get<Rooms>().set(null);
+                          });
+                        },
+                      ),
+                      for (Room room in locator.get<Rooms>().rooms) ...[
+                        SpeedDialChild(
+                          labelWidget: room.unlockOrder > event.session
+                              ? Row(
+                                  children: [
+                                    const Icon(Icons.lock),
+                                    Column(
+                                      children: [
+                                        const Text('Unlock at'),
+                                        Text('Session ${room.unlockOrder}'),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                    borderRadius: BorderRadius.circular(5),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        blurRadius: 2,
+                                        color: Colors.grey,
                                       ),
                                     ],
-                                  )
-                                : null,
-                            labelStyle: const TextStyle(fontSize: 24),
-                            onTap: room.unlockOrder <= event.session
-                                ? () {
-                                    setState(() {
-                                      locator.get<Rooms>().set(room);
-                                    });
-                                  }
-                                : null,
-                          )
-                        ]
-                      ],
-                    );
-                  }
-                ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0, vertical: 5),
+                                    child: Row(
+                                      children: [
+                                        room == _currentRoom
+                                            ? const Icon(Icons.arrow_forward)
+                                            : Container(),
+                                        Text(
+                                          capitalize(room.name),
+                                          style: const TextStyle(fontSize: 24),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                          onTap: room.unlockOrder <= event.session
+                              ? () {
+                                  setState(() {
+                                    locator.get<Rooms>().set(room);
+                                  });
+                                }
+                              : null,
+                        )
+                      ]
+                    ],
+                  );
+                }),
                 // Text showing current room name.
                 Text(
                   _currentRoom != null

@@ -49,31 +49,31 @@ class Cube extends StatelessWidget {
 
     // Still not perfect for diagonal view
     if (rotateY < xFov) {
-      children = isInterior ? [left, back, right] : [front];
+      children = [left, back, right];
     } else if (rotateY < math.pi / 2 - yFov) {
-      children = isInterior ? [left, back] : [front, right];
+      children = [left, back];
     } else if (rotateY < math.pi / 2 + yFov) {
-      children = isInterior ? [front, left, back] : [right];
+      children = [front, left, back];
     } else if (rotateY < math.pi - xFov) {
-      children = isInterior ? [front, left] : [right, back];
+      children = [front, left];
     } else if (rotateY < math.pi + xFov) {
-      children = isInterior ? [right, front, left] : [back];
+      children = [right, front, left];
     } else if (rotateY < 3 * math.pi / 2 - yFov) {
-      children = isInterior ? [right, front] : [back, left];
+      children = [right, front];
     } else if (rotateY < 3 * math.pi / 2 + yFov) {
-      children = isInterior ? [back, right, front] : [left];
+      children = [back, right, front];
     } else if (rotateY < 2 * math.pi - xFov) {
-      children = isInterior ? [back, right] : [left, front];
+      children = [back, right];
     } else {
-      children = isInterior ? [left, back, right] : [front];
+      children = [left, back, right];
     }
 
     if (rotateX < -zFov) {
-      children.add(isInterior ? top : bottom);
+      children.add(top);
     } else if (rotateX < zFov && rotateX > -zFov) {
-      children.addAll(isInterior ? [bottom, top] : []);
+      children.addAll([bottom, top]);
     } else if (rotateX <= math.pi / 2) {
-      children.add(isInterior ? bottom : top);
+      children.add(bottom);
     }
 
     return Transform(
@@ -122,16 +122,14 @@ class Cube extends StatelessWidget {
         ..rotateX(math.pi / 2);
     } else if (frontOrBack) {
       transform = Matrix4.identity()..translate(0.0, 0.0, translate);
-      /* ..rotateZ(math.pi / 2); */
     } else {
       transform = Matrix4.identity()
         ..translate(translate, 0.0, 0.0)
         ..rotateY(math.pi / 2);
     }
 
-    // TODO: Assign textures based on room id.
     final BoxDecoration dec = BoxDecoration(
-      border: Border.all(color: Colors.brown),
+      border: Border.all(color: Colors.brown, width: 0.5),
       image: DecorationImage(
         image: topOrBottom ? floorTexture : wallTexture,
         opacity: topOrBottom ? 1 : 0.5,

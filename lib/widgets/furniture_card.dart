@@ -27,7 +27,17 @@ class FurnitureCard extends StatelessWidget {
                     'assets/furniture/${furniture.type + furniture.variant!}.png'),
               ),
             )
-          : Container(),
+            // TODO: make outlines for each selectable furniture
+          : ['bed', 'chair', 'couch', 'refridgerator'].contains(furniture.type)? Container(
+              color: _debugBox
+                  ? const Color.fromARGB(67, 255, 7, 7)
+                  : Colors.transparent,
+              child: Image(
+                color: Color.fromARGB(128, 0, 0, 0),
+                image: AssetImage(
+                    'assets/furniture/${furniture.type}_outline.png'),
+              ),
+            ):Container(),
     );
   }
 }
