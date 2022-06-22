@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:projectmercury/pages/homePage/floor_plan.dart';
@@ -103,32 +104,44 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ],
                                 )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
-                                    borderRadius: BorderRadius.circular(5),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        blurRadius: 2,
-                                        color: Colors.grey,
-                                      ),
-                                    ],
+                              : Badge(
+                                  showBadge: room.items
+                                      .where((item) => item.variant == null)
+                                      .isNotEmpty,
+                                  badgeContent: Icon(
+                                    Icons.notification_important,
+                                    size: 20,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0, vertical: 5),
-                                    child: Row(
-                                      children: [
-                                        room == _currentRoom
-                                            ? const Icon(Icons.arrow_forward)
-                                            : Container(),
-                                        Text(
-                                          capitalize(room.name),
-                                          style: const TextStyle(fontSize: 24),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .background,
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          blurRadius: 2,
+                                          color: Colors.grey,
                                         ),
                                       ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 5),
+                                      child: Row(
+                                        children: [
+                                          room == _currentRoom
+                                              ? const Icon(Icons.arrow_forward)
+                                              : Container(),
+                                          Text(
+                                            capitalize(room.name),
+                                            style:
+                                                const TextStyle(fontSize: 24),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
