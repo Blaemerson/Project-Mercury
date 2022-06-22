@@ -125,6 +125,7 @@ class _UserMethods extends FirestoreMethods {
 
 // get user field (one time read)
   Future<num> get getBalance => getUser.then((value) => value.balance);
+  Future<int> get getSession => getUser.then((value) => value.session);
 
 // stream of user data (listen)
   Stream<DocumentSnapshot> get stream => ref.snapshots();

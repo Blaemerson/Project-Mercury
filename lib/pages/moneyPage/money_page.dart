@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
-import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/utils.dart';
@@ -19,7 +18,6 @@ class _MoneyPageState extends State<MoneyPage> {
   @override
   Widget build(BuildContext context) {
     FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-    EventController _badge = locator.get<EventController>();
 
     return Scaffold(
       appBar: AppBar(

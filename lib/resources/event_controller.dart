@@ -9,7 +9,7 @@ import 'locator.dart';
 
 class EventController with ChangeNotifier {
   final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-  int _session = 1;
+  int _session = 0;
   int nextSession() => _session++;
   int get session => _session;
 
@@ -17,7 +17,7 @@ class EventController with ChangeNotifier {
   List<bool> get showBadge => _showBadge;
 
   Future<void> update() async {
-    _session = await _firestore.user.getUser.then((value) => value.session);
+    loadSession();
     await _firestore.userTransaction.actionNeeded()
         ? _showBadge[1] = true
         : _showBadge[1] = false;
@@ -28,6 +28,10 @@ class EventController with ChangeNotifier {
     if (_showBadge[3] == false) {
       deployMessage();
     }
+  }
+
+  Future<void> loadSession() async {
+    _session = await _firestore.user.getSession;
   }
 
   void deployMessage() async {

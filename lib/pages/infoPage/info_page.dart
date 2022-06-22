@@ -15,7 +15,6 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPageState extends State<InfoPage> {
-  // TODO: add session progress bar
   @override
   Widget build(BuildContext context) {
     final AuthMethods _auth = locator.get<AuthMethods>();

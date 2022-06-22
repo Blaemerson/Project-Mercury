@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/contactPage/contact_data.dart';
-import 'package:provider/provider.dart';
 
-import '../../models/contact.dart';
 import 'contact_card.dart';
 
 class ContactPage extends StatelessWidget {

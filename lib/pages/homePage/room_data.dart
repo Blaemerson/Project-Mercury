@@ -1,6 +1,4 @@
 import 'package:projectmercury/models/furniture_slot.dart';
-import 'package:projectmercury/resources/event_controller.dart';
-import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/widgets/room.dart';
 
 class Rooms {

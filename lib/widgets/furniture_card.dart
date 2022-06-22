@@ -20,7 +20,7 @@ class FurnitureCard extends StatelessWidget {
       child: furniture.variant != null
           ? Container(
               color: _debugBox
-                  ? Color.fromARGB(67, 255, 7, 7)
+                  ? const Color.fromARGB(67, 255, 7, 7)
                   : Colors.transparent,
               child: Image(
                 image: AssetImage(
