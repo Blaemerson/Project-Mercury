@@ -94,19 +94,45 @@ class _InfoPageState extends State<InfoPage> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 12),
+                  const Text('Checklist:'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.check_box_outline_blank),
+                      Text(
+                          'Fully furnish ${locator.get<Rooms>().rooms.where((room) => room.unlockOrder == session).first.name}: 0/10'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.check_box_outline_blank),
+                      Text('Complete 10 events: 0/10'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.check_box_outline_blank),
+                      Text('etc.'),
+                    ],
+                  ),
                 ],
               ),
               Column(
                 children: [
                   ElevatedButton(
-                    onPressed: () async {
-                      if (locator.get<EventController>().session <
-                          locator.get<Rooms>().rooms.length) {
-                        _firestore.user.updateSession();
-                        locator.get<EventController>().nextSession();
-                        setState(() {});
-                      }
-                    },
+                    onPressed: progress == 1
+                        ? () async {
+                            if (locator.get<EventController>().session <
+                                locator.get<Rooms>().rooms.length) {
+                              _firestore.user.updateSession();
+                              locator.get<EventController>().nextSession();
+                              setState(() {});
+                            }
+                          }
+                        : null,
                     child: const Text('Finish Session'),
                   ),
                   Container(
