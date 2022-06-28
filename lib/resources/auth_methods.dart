@@ -13,6 +13,8 @@ class AuthMethods {
     return _auth.currentUser!;
   }
 
+  String get uid => _auth.currentUser != null ? _auth.currentUser!.uid : '';
+
   Future<void> signout() async {
     await _auth.signOut();
   }

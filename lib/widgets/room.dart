@@ -78,8 +78,7 @@ class _RoomState extends State<Room> {
                   start: _extraSpace,
                   child: Transform(
                     alignment: Alignment.topLeft,
-                    transform: Matrix4.identity()
-                      ..rotateY(-math.pi / 2),
+                    transform: Matrix4.identity()..rotateY(-math.pi / 2),
                     child: SizedBox(
                       width: widget.wallHeight,
                       height: widget.extendRight,

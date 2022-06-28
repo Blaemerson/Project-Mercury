@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             // return nav screen if user logged in
             if (snapshot.connectionState == ConnectionState.active) {
-              if (snapshot.hasData)  {
+              if (snapshot.hasData) {
                 _firestore.user.initialize(_auth.currentUser);
                 _analytics.setCurrentScreen('/home');
                 return const NavigationScreen();

@@ -30,12 +30,11 @@ class _InfoPageState extends State<InfoPage> {
         .rooms
         .where((element) => element.unlockOrder == session)
         .first;
-    var dynamicSlots = sessionRoom.items.where((element) => element.variant != '');
-    int slotsTotal =
-        dynamicSlots.length;
-    int slotsFilled = dynamicSlots
-        .where((element) => element.variant != null)
-        .length;
+    var dynamicSlots =
+        sessionRoom.items.where((element) => element.variant != '');
+    int slotsTotal = dynamicSlots.length;
+    int slotsFilled =
+        dynamicSlots.where((element) => element.variant != null).length;
     double progress = slotsTotal != 0 ? slotsFilled / slotsTotal : 1;
     // progress = 1; // override progress for testing
 
