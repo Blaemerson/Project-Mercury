@@ -11,7 +11,7 @@ class FurnitureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool _debugBox = false;
+    const bool _debugBox = false;
     return Container(
       color: _debugBox ? Colors.red : Colors.transparent,
       child: furniture.variant != null

@@ -6,7 +6,6 @@ class Rooms {
   set(Room? room) {
     _room = room;
   }
-
   Room? get room => _room;
 
   final List<Room> _rooms = [

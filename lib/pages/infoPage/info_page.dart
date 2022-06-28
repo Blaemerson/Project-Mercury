@@ -5,6 +5,7 @@ import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/resources/time_controller.dart';
+import 'package:projectmercury/widgets/room.dart';
 import 'package:provider/provider.dart';
 
 class InfoPage extends StatefulWidget {
@@ -22,8 +23,21 @@ class _InfoPageState extends State<InfoPage> {
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
 // TODO: calculate session progress
-    double progress = 1;
     int session = locator.get<EventController>().session;
+
+    Room sessionRoom = locator
+        .get<Rooms>()
+        .rooms
+        .where((element) => element.unlockOrder == session)
+        .first;
+    var dynamicSlots = sessionRoom.items.where((element) => element.variant != '');
+    int slotsTotal =
+        dynamicSlots.length;
+    int slotsFilled = dynamicSlots
+        .where((element) => element.variant != null)
+        .length;
+    double progress = slotsTotal != 0 ? slotsFilled / slotsTotal : 1;
+    // progress = 1; // override progress for testing
 
     return ChangeNotifierProvider.value(
       value: _timer,
@@ -84,6 +98,7 @@ class _InfoPageState extends State<InfoPage> {
                         width: 100,
                         height: 100,
                         child: CircularProgressIndicator(
+                          backgroundColor: Colors.grey,
                           value: progress,
                           strokeWidth: 10,
                         ),
@@ -99,23 +114,11 @@ class _InfoPageState extends State<InfoPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.check_box_outline_blank),
+                      slotsFilled == slotsTotal
+                          ? const Icon(Icons.check_box_outlined)
+                          : const Icon(Icons.check_box_outline_blank),
                       Text(
-                          'Fully furnish ${locator.get<Rooms>().rooms.where((room) => room.unlockOrder == session).first.name}: 0/10'),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.check_box_outline_blank),
-                      Text('Complete 10 events: 0/10'),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.check_box_outline_blank),
-                      Text('etc.'),
+                          'Fully furnish ${sessionRoom.name}: $slotsFilled/$slotsTotal'),
                     ],
                   ),
                 ],
@@ -133,7 +136,7 @@ class _InfoPageState extends State<InfoPage> {
                             }
                           }
                         : null,
-                    child: const Text('Finish Session'),
+                    child: const Text('Complete Session'),
                   ),
                   Container(
                     color: Theme.of(context).colorScheme.primaryContainer,
