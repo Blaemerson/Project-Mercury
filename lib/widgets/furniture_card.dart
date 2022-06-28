@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/furniture_slot.dart';
 
+/// Creates a card to display furniture.
 class FurnitureCard extends StatelessWidget {
   final FurnitureSlot furniture;
   const FurnitureCard({
@@ -10,34 +11,23 @@ class FurnitureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // show container boundaries
-    bool _debugBox = false;
-    return Positioned(
-      width: furniture.width,
-      height: furniture.height,
-      left: furniture.positionX,
-      bottom: furniture.positionY,
+    const bool _debugBox = false;
+    return Container(
+      color: _debugBox ? Colors.red : Colors.transparent,
       child: furniture.variant != null
-          ? Container(
-              color: _debugBox
-                  ? const Color.fromARGB(67, 255, 7, 7)
-                  : Colors.transparent,
-              child: Image(
-                image: AssetImage(
-                    'assets/furniture/${furniture.type + furniture.variant!}.png'),
-              ),
+          ? Image.asset(
+              'assets/furniture/${furniture.type + furniture.variant!}.png',
+              alignment: AlignmentDirectional.center,
+              height: furniture.height,
+              width: furniture.width,
             )
-          // TODO: make outlines for each selectable furniture
           : ['bed', 'chair', 'couch', 'refridgerator'].contains(furniture.type)
-              ? Container(
-                  color: _debugBox
-                      ? const Color.fromARGB(67, 255, 7, 7)
-                      : Colors.transparent,
-                  child: Image(
-                    color: const Color.fromARGB(128, 0, 0, 0),
-                    image: AssetImage(
-                        'assets/furniture/${furniture.type}_outline.png'),
-                  ),
+              ? Image.asset(
+                  // TODO: make outlines for each selectable furniture
+                  'assets/furniture/${furniture.type}_outline.png',
+                  alignment: AlignmentDirectional.center,
+                  height: furniture.height,
+                  width: furniture.width,
                 )
               : Container(),
     );

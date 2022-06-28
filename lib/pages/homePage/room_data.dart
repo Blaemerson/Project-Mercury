@@ -6,18 +6,15 @@ class Rooms {
   set(Room? room) {
     _room = room;
   }
-
   Room? get room => _room;
 
   final List<Room> _rooms = [
     bedroom,
+    livingroom,
     bathroom,
     kitchen,
-    livingroom,
-    diningroom,
     hall,
     washroom,
-    garage,
   ];
   List<Room> get rooms {
     return _rooms;
@@ -26,71 +23,98 @@ class Rooms {
 
 // variant = null for open slots
 // variant = '' for static slots
-// TODO: Make sure all items are the right scale
+// Items are (for now), positioned by their percent distance from each wall.
 Room bedroom = Room(
   name: 'bedroom',
-  width: 250,
-  depth: 250,
+  extendLeft: 200,
+  extendRight: 150,
   unlockOrder: 1,
   floorTexture: "assets/textures/lightWood.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
   items: [
     FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 0,
-      positionY: 120,
+      width: 60,
+      height: 60,
+      distanceFromLeft: .02,
+      distanceFromRight: .5,
       type: 'doorway_NW',
       variant: '',
     ),
     FurnitureSlot(
-      width: 120,
-      height: 120,
-      positionX: 160,
-      positionY: 90,
+      width: 70,
+      height: 70,
+      distanceFromLeft: .5,
+      distanceFromRight: .30,
       type: 'bed',
       variant: null,
     ),
     FurnitureSlot(
       width: 60,
-      height: 60,
-      positionX: 260,
-      positionY: 110,
+      height: 30,
+      distanceFromLeft: .7,
+      distanceFromRight: .3,
       type: 'cabinetBedTable_NE',
       variant: '',
     ),
   ],
 );
 
+Room livingroom = Room(
+  extendLeft: 250,
+  extendRight: 250,
+  unlockOrder: 2,
+  floorTexture: 'assets/textures/woodBoards.jpg',
+  wallTexture: 'assets/textures/floralWall.jpg',
+  name: 'livingroom',
+  items: [
+    FurnitureSlot(
+      width: 60,
+      height: 60,
+      distanceFromLeft: .02,
+      distanceFromRight: .3,
+      type: 'doorway_NW',
+      variant: '',
+    ),
+    FurnitureSlot(
+      width: 60,
+      height: 60,
+      distanceFromLeft: .6,
+      distanceFromRight: .23,
+      type: 'couch',
+      variant: '1',
+    )
+  ],
+);
+
 Room bathroom = Room(
   name: 'bathroom',
-  width: 200,
-  depth: 250,
-  unlockOrder: 2,
+  extendLeft: 150,
+  extendRight: 200,
+  unlockOrder: 3,
   floorTexture: "assets/textures/bathroomTiles.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
   items: [
     FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 125,
-      positionY: 140,
+      width: 60,
+      height: 60,
+      distanceFromLeft: .13,
+      distanceFromRight: .10,
       type: 'shower_NW',
       variant: '',
     ),
     FurnitureSlot(
-      width: 60,
-      height: 60,
-      positionX: 230,
-      positionY: 100,
+      width: 40,
+      height: 40,
+      distanceFromLeft: .8,
+      distanceFromRight: .23,
       type: 'toilet_NE',
       variant: '',
     ),
     FurnitureSlot(
-      width: 60,
-      height: 60,
-      positionX: 10,
-      positionY: 85,
+      width: 40,
+      height: 40,
+      distanceFromLeft: .23,
+      distanceFromRight: .7,
       type: 'bathroomSink_NW',
       variant: '',
     ),
@@ -99,96 +123,34 @@ Room bathroom = Room(
 
 Room kitchen = Room(
   name: 'kitchen',
-  width: 350,
-  depth: 250,
-  unlockOrder: 3,
+  extendLeft: 150,
+  extendRight: 200,
+  unlockOrder: 4,
   floorTexture: "assets/textures/bathroomTiles.jpg",
-  wallTexture: "assets/textures/greyWall.jpg",
+  wallTexture: "assets/textures/floralWall.jpg",
   items: [
     FurnitureSlot(
-      width: 110,
-      height: 110,
-      positionX: 170,
-      positionY: 195,
+      width: 70,
+      height: 70,
+      distanceFromLeft: .1,
+      distanceFromRight: .05,
       type: 'refridgerator',
       variant: null,
     ),
     FurnitureSlot(
-      width: 75,
-      height: 75,
-      positionX: 215,
-      positionY: 165,
+      width: 40,
+      height: 40,
+      distanceFromLeft: .52,
+      distanceFromRight: .2,
       type: 'kitchenCabinet_NE',
       variant: '',
     ),
     FurnitureSlot(
-      width: 75,
-      height: 75,
-      positionX: 247,
-      positionY: 147,
+      width: 40,
+      height: 40,
+      distanceFromLeft: .68,
+      distanceFromRight: .2,
       type: 'kitchenSink_NE',
-      variant: '',
-    ),
-  ],
-);
-
-Room livingroom = Room(
-  name: 'livingroom',
-  width: 300,
-  depth: 250,
-  unlockOrder: 4,
-  floorTexture: "assets/textures/woodBoards.jpg",
-  wallTexture: "assets/textures/floralWall.jpg",
-  items: [
-    FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 10,
-      positionY: 140,
-      type: 'doorway_NW',
-      variant: '',
-    ),
-    FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 180,
-      positionY: 180,
-      type: 'doorway_NE',
-      variant: '',
-    ),
-    FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 270,
-      positionY: 90,
-      type: 'couch',
-      variant: null,
-    ),
-  ],
-);
-
-Room diningroom = Room(
-  name: 'diningroom',
-  width: 500,
-  depth: 250,
-  unlockOrder: 5,
-  floorTexture: "assets/textures/woodBoards.jpg",
-  wallTexture: "assets/textures/greyWall.jpg",
-  items: [
-    FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 200,
-      positionY: 255,
-      type: 'doorway_NE',
-      variant: '',
-    ),
-    FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 50,
-      positionY: 255,
-      type: 'doorway_NW',
       variant: '',
     ),
   ],
@@ -196,34 +158,26 @@ Room diningroom = Room(
 
 Room hall = Room(
   name: 'hall',
-  width: 550,
-  depth: 250,
-  unlockOrder: 6,
-  floorTexture: "assets/textures/lightWood.jpg",
+  extendLeft: 150,
+  extendRight: 300,
+  unlockOrder: 5,
+  floorTexture: "assets/textures/woodBoards.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
   items: [
     FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 70,
-      positionY: 290,
+      width: 60,
+      height: 60,
+      distanceFromLeft: .7,
+      distanceFromRight: .02,
+      type: 'doorway_NE',
+      variant: '',
+    ),
+    FurnitureSlot(
+      width: 60,
+      height: 60,
+      distanceFromLeft: .02,
+      distanceFromRight: .3,
       type: 'doorway_NW',
-      variant: '',
-    ),
-    FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 300,
-      positionY: 220,
-      type: 'doorway_NE',
-      variant: '',
-    ),
-    FurnitureSlot(
-      width: 100,
-      height: 100,
-      positionX: 460,
-      positionY: 130,
-      type: 'doorway_NE',
       variant: '',
     ),
   ],
@@ -231,39 +185,28 @@ Room hall = Room(
 
 Room washroom = Room(
   name: 'washroom',
-  width: 150,
-  depth: 250,
-  unlockOrder: 7,
+  extendLeft: 100,
+  extendRight: 150,
+  unlockOrder: 6,
   floorTexture: "assets/textures/bathroomTiles.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
   items: [
     FurnitureSlot(
-      width: 75,
-      height: 75,
-      positionX: 160,
-      positionY: 112,
+      width: 40,
+      height: 40,
+      distanceFromLeft: .4,
+      distanceFromRight: .25,
       type: 'dryer_NE',
       variant: '',
     ),
     FurnitureSlot(
-      width: 75,
-      height: 75,
-      positionX: 200,
-      positionY: 90,
+      width: 40,
+      height: 40,
+      distanceFromLeft: .6,
+      distanceFromRight: .25,
       type: 'washer_NE',
       variant: '',
     ),
-  ],
-);
-
-Room garage = Room(
-  name: 'garage',
-  width: 300,
-  depth: 250,
-  unlockOrder: 8,
-  floorTexture: "assets/textures/bathroomTiles.jpg",
-  wallTexture: "assets/textures/greyWall.jpg",
-  items: [
   ],
 );
 
