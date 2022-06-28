@@ -7,16 +7,22 @@ import 'package:provider/provider.dart';
 
 class StorePage extends StatelessWidget {
   final Room room;
+  final String furnitureType;
   const StorePage({
     required this.room,
+    this.furnitureType = '',
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     List<String> openSlots = [];
-    room.items.where((element) => element.variant == null).forEach((element) {
-      openSlots.add(element.type);
+    room.items
+        .where((furniture) =>
+            furniture.variant == null &&
+            (furnitureType == '' ? true : furniture.type == furnitureType))
+        .forEach((furniture) {
+      openSlots.add(furniture.type);
     });
     openSlots = openSlots.toSet().toList();
 
@@ -54,7 +60,7 @@ class StorePage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Furniture Store',
+                    (furnitureType != '' ? furnitureType.toUpperCase() : 'Furniture') + ' Store',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 24,

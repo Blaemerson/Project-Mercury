@@ -1,29 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/locator.dart';
+import 'package:projectmercury/widgets/isometric.dart';
+import 'package:projectmercury/widgets/room.dart';
 
 class FloorPlan extends StatelessWidget {
   const FloorPlan({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Rooms _rooms = locator.get<Rooms>();
-    // TODO: Finalize home layout
-    // Subject to change
+    List<Room> _rooms = locator.get<Rooms>().rooms;
+    // TODO: finalize floor layout
+    // Just experimenting for now, but at least positioning rooms is easier
     return SizedBox(
-      width: 1150,
+      width: 800,
       height: 800,
-      child: Stack(
-        children: [
-          Positioned(left: 323, child: _rooms.rooms[1]), // Bathroom
-          Positioned(left: 463, top: 81, child: _rooms.rooms[0]), // Bedroom
-          Positioned(left: 638, top: 180, child: _rooms.rooms[6]), // Washroom
-          Positioned(left: 744, top: 244, child: _rooms.rooms[7]), // Garage
-          Positioned(left: 178, top: 110, child: _rooms.rooms[5]), // Hall
-          Positioned(left: 567, top: 346, child: _rooms.rooms[3]), // Livingroom
-          Positioned(left: 0, top: 223, child: _rooms.rooms[2]), // Kitchen
-          Positioned(left: 249, top: 360, child: _rooms.rooms[4]), // Diningroom
-        ],
+      child: IsometricView(
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+
+            /*Bathroom*/
+            Positioned(
+              left: 0,
+              bottom: 0,
+              child: Actor(
+                child: _rooms[2],
+              ),
+            ),
+
+            /*Bedroom*/
+            Positioned(
+              left: _rooms[2].extendLeft,
+              bottom: 0,
+              child: Actor(
+                child: _rooms[0],
+              ),
+            ),
+
+            /*Washroom*/
+            Positioned(
+              left: _rooms[2].extendLeft + _rooms[0].extendLeft,
+              bottom: 0,
+              child: Actor(
+                child: _rooms[5],
+              ),
+            ),
+
+            /*Kitchen*/
+            Positioned(
+              left: 0,
+              bottom: _rooms[2].extendRight,
+              child: Actor(
+                child: _rooms[3],
+              ),
+            ),
+
+            /*Hallway*/
+            Positioned(
+              left: _rooms[2].extendLeft,
+              bottom: _rooms[0].extendRight,
+              child: Actor(
+                child: _rooms[4],
+              ),
+            ),
+
+            /*Livingroom*/
+            Positioned(
+              left: _rooms[2].extendLeft + _rooms[4].extendLeft,
+              bottom: _rooms[0].extendRight,
+              child: Actor(
+                child: _rooms[1],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

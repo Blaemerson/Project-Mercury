@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Home'),
           ),
           body: InteractiveViewer(
-            boundaryMargin: const EdgeInsets.all(30.0),
+            boundaryMargin: const EdgeInsets.all(0.0),
             minScale: 1.2,
             maxScale: 3.0,
             child: Center(
