@@ -110,8 +110,7 @@ class StorePage extends StatelessWidget {
               StreamBuilder<List<PurchasedItem>>(
                 stream: locator
                     .get<FirestoreMethods>()
-                    .userItem
-                    .collectionStream(room: room.name),
+                    .itemsStream(room: room.name),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List<PurchasedItem> roomItems = snapshot.data!;

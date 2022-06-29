@@ -23,12 +23,12 @@ class StoreItemCard extends StatelessWidget {
 
     buyItem() async {
       num currentBalance =
-          await _firestore.user.getUser.then((value) => value.balance);
+          await _firestore.userFuture.then((value) => value.balance);
       if (currentBalance > storeItem.price) {
-        _firestore.userItem.add(storeItem, room);
+        _firestore.addItem(storeItem, room);
         double overcharge = Random().nextDouble();
         if (overcharge > overchargeFrequency) {
-          _firestore.userTransaction.add(
+          _firestore.addTransaction(
             Transaction(
               description: 'Purchased ${storeItem.name}',
               amount: -storeItem.price,
@@ -38,7 +38,7 @@ class StoreItemCard extends StatelessWidget {
           int overAmount = (Random().nextInt(maxOvercharge - minOvercharge) +
                   minOvercharge) *
               10;
-          _firestore.userTransaction.add(
+          _firestore.addTransaction(
             Transaction(
               description: 'Purchased ${storeItem.name}',
               amount: -(storeItem.price + overAmount),

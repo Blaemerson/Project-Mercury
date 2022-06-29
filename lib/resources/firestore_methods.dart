@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:projectmercury/models/message.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/models/user.dart' as model;
@@ -16,61 +15,26 @@ import '../models/store_item.dart';
 
 //main firestore methods
 class FirestoreMethods {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirestoreService _firestoreService = FirestoreService.instance;
 
-  _UserTransactionMethods get userTransaction => _UserTransactionMethods();
-  _UserMessageMethods get userMessage => _UserMessageMethods();
-  _UserItemMethods get userItem => _UserItemMethods();
-  _UserMethods get user => _UserMethods();
-
-// checks if firebase document exists
-  Future<bool> docExists(DocumentSnapshot snapshot) async {
-    if (snapshot.exists) {
-      return true;
-    }
-    return false;
-  }
-
-//checks if firebase collection exists
-  Future<bool> collectionExists(QuerySnapshot snapshot) async {
-    if (snapshot.size != 0) {
-      return true;
-    }
-    return false;
-  }
-}
-
-// firestore methods for user data
-class _UserMethods extends FirestoreMethods {
-  late DocumentReference ref = _firestore.doc(FirestorePath.user());
-
 // add new users to firestore
-  Future<void> initialize(User user) async {
-    if (!(await docExists(await ref.get()))) {
+  Future<void> initializeData(User user) async {
+    if (!(await _firestoreService.documentExists(path: FirestorePath.user()))) {
       model.User userModel = model.User(uid: user.uid);
-      await _firestoreService.addToCollection(
+      _firestoreService.addDocument(
           path: FirestorePath.users(),
           data: userModel.toJson(),
           myId: user.uid);
     }
-    if (!(await collectionExists(await _firestore
-        .collection(FirestorePath.transactions())
-        .limit(1)
-        .get()))) {
-      userTransaction.add(initialTransaction);
-    }
-    if (!(await collectionExists(await _firestore
-        .collection(FirestorePath.messages())
-        .limit(1)
-        .get()))) {
-      userMessage.add(messages[0]);
+    if (!(await _firestoreService.collectionExists(
+        path: FirestorePath.transactions()))) {
+      addTransaction(initialTransaction);
     }
     locator.get<EventController>().update();
   }
 
-// TODO: for testing purposes
-  Future<void> reset() async {
+// reset data
+  Future<void> resetData() async {
     await _firestoreService.updateDocument(path: FirestorePath.user(), data: {
       'score': 0,
       'balance': 0,
@@ -80,7 +44,7 @@ class _UserMethods extends FirestoreMethods {
     await _firestoreService.deleteCollection(
         path: FirestorePath.transactions());
     await _firestoreService.deleteCollection(path: FirestorePath.messages());
-    initialize(locator.get<AuthMethods>().currentUser);
+    initializeData(locator.get<AuthMethods>().currentUser);
   }
 
 // update user score
@@ -104,26 +68,19 @@ class _UserMethods extends FirestoreMethods {
   }
 
 // get user model (one time read)
-  Future<model.User> get getUser => ref
-      .get()
-      .then((snap) => model.User.fromSnap(snap.data() as Map<String, dynamic>));
-
-// get user field (one time read)
-  Future<num> get getBalance => getUser.then((value) => value.balance);
-  Future<int> get getSession => getUser.then((value) => value.session);
+  Future<model.User> get userFuture => _firestoreService.documentFuture(
+      path: FirestorePath.user(), builder: (data) => model.User.fromSnap(data));
 
 // stream of user data (listen)
-  Stream<DocumentSnapshot> get stream => ref.snapshots();
-}
+  Stream<model.User> get userStream => _firestoreService.documentStream(
+      path: FirestorePath.user(), builder: (data) => model.User.fromSnap(data));
 
-// firestore methods for item data
-class _UserItemMethods extends FirestoreMethods {
 // add new perchased_item data
-  Future<void> add(
+  Future<void> addItem(
     StoreItem storeItem,
     String room,
   ) async {
-    await _firestoreService.addToCollection(
+    await _firestoreService.addDocument(
         path: FirestorePath.items(),
         data: storeItem.toJson()
           ..addAll({
@@ -141,41 +98,36 @@ class _UserItemMethods extends FirestoreMethods {
       );
 
 // stream of purchased_items
-  Stream<List<PurchasedItem>> collectionStream({String? room}) =>
+  Stream<List<PurchasedItem>> itemsStream({String? room}) =>
       _firestoreService.collectionStream(
         path: FirestorePath.items(),
         builder: (data) => PurchasedItem.fromSnap(data),
         queryBuilder: (query) =>
             room != null ? query.where('room', isEqualTo: room) : query,
       );
-}
 
-// firestore methods for message data
-class _UserMessageMethods extends FirestoreMethods {
-  late CollectionReference ref =
-      _firestore.collection(FirestorePath.messages());
-
-  Future<bool> actionNeeded() async {
-    int data = await ref
-        .where('state', isEqualTo: 'actionNeeded')
-        .limit(1)
-        .get()
-        .then((value) => value.docs.length);
+  Future<bool> waitingMessageAction() async {
+    List<Message> messages = await _firestoreService.collectionFuture(
+        path: FirestorePath.messages(),
+        builder: (data) => Message.fromSnap(data),
+        queryBuilder: (query) =>
+            query.where('state', isEqualTo: 'actionNeeded').limit(1));
+    int data = messages.length;
     return data > 0;
   }
 
-  Future<void> action(Message message, bool give) async {
+  Future<void> messageAction(Message message, bool give) async {
     if (give == true) {
-      userMessage.updateState(message.id, MessageState.infoGiven);
+      updateMessageState(message.id, MessageState.infoGiven);
       if (message.sender.trustedWith.contains(message.requestedItem)) {
-        user.updateScore(1);
+        updateScore(1);
       } else {
         //penalty?
       }
     } else {
       if (!message.sender.trustedWith.contains(message.requestedItem)) {
-        userMessage.updateState(message.id, MessageState.infoDenied);
-        user.updateScore(1);
+        updateMessageState(message.id, MessageState.infoDenied);
+        updateScore(1);
       } else {
         //penalty?
       }
@@ -184,16 +136,16 @@ class _UserMessageMethods extends FirestoreMethods {
   }
 
 // add new message data
-  Future<void> add(
+  Future<void> addMessage(
     Message message,
   ) async {
-    await _firestoreService.addToCollection(
+    await _firestoreService.addDocument(
         path: FirestorePath.messages(),
         data: message.toJson()..addAll({'timeSent': DateTime.now()}));
     locator.get<EventController>().update();
   }
 
-  Future<void> updateState(String id, MessageState state) async {
+  Future<void> updateMessageState(String id, MessageState state) async {
     await _firestoreService.updateDocument(
         path: FirestorePath.message(id),
         data: {'state': state.name, 'timeActed': DateTime.now()});
@@ -211,74 +163,81 @@ class _UserMessageMethods extends FirestoreMethods {
     );
   }
 
-// stream of messages
-  Query<Message> get query =>
-      ref.orderBy('timeSent', descending: true).withConverter(
-          fromFirestore: (snapshot, _) => Message.fromSnap(snapshot.data()!),
-          toFirestore: (message, _) => message.toJson());
-}
+// query of messages
+  Query<Message> get messageQuery => _firestoreService.collectionQuery(
+      path: FirestorePath.messages(),
+      queryBuilder: (query) => query
+          .orderBy('timeSent', descending: true)
+          .withConverter(
+              fromFirestore: (snapshot, _) =>
+                  Message.fromSnap(snapshot.data()!),
+              toFirestore: (message, _) => message.toJson()));
 
-// firestore methods for transaction data
-class _UserTransactionMethods extends FirestoreMethods {
-  late CollectionReference ref =
-      _firestore.collection(FirestorePath.transactions());
-
-  Future<bool> actionNeeded() async {
-    int data = await ref
-        .where('state', isEqualTo: 'actionNeeded')
-        .limit(1)
-        .get()
-        .then((value) => value.docs.length);
+  Future<bool> waitingTransactionAction() async {
+    List<model.Transaction> transactions =
+        await _firestoreService.collectionFuture(
+      path: FirestorePath.transactions(),
+      builder: (data) => model.Transaction.fromSnap(data),
+      queryBuilder: (query) =>
+          query.where('state', isEqualTo: 'actionNeeded').limit(1),
+    );
+    int data = transactions.length;
     return data > 0;
   }
 
-  Future<void> action(model.Transaction transaction, bool approve) async {
+  Future<void> transactionAction(
+      model.Transaction transaction, bool approve) async {
     if (approve == true) {
-      await userTransaction.updateState(
+      await updateTransactionState(
           transaction.id, model.TransactionState.approved);
       if (transaction.overcharge == 0) {
-        user.updateScore(1);
+        updateScore(1);
       }
     } else {
-      await userTransaction.updateState(
+      await updateTransactionState(
           transaction.id, model.TransactionState.disputed);
       if (transaction.overcharge != 0) {
-        userTransaction.add(
+        addTransaction(
           model.Transaction(
             description: 'Refund:',
             amount: transaction.overcharge,
             state: model.TransactionState.approved,
           ),
         );
-        user.updateScore(1);
+        updateScore(1);
       }
     }
     locator.get<EventController>().update();
   }
 
 // add new transaction data
-  Future<void> add(
+  Future<void> addTransaction(
     model.Transaction transaction,
   ) async {
-    await _firestoreService.addToCollection(
+    await _firestoreService.addDocument(
         path: FirestorePath.transactions(),
         data: transaction.toJson()..addAll({'timeStamp': DateTime.now()}));
-    user.updateBalance(transaction.amount);
+    updateBalance(transaction.amount);
   }
 
 // update state of transaction
-  Future<void> updateState(String id, model.TransactionState state) async {
+  Future<void> updateTransactionState(
+      String id, model.TransactionState state) async {
     await _firestoreService.updateDocument(
         path: FirestorePath.transaction(id),
         data: {'state': state.name, 'timeActed': DateTime.now()});
   }
 
-// stream of transacitons
-  Query<model.Transaction> get query => ref
-      .orderBy('timeStamp', descending: true)
-      .withConverter<model.Transaction>(
-        fromFirestore: (snapshot, _) =>
-            model.Transaction.fromSnap(snapshot.data()!),
-        toFirestore: (transaction, _) => transaction.toJson(),
+// query of transacitons
+  Query<model.Transaction> get transactionQuery =>
+      _firestoreService.collectionQuery(
+        path: FirestorePath.transactions(),
+        queryBuilder: (query) => query
+            .orderBy('timeStamp', descending: true)
+            .withConverter<model.Transaction>(
+              fromFirestore: (snapshot, _) =>
+                  model.Transaction.fromSnap(snapshot.data()!),
+              toFirestore: (transaction, _) => transaction.toJson(),
+            ),
       );
 }

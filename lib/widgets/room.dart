@@ -43,10 +43,7 @@ class Room extends StatelessWidget {
         width: extendLeft + _extraSpace,
         height: extendRight + _extraSpace,
         child: StreamBuilder<List<PurchasedItem>>(
-            stream: locator
-                .get<FirestoreMethods>()
-                .userItem
-                .collectionStream(room: name),
+            stream: locator.get<FirestoreMethods>().itemsStream(room: name),
             builder: (context, roomItems) {
               if (roomItems.hasData) {
                 // reset then place items in room

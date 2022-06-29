@@ -81,7 +81,7 @@ class MessageCard extends StatelessWidget {
                         ) ??
                         false;
                     if (result == true) {
-                      _firestore.userMessage.action(message, false);
+                      _firestore.messageAction(message, false);
                     }
                   },
                   icon: const Icon(Icons.close, size: 32),
@@ -102,7 +102,7 @@ class MessageCard extends StatelessWidget {
                         ) ??
                         false;
                     if (result == true) {
-                      _firestore.userMessage.action(message, true);
+                      _firestore.messageAction(message, true);
                     }
                   },
                   icon: const Icon(Icons.check, size: 36),

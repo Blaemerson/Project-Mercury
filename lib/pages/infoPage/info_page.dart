@@ -126,7 +126,7 @@ class _InfoPageState extends State<InfoPage> {
                         ? () async {
                             if (locator.get<EventController>().session <
                                 locator.get<Rooms>().rooms.length) {
-                              _firestore.user.updateSession();
+                              _firestore.updateSession();
                               locator.get<EventController>().nextSession();
                               setState(() {});
                             }
@@ -148,8 +148,9 @@ class _InfoPageState extends State<InfoPage> {
                     color: Theme.of(context).colorScheme.error,
                     child: TextButton(
                       onPressed: () async {
-                        await _firestore.user.reset();
-                        setState(() {});
+                        setState(() {
+                          _firestore.resetData();
+                        });
                       },
                       child: Text(
                         'Reset',

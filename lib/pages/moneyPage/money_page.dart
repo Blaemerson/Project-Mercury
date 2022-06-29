@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
+import 'package:projectmercury/models/user.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/utils.dart';
@@ -33,23 +33,25 @@ class _MoneyPageState extends State<MoneyPage> {
                   'Account Balance:',
                   style: TextStyle(fontSize: 24),
                 ),
-                StreamBuilder(
-                    stream: _firestore.user.stream,
-                    builder:
-                        (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
+                StreamBuilder<User>(
+                  stream: _firestore.userStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
                       return Text(
-                        formatCurrency.format(snapshot.data!.get('balance')),
+                        formatCurrency.format(snapshot.data!.balance),
                         style: const TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
                         ),
                       );
-                    }),
+                    }
+                    return Text(
+                      formatCurrency.format(0),
+                      style: const TextStyle(
+                          fontSize: 36, fontWeight: FontWeight.bold),
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -77,7 +79,7 @@ class _MoneyPageState extends State<MoneyPage> {
           Flexible(
             child: Scrollbar(
               child: FirestoreListView<model.Transaction>(
-                query: _firestore.userTransaction.query,
+                query: _firestore.transactionQuery,
                 itemBuilder: (context, snapshot) {
                   model.Transaction transaction = snapshot.data();
                   return TransactionCard(transaction: transaction);

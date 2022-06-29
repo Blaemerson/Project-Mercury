@@ -2,14 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:projectmercury/firebase_options.dart';
-import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/screens/welcome_screen.dart';
 import 'package:projectmercury/screens/navigation_screen.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,7 +61,7 @@ class MyApp extends StatelessWidget {
           // return nav screen if user logged in
           if (snapshot.connectionState == ConnectionState.active) {
             if (snapshot.hasData) {
-              _firestore.user.initialize(_auth.currentUser);
+              _firestore.initializeData(_auth.currentUser);
               _analytics.setCurrentScreen('/home');
               return const NavigationScreen();
             } else if (snapshot.hasError) {

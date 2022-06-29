@@ -21,7 +21,7 @@ class MessagePage extends StatelessWidget {
         children: [
           Flexible(
             child: FirestoreListView<Message>(
-              query: _firestore.userMessage.query,
+              query: _firestore.messageQuery,
               itemBuilder: (context, snapshot) {
                 Message message = snapshot.data();
                 return MessageCard(message: message);

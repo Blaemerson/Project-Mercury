@@ -17,11 +17,11 @@ class EventController with ChangeNotifier {
   List<bool> get showBadge => _showBadge;
 
   Future<void> update() async {
-    loadSession();
-    await _firestore.userTransaction.actionNeeded()
+    await loadSession();
+    await _firestore.waitingTransactionAction()
         ? _showBadge[1] = true
         : _showBadge[1] = false;
-    await _firestore.userMessage.actionNeeded()
+    await _firestore.waitingMessageAction()
         ? _showBadge[3] = true
         : _showBadge[3] = false;
     notifyListeners();
@@ -31,14 +31,14 @@ class EventController with ChangeNotifier {
   }
 
   Future<void> loadSession() async {
-    _session = await _firestore.user.getSession;
+    _session = await _firestore.userFuture.then((value) => value.session);
   }
 
   void deployMessage() async {
     int delay =
         Random().nextInt(messageMaxDelay - messageMinDelay) + messageMinDelay;
     Future.delayed(Duration(seconds: delay), () {
-      _firestore.userMessage.add(randomMessage);
+      _firestore.addMessage(randomMessage);
     });
   }
 }

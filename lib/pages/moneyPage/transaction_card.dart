@@ -67,7 +67,7 @@ class TransactionCard extends StatelessWidget {
                           ) ??
                           false;
                       if (result == true) {
-                        _firestore.userTransaction.action(transaction, false);
+                        _firestore.transactionAction(transaction, false);
                       }
                     },
                     icon: const Icon(Icons.close, size: 32),
@@ -88,7 +88,7 @@ class TransactionCard extends StatelessWidget {
                           ) ??
                           false;
                       if (result == true) {
-                        _firestore.userTransaction.action(transaction, true);
+                        _firestore.transactionAction(transaction, true);
                       }
                     },
                     icon: const Icon(Icons.check, size: 36),

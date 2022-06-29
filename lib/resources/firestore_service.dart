@@ -7,7 +7,32 @@ class FirestoreService {
   FirestoreService._();
   static final instance = FirestoreService._();
 
-  Future<void> addToCollection({
+// Check if a document exists in Firestore
+  Future<bool> documentExists({required String path}) async {
+    final ref = FirebaseFirestore.instance.doc(path);
+    return ref.get().then((value) => value.exists ? true : false);
+  }
+
+// check if a collection exists in Firestore
+  Future<bool> collectionExists({required String path}) async {
+    final ref = FirebaseFirestore.instance.collection(path);
+    return ref.limit(1).get().then((value) => value.size == 1 ? true : false);
+  }
+
+// update a document in Firestore
+  Future<void> updateDocument({
+    required String path,
+    required Map<String, dynamic> data,
+  }) async {
+    final ref = FirebaseFirestore.instance.doc(path);
+    await ref
+        .update(data)
+        .then((_) => debugPrint('Updated $path: $data'))
+        .onError((error, stackTrace) => debugPrint('$error'));
+  }
+
+// add a document to a specified collection in Firestore
+  Future<void> addDocument({
     required String path,
     required Map<String, dynamic> data,
     String? myId,
@@ -26,35 +51,63 @@ class FirestoreService {
             .onError((error, stackTrace) => debugPrint('$error'));
   }
 
-  Future<void> updateDocument({
-    required String path,
-    required Map<String, dynamic> data,
-  }) async {
-    final ref = FirebaseFirestore.instance.doc(path);
-    await ref
-        .update(data)
-        .then((_) => debugPrint('Updated $path: $data'))
-        .onError((error, stackTrace) => debugPrint('$error'));
-  }
-
+// delete a document from Firestore
   Future<void> deleteDocument({
     required String path,
   }) async {
     final ref = FirebaseFirestore.instance.doc(path);
-    ref.delete().then((value) => debugPrint('Deleted: $path'));
+    await ref.delete().then((value) => debugPrint('Deleted: $path'));
   }
 
+// delete a collection from Firestore
   Future<void> deleteCollection({
     required String path,
   }) async {
     final ref = FirebaseFirestore.instance.collection(path);
-    ref.get().then((value) {
+    await ref.get().then((value) {
       for (var doc in value.docs) {
         doc.reference.delete();
       }
     });
   }
 
+// emit a future of a document for one-time read from Firestore
+  Future<T> documentFuture<T>({
+    required String path,
+    required T Function(Map<String, dynamic> data) builder,
+  }) {
+    final ref = FirebaseFirestore.instance.doc(path);
+    return ref
+        .get()
+        .then((value) => builder(value.data() as Map<String, dynamic>));
+  }
+
+// emit a future of a collection for one-time read from Firestore
+  Future<List<T>> collectionFuture<T>({
+    required String path,
+    required T Function(Map<String, dynamic> data) builder,
+    Query Function(Query query)? queryBuilder,
+    int Function(T lhs, T rhs)? sort,
+  }) {
+    Query query = FirebaseFirestore.instance.collection(path);
+    if (queryBuilder != null) {
+      query = queryBuilder(query);
+    }
+    final Future<QuerySnapshot> snapshots = query.get();
+    return snapshots.then(
+      (value) {
+        final result = value.docs
+            .map((snapshot) => builder(snapshot.data() as Map<String, dynamic>))
+            .toList();
+        if (sort != null) {
+          result.sort(sort);
+        }
+        return result;
+      },
+    );
+  }
+
+// emit a stream of a document for real-time updates from Firestore
   Stream<T> documentStream<T>({
     required String path,
     required T Function(Map<String, dynamic> data) builder,
@@ -65,6 +118,7 @@ class FirestoreService {
         .map((snapshot) => builder(snapshot.data() as Map<String, dynamic>));
   }
 
+// emit a stream of a collection for real-time updates from Firestore
   Stream<List<T>> collectionStream<T>({
     required String path,
     required T Function(Map<String, dynamic> data) builder,
@@ -86,5 +140,15 @@ class FirestoreService {
       }
       return result;
     });
+  }
+
+// query for use with FirestoreListView
+  Query<T> collectionQuery<T>({
+    required String path,
+    required Query<T> Function(Query query) queryBuilder,
+  }) {
+    final ref = FirebaseFirestore.instance.collection(path);
+    Query<T> query = queryBuilder(ref);
+    return query;
   }
 }
