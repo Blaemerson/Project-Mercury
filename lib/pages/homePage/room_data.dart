@@ -82,7 +82,7 @@ Room livingroom = Room(
       distanceFromLeft: .6,
       distanceFromRight: .23,
       type: 'sofa',
-      variant: '1',
+      variant: null,
     )
   ],
 );

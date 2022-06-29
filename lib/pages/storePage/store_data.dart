@@ -58,19 +58,19 @@ const List<StoreItem> storeItems = [
   StoreItem(
     name: 'Red Couch',
     price: 300,
-    type: 'couch',
+    type: 'sofa',
     variant: '1',
   ),
   StoreItem(
     name: 'Blue Couch',
     price: 350,
-    type: 'couch',
+    type: 'sofa',
     variant: '2',
   ),
   StoreItem(
     name: 'Purple Couch',
     price: 400,
-    type: 'couch',
+    type: 'sofa',
     variant: '3',
   ),
   StoreItem(
