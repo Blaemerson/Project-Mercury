@@ -22,20 +22,17 @@ class _InfoPageState extends State<InfoPage> {
     final TimerController _timer = locator.get<TimerController>();
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
-// TODO: calculate session progress
     int session = locator.get<EventController>().session;
-
     Room sessionRoom = locator
         .get<Rooms>()
         .rooms
         .where((element) => element.unlockOrder == session)
         .first;
-    var dynamicSlots =
-        sessionRoom.items.where((element) => element.variant != '');
-    int slotsTotal = dynamicSlots.length;
-    int slotsFilled =
-        dynamicSlots.where((element) => element.variant != null).length;
-    double progress = slotsTotal != 0 ? slotsFilled / slotsTotal : 1;
+
+// TODO: calculate session progress
+    List<int> roomProgress = _calculateRoomProgress(sessionRoom);
+    double progress =
+        roomProgress[1] != 0 ? roomProgress[0] / roomProgress[1] : 1;
     // progress = 1; // override progress for testing
 
     return ChangeNotifierProvider.value(
@@ -113,11 +110,11 @@ class _InfoPageState extends State<InfoPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      slotsFilled == slotsTotal
+                      roomProgress[0] == roomProgress[1]
                           ? const Icon(Icons.check_box_outlined)
                           : const Icon(Icons.check_box_outline_blank),
                       Text(
-                          'Fully furnish ${sessionRoom.name}: $slotsFilled/$slotsTotal'),
+                          'Fully furnish ${sessionRoom.name}: ${roomProgress.join('/')}'),
                     ],
                   ),
                 ],
@@ -169,5 +166,14 @@ class _InfoPageState extends State<InfoPage> {
         ),
       ),
     );
+  }
+
+  List<int> _calculateRoomProgress(Room sessionRoom) {
+    var dynamicSlots =
+        sessionRoom.items.where((element) => element.variant != '');
+    int slotsTotal = dynamicSlots.length;
+    int slotsFilled =
+        dynamicSlots.where((element) => element.variant != null).length;
+    return [slotsFilled, slotsTotal];
   }
 }

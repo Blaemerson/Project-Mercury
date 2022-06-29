@@ -44,6 +44,17 @@ class FirestoreService {
     ref.delete().then((value) => debugPrint('Deleted: $path'));
   }
 
+  Future<void> deleteCollection({
+    required String path,
+  }) async {
+    final ref = FirebaseFirestore.instance.collection(path);
+    ref.get().then((value) {
+      for (var doc in value.docs) {
+        doc.reference.delete();
+      }
+    });
+  }
+
   Stream<T> documentStream<T>({
     required String path,
     required T Function(Map<String, dynamic> data) builder,

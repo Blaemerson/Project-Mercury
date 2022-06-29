@@ -71,24 +71,15 @@ class _UserMethods extends FirestoreMethods {
 
 // TODO: for testing purposes
   Future<void> reset() async {
-    ref.update({'score': 0});
-    ref.update({'balance': 0});
-    ref.update({'session': 1});
-    ref.collection('purchased_items').get().then((value) {
-      for (var doc in value.docs) {
-        doc.reference.delete();
-      }
+    await _firestoreService.updateDocument(path: FirestorePath.user(), data: {
+      'score': 0,
+      'balance': 0,
+      'session': 1,
     });
-    ref.collection('transactions').get().then((value) {
-      for (var doc in value.docs) {
-        doc.reference.delete();
-      }
-    });
-    await ref.collection('messages').get().then((value) {
-      for (var doc in value.docs) {
-        doc.reference.delete();
-      }
-    });
+    await _firestoreService.deleteCollection(path: FirestorePath.items());
+    await _firestoreService.deleteCollection(
+        path: FirestorePath.transactions());
+    await _firestoreService.deleteCollection(path: FirestorePath.messages());
     initialize(locator.get<AuthMethods>().currentUser);
   }
 
@@ -127,8 +118,6 @@ class _UserMethods extends FirestoreMethods {
 
 // firestore methods for item data
 class _UserItemMethods extends FirestoreMethods {
-  late CollectionReference ref = _firestore.collection(FirestorePath.items());
-
 // add new perchased_item data
   Future<void> add(
     StoreItem storeItem,

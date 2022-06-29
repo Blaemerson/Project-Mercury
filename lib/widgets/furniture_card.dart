@@ -21,7 +21,7 @@ class FurnitureCard extends StatelessWidget {
               height: furniture.height,
               width: furniture.width,
             )
-          : ['bed', 'chair', 'couch', 'refridgerator'].contains(furniture.type)
+          : ['bed', 'chair', 'sofa', 'refridgerator'].contains(furniture.type)
               ? Image.asset(
                   // TODO: make outlines for each selectable furniture
                   'assets/furniture/${furniture.type}_outline.png',
