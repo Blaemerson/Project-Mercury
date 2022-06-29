@@ -6,6 +6,7 @@ class Rooms {
   set(Room? room) {
     _room = room;
   }
+
   Room? get room => _room;
 
   final List<Room> _rooms = [
@@ -37,7 +38,7 @@ Room bedroom = Room(
       height: 60,
       distanceFromLeft: .02,
       distanceFromRight: .5,
-      type: 'doorway_NW',
+      type: 'door_NW',
       variant: '',
     ),
     FurnitureSlot(
@@ -53,7 +54,7 @@ Room bedroom = Room(
       height: 30,
       distanceFromLeft: .7,
       distanceFromRight: .3,
-      type: 'cabinetBedTable_NE',
+      type: 'bedside_table',
       variant: '',
     ),
   ],
@@ -72,7 +73,7 @@ Room livingroom = Room(
       height: 60,
       distanceFromLeft: .02,
       distanceFromRight: .3,
-      type: 'doorway_NW',
+      type: 'door_NW',
       variant: '',
     ),
     FurnitureSlot(
@@ -80,7 +81,7 @@ Room livingroom = Room(
       height: 60,
       distanceFromLeft: .6,
       distanceFromRight: .23,
-      type: 'couch',
+      type: 'sofa',
       variant: '1',
     )
   ],
@@ -99,7 +100,7 @@ Room bathroom = Room(
       height: 60,
       distanceFromLeft: .13,
       distanceFromRight: .10,
-      type: 'shower_NW',
+      type: 'shower',
       variant: '',
     ),
     FurnitureSlot(
@@ -107,7 +108,7 @@ Room bathroom = Room(
       height: 40,
       distanceFromLeft: .8,
       distanceFromRight: .23,
-      type: 'toilet_NE',
+      type: 'toilet',
       variant: '',
     ),
     FurnitureSlot(
@@ -115,7 +116,7 @@ Room bathroom = Room(
       height: 40,
       distanceFromLeft: .23,
       distanceFromRight: .7,
-      type: 'bathroomSink_NW',
+      type: 'sink',
       variant: '',
     ),
   ],
@@ -142,7 +143,7 @@ Room kitchen = Room(
       height: 40,
       distanceFromLeft: .52,
       distanceFromRight: .2,
-      type: 'kitchenCabinet_NE',
+      type: 'kitchen_cabinet',
       variant: '',
     ),
     FurnitureSlot(
@@ -150,7 +151,7 @@ Room kitchen = Room(
       height: 40,
       distanceFromLeft: .68,
       distanceFromRight: .2,
-      type: 'kitchenSink_NE',
+      type: 'kitchen_sink',
       variant: '',
     ),
   ],
@@ -169,7 +170,7 @@ Room hall = Room(
       height: 60,
       distanceFromLeft: .7,
       distanceFromRight: .02,
-      type: 'doorway_NE',
+      type: 'door_NE',
       variant: '',
     ),
     FurnitureSlot(
@@ -177,7 +178,7 @@ Room hall = Room(
       height: 60,
       distanceFromLeft: .02,
       distanceFromRight: .3,
-      type: 'doorway_NW',
+      type: 'door_NW',
       variant: '',
     ),
   ],
@@ -196,7 +197,7 @@ Room washroom = Room(
       height: 40,
       distanceFromLeft: .4,
       distanceFromRight: .25,
-      type: 'dryer_NE',
+      type: 'dryer',
       variant: '',
     ),
     FurnitureSlot(
@@ -204,10 +205,8 @@ Room washroom = Room(
       height: 40,
       distanceFromLeft: .6,
       distanceFromRight: .25,
-      type: 'washer_NE',
+      type: 'washer',
       variant: '',
     ),
   ],
 );
-
-
