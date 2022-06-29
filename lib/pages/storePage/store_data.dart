@@ -56,21 +56,39 @@ const List<StoreItem> storeItems = [
     variant: '3',
   ),
   StoreItem(
-    name: 'Red Couch',
+    name: 'Red Sofa',
     price: 300,
     type: 'sofa',
     variant: '1',
   ),
   StoreItem(
-    name: 'Blue Couch',
+    name: 'Blue Sofa',
     price: 350,
     type: 'sofa',
     variant: '2',
   ),
   StoreItem(
-    name: 'Purple Couch',
+    name: 'Purple Sofa',
     price: 400,
     type: 'sofa',
+    variant: '3',
+  ),
+  StoreItem(
+    name: 'Red Rug',
+    price: 300,
+    type: 'rug',
+    variant: '1',
+  ),
+  StoreItem(
+    name: 'Blue Rug',
+    price: 350,
+    type: 'rug',
+    variant: '2',
+  ),
+  StoreItem(
+    name: 'Purple Rug',
+    price: 400,
+    type: 'rug',
     variant: '3',
   ),
   StoreItem(
