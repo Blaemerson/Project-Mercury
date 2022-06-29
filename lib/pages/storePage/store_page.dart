@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/storePage/store_card.dart';
 import 'package:projectmercury/pages/storePage/store_data.dart';
+import 'package:projectmercury/resources/firestore_methods.dart';
+import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/widgets/room.dart';
-import 'package:provider/provider.dart';
 
 class StorePage extends StatelessWidget {
   final Room room;
@@ -60,7 +61,10 @@ class StorePage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    (furnitureType != '' ? furnitureType.toUpperCase() : 'Furniture') + ' Store',
+                    (furnitureType != ''
+                            ? furnitureType.toUpperCase()
+                            : 'Furniture') +
+                        ' Store',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 24,
@@ -103,12 +107,14 @@ class StorePage extends StatelessWidget {
                   ),
                 ),
               ],
-              Consumer<List<PurchasedItem>>(
-                builder: (_, userItems, __) {
-                  List<PurchasedItem> roomItems = userItems
-                      .where((element) => element.room == room.name)
-                      .toList();
-                  if (roomItems.isNotEmpty) {
+              StreamBuilder<List<PurchasedItem>>(
+                stream: locator
+                    .get<FirestoreMethods>()
+                    .userItem
+                    .collectionStream(room: room.name),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<PurchasedItem> roomItems = snapshot.data!;
                     return Column(
                       children: [
                         const Divider(),

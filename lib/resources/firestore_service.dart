@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -33,5 +35,45 @@ class FirestoreService {
         .update(data)
         .then((_) => debugPrint('Updated $path: $data'))
         .onError((error, stackTrace) => debugPrint('$error'));
+  }
+
+  Future<void> deleteDocument({
+    required String path,
+  }) async {
+    final ref = FirebaseFirestore.instance.doc(path);
+    ref.delete().then((value) => debugPrint('Deleted: $path'));
+  }
+
+  Stream<T> documentStream<T>({
+    required String path,
+    required T Function(Map<String, dynamic> data) builder,
+  }) {
+    final ref = FirebaseFirestore.instance.doc(path);
+    final Stream<DocumentSnapshot> snapshots = ref.snapshots();
+    return snapshots
+        .map((snapshot) => builder(snapshot.data() as Map<String, dynamic>));
+  }
+
+  Stream<List<T>> collectionStream<T>({
+    required String path,
+    required T Function(Map<String, dynamic> data) builder,
+    Query Function(Query query)? queryBuilder,
+    int Function(T lhs, T rhs)? sort,
+  }) {
+    Query query = FirebaseFirestore.instance.collection(path);
+    if (queryBuilder != null) {
+      query = queryBuilder(query);
+    }
+    final Stream<QuerySnapshot> snapshots = query.snapshots();
+    return snapshots.map((snapshot) {
+      final result = snapshot.docs
+          .map((snapshot) => builder(snapshot.data() as Map<String, dynamic>))
+          .where((element) => element != null)
+          .toList();
+      if (sort != null) {
+        result.sort(sort);
+      }
+      return result;
+    });
   }
 }

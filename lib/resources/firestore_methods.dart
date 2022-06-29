@@ -144,12 +144,21 @@ class _UserItemMethods extends FirestoreMethods {
     locator.get<EventController>().update();
   }
 
+  // stream of purchased_item
+  Stream<PurchasedItem> itemStream({required String id}) =>
+      _firestoreService.documentStream(
+        path: FirestorePath.item(id),
+        builder: (data) => PurchasedItem.fromSnap(data),
+      );
+
 // stream of purchased_items
-  Stream<List<PurchasedItem>> get stream => ref.snapshots().map((list) => list
-      .docs
-      .map(
-          (snap) => PurchasedItem.fromSnap(snap.data() as Map<String, dynamic>))
-      .toList());
+  Stream<List<PurchasedItem>> collectionStream({String? room}) =>
+      _firestoreService.collectionStream(
+        path: FirestorePath.items(),
+        builder: (data) => PurchasedItem.fromSnap(data),
+        queryBuilder: (query) =>
+            room != null ? query.where('room', isEqualTo: room) : query,
+      );
 }
 
 // firestore methods for message data

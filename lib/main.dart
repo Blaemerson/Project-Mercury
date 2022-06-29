@@ -33,63 +33,55 @@ class MyApp extends StatelessWidget {
       seedColor: Colors.red,
     );
 
-    return MultiProvider(
-      providers: [
-        StreamProvider<List<PurchasedItem>>(
-          create: (context) => _firestore.userItem.stream,
-          initialData: const [],
-        ),
+    return MaterialApp(
+      title: 'Project Mercury',
+      debugShowCheckedModeBanner: false,
+      scrollBehavior: MyCustomScrollBehavior(),
+      navigatorObservers: [
+        _analytics.getAnalyticObserver(),
       ],
-      child: MaterialApp(
-        title: 'Project Mercury',
-        debugShowCheckedModeBanner: false,
-        scrollBehavior: MyCustomScrollBehavior(),
-        navigatorObservers: [
-          _analytics.getAnalyticObserver(),
-        ],
-        theme: ThemeData(
-          colorScheme: _color,
-          outlinedButtonTheme: OutlinedButtonThemeData(
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(_color.primary),
-                foregroundColor: MaterialStateProperty.all(_color.onPrimary)),
-          ),
-          appBarTheme: AppBarTheme(
-            centerTitle: true,
-            titleTextStyle: TextStyle(
-              fontSize: 36,
-              color: _color.onPrimary,
-              fontWeight: FontWeight.bold,
-            ),
+      theme: ThemeData(
+        colorScheme: _color,
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(_color.primary),
+              foregroundColor: MaterialStateProperty.all(_color.onPrimary)),
+        ),
+        appBarTheme: AppBarTheme(
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            fontSize: 36,
+            color: _color.onPrimary,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        home: StreamBuilder(
-          // listen to authentication changes
-          stream: _auth.userStream,
-          builder: (context, snapshot) {
-            // return nav screen if user logged in
-            if (snapshot.connectionState == ConnectionState.active) {
-              if (snapshot.hasData) {
-                _firestore.user.initialize(_auth.currentUser);
-                _analytics.setCurrentScreen('/home');
-                return const NavigationScreen();
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('${snapshot.error}'),
-                );
-              }
-            }
-            // return indicator if loading
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
+      ),
+      home: StreamBuilder(
+        // listen to authentication changes
+        stream: _auth.userStream,
+        builder: (context, snapshot) {
+          // return nav screen if user logged in
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.hasData) {
+              _firestore.user.initialize(_auth.currentUser);
+              _analytics.setCurrentScreen('/home');
+              return const NavigationScreen();
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('${snapshot.error}'),
               );
             }
-            // return login screen if user not logged in
-            _analytics.setCurrentScreen('/login');
-            return const WelcomeScreen();
-          },
-        ),
+          }
+          // return indicator if loading
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          // return login screen if user not logged in
+          _analytics.setCurrentScreen('/login');
+          return const WelcomeScreen();
+        },
       ),
     );
   }
