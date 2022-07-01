@@ -9,6 +9,7 @@ class FurnitureCard extends StatelessWidget {
     required this.furniture,
   }) : super(key: key);
 
+  // TODO: make furniture slots touchable, bring up shop with different options (and/or variants of item)?.
   @override
   Widget build(BuildContext context) {
     const bool _debugBox = false;

@@ -12,6 +12,7 @@ class Room extends StatelessWidget {
   final String name;
   final int unlockOrder;
   final List<FurnitureSlot> items;
+  // TODO: Possibly make wall/flooring changable
   final String floorTexture;
   final String wallTexture;
   final double extendLeft;

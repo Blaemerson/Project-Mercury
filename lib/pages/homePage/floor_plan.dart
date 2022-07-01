@@ -10,37 +10,15 @@ class FloorPlan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Room> _rooms = locator.get<Rooms>().rooms;
-    // TODO: finalize floor layout
-    // Just experimenting for now, but at least positioning rooms is easier
     return SizedBox(
-      width: 800,
-      height: 800,
+      width: 600,
+      height: 705,
       child: IsometricView(
         child: Stack(
-          alignment: Alignment.topCenter,
+          alignment: Alignment.topLeft,
           children: [
-
-            /*Bathroom*/
-            Positioned(
-              left: 0,
-              bottom: 0,
-              child: Actor(
-                child: _rooms[2],
-              ),
-            ),
-
-            /*Bedroom*/
-            Positioned(
-              left: _rooms[2].extendLeft,
-              bottom: 0,
-              child: Actor(
-                child: _rooms[0],
-              ),
-            ),
-
             /*Washroom*/
             Positioned(
-              left: _rooms[2].extendLeft + _rooms[0].extendLeft,
               bottom: 0,
               child: Actor(
                 child: _rooms[5],
@@ -49,26 +27,42 @@ class FloorPlan extends StatelessWidget {
 
             /*Kitchen*/
             Positioned(
-              left: 0,
-              bottom: _rooms[2].extendRight,
+              bottom: _rooms[5].extendRight,
               child: Actor(
                 child: _rooms[3],
               ),
             ),
 
-            /*Hallway*/
+            /*Diningroom*/
             Positioned(
-              left: _rooms[2].extendLeft,
-              bottom: _rooms[0].extendRight,
+              bottom: _rooms[5].extendRight + _rooms[3].extendRight,
               child: Actor(
                 child: _rooms[4],
               ),
             ),
 
+            /*Bathroom*/
+            Positioned(
+              left: _rooms[5].extendLeft,
+              bottom: 0,
+              child: Actor(
+                child: _rooms[2],
+              ),
+            ),
+
+            /*Bedroom*/
+            Positioned(
+              left: _rooms[5].extendLeft,
+              bottom: _rooms[2].extendRight,
+              child: Actor(
+                child: _rooms[0],
+              ),
+            ),
+
             /*Livingroom*/
             Positioned(
-              left: _rooms[2].extendLeft + _rooms[4].extendLeft,
-              bottom: _rooms[0].extendRight,
+              left: _rooms[5].extendLeft,
+              bottom: _rooms[2].extendRight + _rooms[0].extendRight,
               child: Actor(
                 child: _rooms[1],
               ),

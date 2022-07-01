@@ -14,7 +14,7 @@ class Rooms {
     livingroom,
     bathroom,
     kitchen,
-    hall,
+    diningroom,
     washroom,
   ];
   List<Room> get rooms {
@@ -28,7 +28,7 @@ class Rooms {
 Room bedroom = Room(
   name: 'bedroom',
   extendLeft: 200,
-  extendRight: 150,
+  extendRight: 215,
   unlockOrder: 1,
   floorTexture: "assets/textures/woodBoards.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
@@ -36,24 +36,24 @@ Room bedroom = Room(
     FurnitureSlot(
       width: 60,
       height: 60,
-      distanceFromLeft: .02,
-      distanceFromRight: .5,
-      type: 'door_NW',
+      distanceFromRight: .02,
+      distanceFromLeft: .7,
+      type: 'door_NE',
       variant: '',
     ),
     FurnitureSlot(
       width: 70,
       height: 70,
       distanceFromLeft: .5,
-      distanceFromRight: .30,
+      distanceFromRight: .20,
       type: 'bed',
       variant: null,
     ),
     FurnitureSlot(
       width: 60,
       height: 30,
-      distanceFromLeft: .7,
-      distanceFromRight: .3,
+      distanceFromLeft: .3,
+      distanceFromRight: .2,
       type: 'bedside_table',
       variant: '',
     ),
@@ -61,7 +61,7 @@ Room bedroom = Room(
 );
 
 Room livingroom = Room(
-  extendLeft: 250,
+  extendLeft: 200,
   extendRight: 250,
   unlockOrder: 2,
   floorTexture: 'assets/textures/woodBoards.jpg',
@@ -72,15 +72,23 @@ Room livingroom = Room(
       width: 60,
       height: 60,
       distanceFromLeft: .02,
-      distanceFromRight: .3,
+      distanceFromRight: .8,
       type: 'door_NW',
+      variant: '',
+    ),
+    FurnitureSlot(
+      width: 60,
+      height: 60,
+      distanceFromLeft: .8,
+      distanceFromRight: .02,
+      type: 'door_NE',
       variant: '',
     ),
     FurnitureSlot(
       width: 70,
       height: 70,
       distanceFromLeft: .1,
-      distanceFromRight: .7,
+      distanceFromRight: .3,
       type: 'tv',
       variant: '',
     ),
@@ -105,8 +113,8 @@ Room livingroom = Room(
 
 Room bathroom = Room(
   name: 'bathroom',
-  extendLeft: 150,
-  extendRight: 200,
+  extendLeft: 200,
+  extendRight: 175,
   unlockOrder: 3,
   floorTexture: "assets/textures/bathroomTiles.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
@@ -140,8 +148,8 @@ Room bathroom = Room(
 
 Room kitchen = Room(
   name: 'kitchen',
-  extendLeft: 150,
-  extendRight: 200,
+  extendLeft: 200,
+  extendRight: 215,
   unlockOrder: 4,
   floorTexture: "assets/textures/woodBoards.jpg",
   wallTexture: "assets/textures/floralWall.jpg",
@@ -149,7 +157,7 @@ Room kitchen = Room(
     FurnitureSlot(
       width: 60,
       height: 60,
-      distanceFromLeft: .15,
+      distanceFromLeft: .10,
       distanceFromRight: .08,
       type: 'refridgerator',
       variant: null,
@@ -157,18 +165,26 @@ Room kitchen = Room(
     FurnitureSlot(
       width: 80,
       height: 60,
-      distanceFromLeft: .55,
+      distanceFromLeft: .45,
       distanceFromRight: .15,
       type: 'kitchencounters',
+      variant: '',
+    ),
+    FurnitureSlot(
+      width: 60,
+      height: 60,
+      distanceFromLeft: .8,
+      distanceFromRight: .02,
+      type: 'door_NE',
       variant: '',
     ),
   ],
 );
 
-Room hall = Room(
-  name: 'hall',
-  extendLeft: 150,
-  extendRight: 300,
+Room diningroom = Room(
+  name: 'diningroom',
+  extendLeft: 200,
+  extendRight: 225,
   unlockOrder: 5,
   floorTexture: "assets/textures/woodBoards.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
@@ -176,17 +192,9 @@ Room hall = Room(
     FurnitureSlot(
       width: 60,
       height: 60,
-      distanceFromLeft: .7,
+      distanceFromLeft: .8,
       distanceFromRight: .02,
       type: 'door_NE',
-      variant: '',
-    ),
-    FurnitureSlot(
-      width: 60,
-      height: 60,
-      distanceFromLeft: .02,
-      distanceFromRight: .7,
-      type: 'door_NW',
       variant: '',
     ),
   ],
@@ -194,8 +202,8 @@ Room hall = Room(
 
 Room washroom = Room(
   name: 'washroom',
-  extendLeft: 100,
-  extendRight: 150,
+  extendLeft: 200,
+  extendRight: 200,
   unlockOrder: 6,
   floorTexture: "assets/textures/bathroomTiles.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
