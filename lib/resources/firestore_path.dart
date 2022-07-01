@@ -15,6 +15,10 @@ class FirestorePath {
   static String message(String messageId) =>
       'users/${locator.get<AuthMethods>().uid}/messages/$messageId';
 
+  static String events() => 'users/${locator.get<AuthMethods>().uid}/events';
+  static String event(String eventId) =>
+      'users/${locator.get<AuthMethods>().uid}/events/$eventId';
+
   static String items() =>
       'users/${locator.get<AuthMethods>().uid}/purchased_items';
   static String item(String itemId) =>

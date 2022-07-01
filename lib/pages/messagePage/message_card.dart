@@ -128,7 +128,6 @@ class MessageCard extends StatelessWidget {
               const SizedBox(height: 12),
             ],
             if (message.displayState > 1) ...[
-              // TODO: change response based on contact
               message.state == MessageState.infoGiven
                   ? _chatBubble('Thank you!', false, context)
                   : _chatBubble(':(', false, context)

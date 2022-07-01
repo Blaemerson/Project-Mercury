@@ -98,7 +98,6 @@ class StorePage extends StatelessWidget {
                     ),
                   ],
               ] else ...[
-                //TODO: add sell item option
                 Center(
                   child: Text(
                     'Congratulations! Your ${room.name} is fully furnished.',

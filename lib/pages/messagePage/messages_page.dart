@@ -6,6 +6,7 @@ import '../../models/message.dart';
 import '../../resources/locator.dart';
 import 'message_card.dart';
 
+//TODO: replace this page with event page when finished
 class MessagePage extends StatelessWidget {
   const MessagePage({Key? key}) : super(key: key);
 

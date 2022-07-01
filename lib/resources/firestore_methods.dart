@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projectmercury/models/event.dart';
 import 'package:projectmercury/models/message.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/models/user.dart' as model;
-import 'package:projectmercury/pages/messagePage/message_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_path.dart';
@@ -17,7 +17,7 @@ import '../models/store_item.dart';
 class FirestoreMethods {
   final FirestoreService _firestoreService = FirestoreService.instance;
 
-// add new users to firestore
+// initialize data
   Future<void> initializeData(User user) async {
     if (!(await _firestoreService.documentExists(path: FirestorePath.user()))) {
       model.User userModel = model.User(uid: user.uid);
@@ -172,6 +172,21 @@ class FirestoreMethods {
               fromFirestore: (snapshot, _) =>
                   Message.fromSnap(snapshot.data()!),
               toFirestore: (message, _) => message.toJson()));
+
+  Future<void> addEvent(Event event) async {
+    await _firestoreService.addDocument(
+        path: FirestorePath.events(),
+        data: event.toJson()..addAll({'timeSent': DateTime.now()}));
+    locator.get<EventController>().update();
+  }
+
+  Query<Event> get eventQuery => _firestoreService.collectionQuery(
+      path: FirestorePath.events(),
+      queryBuilder: (query) => query
+          .orderBy('timeSent', descending: true)
+          .withConverter(
+              fromFirestore: (snapshot, _) => Event.fromSnap(snapshot.data()!),
+              toFirestore: (event, _) => event.toJson()));
 
   Future<bool> waitingTransactionAction() async {
     List<model.Transaction> transactions =

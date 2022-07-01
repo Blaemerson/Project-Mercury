@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:projectmercury/pages/contactPage/contacts_page.dart';
+import 'package:projectmercury/pages/eventPage/event_page.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
@@ -28,14 +29,16 @@ class _NavigationScreenState extends State<NavigationScreen> {
     HomePage(),
     MoneyPage(),
     ContactPage(),
-    MessagePage(),
+    EventPage(),
+    //MessagePage(),
     InfoPage(),
   ];
   List<String> pageTitles = const [
     '/home',
     '/money',
     '/contacts',
-    '/mail',
+    '/event',
+    //'/mail',
     '/info',
   ];
 
