@@ -5,12 +5,14 @@ class FurnitureSlot {
   final double distanceFromLeft;
   final double distanceFromRight;
   final String type;
+  final bool interactable;
   String? variant;
   FurnitureSlot({
     required this.width,
     required this.height,
     required this.distanceFromLeft,
     required this.distanceFromRight,
+    this.interactable = false,
     required this.type,
     this.variant,
   }) : assert(distanceFromLeft >= 0 &&

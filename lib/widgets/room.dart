@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:projectmercury/models/store_item.dart';
+import 'package:projectmercury/pages/storePage/store_page.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/widgets/furniture_card.dart';
@@ -144,9 +145,27 @@ class Room extends StatelessWidget {
                     Positioned(
                       left: (extendLeft * slot.distanceFromLeft),
                       bottom: (extendRight * slot.distanceFromRight),
-                      child: Actor(
-                        child: FurnitureCard(furniture: slot),
-                      ),
+                      child: slot.variant == null
+                          ? GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(16),
+                                    ),
+                                  ),
+                                  context: context,
+                                  builder: (context) {
+                                    return StorePage(
+                                        room: this, furnitureType: slot.type);
+                                  },
+                                );
+                              },
+                              child: FurnitureCard(furniture: slot),
+                            )
+                          : FurnitureCard(furniture: slot),
                     ),
                   ],
                 ],
