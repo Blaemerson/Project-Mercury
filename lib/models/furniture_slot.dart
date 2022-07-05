@@ -4,14 +4,18 @@ class FurnitureSlot {
   final double height;
   final double distanceFromLeft;
   final double distanceFromRight;
+  final String orientation;
   final List<String> possibleItems;
+  final double scale;
   String? item;
   FurnitureSlot({
     required this.width,
     required this.height,
     required this.distanceFromLeft,
     required this.distanceFromRight,
-    required this.possibleItems,
+    this.possibleItems = const <String>[],
+    this.orientation = '',
+    this.scale = 3,
     this.item,
   }) : assert(distanceFromLeft >= 0 &&
             distanceFromLeft <= 1 &&

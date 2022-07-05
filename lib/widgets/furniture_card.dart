@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/furniture_slot.dart';
-import 'package:projectmercury/widgets/cube.dart';
 import 'package:projectmercury/widgets/isometric.dart';
 
 /// Creates a card to display furniture.
@@ -16,18 +15,30 @@ class FurnitureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const bool _debugBox = false;
     return Container(
+      // TODO: Handle furniture placement better.
       decoration: BoxDecoration(
-        color: _debugBox ? Colors.red : Colors.transparent,
+        color: furniture.item == null ? const Color.fromARGB(100, 255, 255, 255) : null,
         border: furniture.item == null ? Border.all(color: Colors.black) : null,
       ),
       width: furniture.width,
-      height: furniture.height + (furniture.item == 'paintingRooster' ? 30 : 0),
+      height: furniture.height,
       child: Actor(
         child: furniture.item != null
             ? Image.asset(
                 'assets/furniture/${furniture.item}.png',
-                alignment: AlignmentDirectional.center,
-                scale: 3,
+                alignment: furniture.orientation == 'right'
+                    ? AlignmentDirectional.topEnd
+                    : furniture.orientation == 'left'
+                        ? AlignmentDirectional.topStart
+                        : AlignmentDirectional.center,
+                scale: furniture.scale,
+          /* == 'rugRed' */
+          /*           ? 1 */
+          /*           : furniture.item == 'fireplace' */
+          /*               ? 2 */
+          /*               : furniture.item == 'coffeeTable' */
+          /*                   ? 4 */
+          /*                   : 3, */
               )
             : Container(),
         /* ['bed', 'chair', 'sofa', 'refridgerator', 'rug'] */

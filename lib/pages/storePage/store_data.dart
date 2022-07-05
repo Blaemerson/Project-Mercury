@@ -51,4 +51,30 @@ const List<StoreItem> storeItems = [
     price: 300,
     item: 'paintingRooster',
   ),
+  StoreItem(
+    name: 'Cozy Chair',
+    price: 300,
+    item: 'chairCozy',
+  ),
+  StoreItem(
+    name: 'Wooden Chair',
+    price: 100,
+    item: 'chairWooden',
+  ),
+
+  StoreItem(
+    name: 'Red Bed',
+    price: 400,
+    item: 'bed1',
+  ),
+  StoreItem(
+    name: 'Blue Bed',
+    price: 500,
+    item: 'bed2',
+  ),
+  StoreItem(
+    name: 'Purple Bed',
+    price: 600,
+    item: 'bed3',
+  ),
 ];

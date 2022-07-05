@@ -40,7 +40,7 @@ class Room extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IsometricView(
-      child: SizedBox(
+      child: Container(
         /* color: Colors.blue, */
         width: extendLeft + _extraSpace,
         height: extendRight + _extraSpace,
@@ -50,13 +50,15 @@ class Room extends StatelessWidget {
               if (roomItems.hasData) {
                 // reset then place items in room
                 for (FurnitureSlot slot in items) {
-                  if (slot.item != '') {
+                  if (slot.item != '' && slot.possibleItems.isNotEmpty) {
                     slot.set(null);
                   }
                 }
                 for (PurchasedItem purchase in roomItems.data!) {
-                  List<FurnitureSlot> matchingSlot =
-                      items.where((slot) => slot.possibleItems.contains(purchase.item)).toList();
+                  List<FurnitureSlot> matchingSlot = items
+                      .where(
+                          (slot) => slot.possibleItems.contains(purchase.item))
+                      .toList();
                   matchingSlot.isNotEmpty
                       ? matchingSlot.first.set(purchase.item)
                       : null;
@@ -141,8 +143,9 @@ class Room extends StatelessWidget {
                   /* Items */
                   for (FurnitureSlot slot in items) ...[
                     Positioned(
-                      left: (extendLeft * slot.distanceFromLeft),
-                      bottom: (extendRight * slot.distanceFromRight),
+                    // TODO: Setup furniture positions depending regardless of furniture type.
+                      left: (extendLeft * slot.distanceFromLeft) - (['tvMounted', 'paintingRooster'].contains(slot.item) ? 50 : 0),
+                      bottom: (extendRight * slot.distanceFromRight) - (['tvMounted', 'paintingRooster'].contains(slot.item) ? 40 : 0),
                       child: slot.item == null
                           ? GestureDetector(
                               onTap: () {
@@ -156,7 +159,9 @@ class Room extends StatelessWidget {
                                   ),
                                   context: context,
                                   builder: (context) {
-                                    return StorePage(room: this, slotItems: slot.possibleItems);
+                                    return StorePage(
+                                        room: this,
+                                        slotItems: slot.possibleItems);
                                   },
                                 );
                               },
