@@ -3,22 +3,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class StoreItem {
   final String name;
   final num price;
-  final String type;
-  final String variant;
+  final String item;
+  /* final String variant; */
 
   const StoreItem({
     this.name = '',
     this.price = 0,
-    this.type = '',
-    this.variant = '',
+    this.item = '',
+    /* this.variant = '', */
   });
 
   Map<String, dynamic> toJson() {
     return ({
       'name': name,
       'price': price,
-      'type': type,
-      'variant': variant,
+      'item': item,
+      /* 'variant': variant, */
     });
   }
 
@@ -26,8 +26,8 @@ class StoreItem {
     return StoreItem(
       name: snap['name'],
       price: snap['price'],
-      type: snap['type'],
-      variant: snap['variant'],
+      item: snap['item'],
+      /* variant: snap['variant'], */
     );
   }
 }
@@ -38,15 +38,15 @@ class PurchasedItem extends StoreItem {
   PurchasedItem({
     name = '',
     price = 0,
-    type = '',
-    variant = '',
+    item = '',
+    /* variant = '', */
     this.room = '',
     this.timeBought,
   }) : super(
           name: name,
           price: price,
-          type: type,
-          variant: variant,
+          item: item,
+          /* variant: variant, */
         );
 
   @override
@@ -54,8 +54,8 @@ class PurchasedItem extends StoreItem {
     return ({
       'name': name,
       'price': price,
-      'type': type,
-      'variant': variant,
+      'item': item,
+      /* 'variant': variant, */
       'room': room,
       'timeBought': timeBought,
     });
@@ -65,8 +65,8 @@ class PurchasedItem extends StoreItem {
     return PurchasedItem(
       name: snap['name'],
       price: snap['price'],
-      type: snap['type'],
-      variant: snap['variant'],
+      item: snap['item'],
+      /* variant: snap['variant'], */
       room: snap['room'],
       timeBought: snap['timeBought'] != null
           ? (snap['timeBought'] as Timestamp).toDate()

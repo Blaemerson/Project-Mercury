@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                                 )
                               : Badge(
                                   showBadge: room.items
-                                      .where((item) => item.variant == null)
+                                      .where((item) => item.item == null)
                                       .isNotEmpty,
                                   badgeContent: Icon(
                                     Icons.notification_important,

@@ -50,17 +50,15 @@ class Room extends StatelessWidget {
               if (roomItems.hasData) {
                 // reset then place items in room
                 for (FurnitureSlot slot in items) {
-                  if (slot.variant != '') {
+                  if (slot.item != '') {
                     slot.set(null);
                   }
                 }
-                for (PurchasedItem item in roomItems.data!) {
-                  List<FurnitureSlot> matchingSlot = items
-                      .where((slot) =>
-                          slot.type == item.type && slot.variant == null)
-                      .toList();
+                for (PurchasedItem purchase in roomItems.data!) {
+                  List<FurnitureSlot> matchingSlot =
+                      items.where((slot) => slot.possibleItems.contains(purchase.item)).toList();
                   matchingSlot.isNotEmpty
-                      ? matchingSlot.first.set(item.variant)
+                      ? matchingSlot.first.set(purchase.item)
                       : null;
                 }
               }
@@ -145,7 +143,7 @@ class Room extends StatelessWidget {
                     Positioned(
                       left: (extendLeft * slot.distanceFromLeft),
                       bottom: (extendRight * slot.distanceFromRight),
-                      child: slot.variant == null
+                      child: slot.item == null
                           ? GestureDetector(
                               onTap: () {
                                 showModalBottomSheet(
@@ -158,8 +156,7 @@ class Room extends StatelessWidget {
                                   ),
                                   context: context,
                                   builder: (context) {
-                                    return StorePage(
-                                        room: this, furnitureType: slot.type);
+                                    return StorePage(room: this, slotItems: slot.possibleItems);
                                   },
                                 );
                               },

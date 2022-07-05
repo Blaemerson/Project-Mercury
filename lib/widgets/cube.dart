@@ -10,8 +10,6 @@ class Cube extends StatelessWidget {
   final double rotateY;
   final double fov;
   final bool isInterior;
-  final AssetImage wallTexture;
-  final AssetImage floorTexture;
 
   const Cube({
     Key? key,
@@ -19,9 +17,7 @@ class Cube extends StatelessWidget {
     required this.height,
     required this.depth,
     this.rotateX = 0.0,
-    this.isInterior = true,
-    required this.wallTexture,
-    required this.floorTexture,
+    this.isInterior = false,
     rotateY = 0.0,
     this.fov = 0.0,
   })  : rotateY = rotateY % (math.pi * 2),
@@ -130,13 +126,7 @@ class Cube extends StatelessWidget {
 
     final BoxDecoration dec = BoxDecoration(
       border: Border.all(color: Colors.brown, width: 0.5),
-      image: DecorationImage(
-        image: topOrBottom ? floorTexture : wallTexture,
-        opacity: topOrBottom ? 1 : 0.5,
-        repeat: ImageRepeat.repeat,
-        scale: 4,
-        fit: BoxFit.none,
-      ),
+      color: const Color.fromARGB(70, 255, 255, 255),
     );
 
     final face = Transform(
