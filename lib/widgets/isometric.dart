@@ -27,7 +27,8 @@ class IsometricView extends StatelessWidget {
 class Actor extends StatelessWidget {
   final Widget child;
 
-  const Actor({Key? key, required this.child}) : super(key: key);
+  const Actor({Key? key, required this.child})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

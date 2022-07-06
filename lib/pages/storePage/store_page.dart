@@ -8,27 +8,25 @@ import 'package:projectmercury/widgets/room.dart';
 
 class StorePage extends StatelessWidget {
   final Room room;
-  final String furnitureType;
+  final List<String> slotItems;
   const StorePage({
     required this.room,
-    this.furnitureType = '',
+    this.slotItems = const <String>[],
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<String> openSlots = [];
+    List<String> sellableItems = [];
     room.items
-        .where((furniture) =>
-            furniture.variant == null &&
-            (furnitureType == '' ? true : furniture.type == furnitureType))
+        .where((furniture) => furniture.item == null)
         .forEach((furniture) {
-      openSlots.add(furniture.type);
+      sellableItems.addAll(slotItems.isNotEmpty ? slotItems : furniture.possibleItems);
     });
-    openSlots = openSlots.toSet().toList();
+    sellableItems = sellableItems.toSet().toList();
 
-    List<StoreItem> getItemsByType(String type) {
-      return storeItems.where((item) => item.type == type).toList();
+    List<StoreItem> getItems(List<String> items) {
+      return storeItems.where((item) => items.contains(item.item)).toList();
     }
 
     Widget makeDismissible({required Widget child}) {
@@ -61,10 +59,7 @@ class StorePage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    (furnitureType != ''
-                            ? furnitureType.toUpperCase()
-                            : 'Furniture') +
-                        ' Store',
+                    'Furniture Store',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 24,
@@ -73,30 +68,27 @@ class StorePage extends StatelessWidget {
                   ),
                 ),
               ),
-              if (openSlots.isNotEmpty) ...[
-                for (String type in openSlots)
-                  if (getItemsByType(type).isNotEmpty) ...[
-                    const Divider(),
-                    Center(
-                      child: Text(
-                        '${type.toUpperCase()} Selection',
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 200,
-                      child: ListView.builder(
-                        itemBuilder: (context, index) {
-                          return StoreItemCard(
-                            storeItem: getItemsByType(type)[index],
-                            room: room.name,
-                          );
-                        },
-                        itemCount: getItemsByType(type).length,
-                        scrollDirection: Axis.horizontal,
-                      ),
-                    ),
-                  ],
+              if (sellableItems.isNotEmpty) ...[
+                /* for (String item in sellableItems) const Divider(), */
+                const Center(
+                  child: Text(
+                    'Item Selection',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+                SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return StoreItemCard(
+                        storeItem: getItems(sellableItems)[index],
+                        room: room.name,
+                      );
+                    },
+                    itemCount: getItems(sellableItems).length,
+                    scrollDirection: Axis.horizontal,
+                  ),
+                ),
               ] else ...[
                 Center(
                   child: Text(

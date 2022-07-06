@@ -26,28 +26,28 @@ class _HomePageState extends State<HomePage> {
     return ChangeNotifierProvider.value(
       value: locator.get<EventController>(),
       child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Home'),
-          ),
-          body: InteractiveViewer(
-            boundaryMargin: const EdgeInsets.fromLTRB(80, 0, 40, 0),
-            minScale: 1.0,
-            maxScale: 3.0,
-            child: Center(
-              child: FittedBox(
-                child: _currentRoom ?? _homeLayout,
-              ),
+        appBar: AppBar(
+          title: const Text('Home'),
+        ),
+        body: InteractiveViewer(
+          boundaryMargin: const EdgeInsets.fromLTRB(80, 0, 40, 0),
+          minScale: 1.0,
+          maxScale: 3.0,
+          child: Center(
+            child: FittedBox(
+              child: _currentRoom ?? _homeLayout,
             ),
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //button on bottom-left: shows list of rooms for navigation.
-                Consumer<EventController>(builder: (_, event, __) {
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //button on bottom-left: shows list of rooms for navigation.
+              Consumer<EventController>(
+                builder: (_, event, __) {
                   return SpeedDial(
                     childPadding: const EdgeInsets.symmetric(vertical: 0),
                     visible: event.session != 0 ? true : false,
@@ -85,9 +85,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         onTap: () {
-                          setState(() {
-                            locator.get<Rooms>().set(null);
-                          });
+                          setState(
+                            () {
+                              locator.get<Rooms>().set(null);
+                            },
+                          );
                         },
                       ),
                       for (Room room in locator.get<Rooms>().rooms) ...[
@@ -106,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                                 )
                               : Badge(
                                   showBadge: room.items
-                                      .where((item) => item.variant == null)
+                                      .where((item) => item.item == null)
                                       .isNotEmpty,
                                   badgeContent: Icon(
                                     Icons.notification_important,
@@ -152,44 +154,46 @@ class _HomePageState extends State<HomePage> {
                                   });
                                 }
                               : null,
-                        )
+                        ),
                       ]
                     ],
                   );
-                }),
-                // Text showing current room name.
-                Text(
-                  _currentRoom != null
-                      ? capitalize(_currentRoom.name)
-                      : 'Full View',
-                  style: const TextStyle(fontSize: 30),
-                ),
-                // button on bottom-right: opens store page.
-                FloatingActionButton(
-                  heroTag: null,
-                  child: const Icon(Icons.storefront, size: 42),
-                  onPressed: _currentRoom != null
-                      ? () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16),
-                              ),
+                },
+              ),
+              // Text showing current room name.
+              Text(
+                _currentRoom != null
+                    ? capitalize(_currentRoom.name)
+                    : 'Full View',
+                style: const TextStyle(fontSize: 30),
+              ),
+              // button on bottom-right: opens store page.
+              FloatingActionButton(
+                heroTag: null,
+                child: const Icon(Icons.storefront, size: 42),
+                onPressed: _currentRoom != null
+                    ? () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(16),
                             ),
-                            context: context,
-                            builder: (context) {
-                              return StorePage(room: _currentRoom);
-                            },
-                          );
-                        }
-                      : () =>
-                          showSnackBar('Select a room to open store.', context),
-                ),
-              ],
-            ),
-          )),
+                          ),
+                          context: context,
+                          builder: (context) {
+                            return StorePage(room: _currentRoom);
+                          },
+                        );
+                      }
+                    : () =>
+                        showSnackBar('Select a room to open store.', context),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:projectmercury/models/store_item.dart';
+import 'package:projectmercury/pages/storePage/store_page.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/widgets/furniture_card.dart';
@@ -39,7 +40,7 @@ class Room extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IsometricView(
-      child: SizedBox(
+      child: Container(
         /* color: Colors.blue, */
         width: extendLeft + _extraSpace,
         height: extendRight + _extraSpace,
@@ -49,17 +50,17 @@ class Room extends StatelessWidget {
               if (roomItems.hasData) {
                 // reset then place items in room
                 for (FurnitureSlot slot in items) {
-                  if (slot.variant != '') {
+                  if (slot.item != '' && slot.possibleItems.isNotEmpty) {
                     slot.set(null);
                   }
                 }
-                for (PurchasedItem item in roomItems.data!) {
+                for (PurchasedItem purchase in roomItems.data!) {
                   List<FurnitureSlot> matchingSlot = items
-                      .where((slot) =>
-                          slot.type == item.type && slot.variant == null)
+                      .where(
+                          (slot) => slot.possibleItems.contains(purchase.item))
                       .toList();
                   matchingSlot.isNotEmpty
-                      ? matchingSlot.first.set(item.variant)
+                      ? matchingSlot.first.set(purchase.item)
                       : null;
                 }
               }
@@ -142,11 +143,31 @@ class Room extends StatelessWidget {
                   /* Items */
                   for (FurnitureSlot slot in items) ...[
                     Positioned(
-                      left: (extendLeft * slot.distanceFromLeft),
-                      bottom: (extendRight * slot.distanceFromRight),
-                      child: Actor(
-                        child: FurnitureCard(furniture: slot),
-                      ),
+                    // TODO: Setup furniture positions depending regardless of furniture type.
+                      left: (extendLeft * slot.distanceFromLeft) - (['tvMounted', 'paintingRooster'].contains(slot.item) ? 50 : 0),
+                      bottom: (extendRight * slot.distanceFromRight) - (['tvMounted', 'paintingRooster'].contains(slot.item) ? 40 : 0),
+                      child: slot.item == null
+                          ? GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(16),
+                                    ),
+                                  ),
+                                  context: context,
+                                  builder: (context) {
+                                    return StorePage(
+                                        room: this,
+                                        slotItems: slot.possibleItems);
+                                  },
+                                );
+                              },
+                              child: FurnitureCard(furniture: slot),
+                            )
+                          : FurnitureCard(furniture: slot),
                     ),
                   ],
                 ],
