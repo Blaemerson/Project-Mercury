@@ -32,6 +32,7 @@ Future<bool?> showConfirmation({
   required BuildContext context,
   String? title,
   String? text,
+  bool static = false,
 }) async {
   bool? result = false;
   result = await showDialog(
@@ -50,26 +51,40 @@ Future<bool?> showConfirmation({
             )
           : null,
       actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context, false);
-          },
-          child: const Text(
-            'no',
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context, true);
-          },
-          child: const Text(
-            'yes',
-            style: TextStyle(
-              fontSize: 20,
+        if (static == false) ...[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+            child: const Text(
+              'no',
+              style: TextStyle(fontSize: 20),
             ),
           ),
-        ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+            child: const Text(
+              'yes',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ] else ...[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+            child: const Text(
+              'ok',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ],
       ],
     ),
   );
@@ -104,5 +119,63 @@ BoxDecoration elevatedCardDecor(BuildContext context) {
       ),
     ],
     borderRadius: BorderRadius.circular(8),
+  );
+}
+
+Widget yesOrNo(
+  BuildContext context, {
+  required String yesLabel,
+  required String noLabel,
+  required String yesConfirmationMessage,
+  required String noConfirmationMessage,
+  required Function() onYes,
+  required Function() onNo,
+}) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      ElevatedButton.icon(
+        onPressed: () async {
+          bool result = await showConfirmation(
+                context: context,
+                title: 'Confirmation',
+                text: noConfirmationMessage,
+              ) ??
+              false;
+          if (result == true) {
+            onNo();
+          }
+        },
+        icon: const Icon(Icons.close, size: 32),
+        label: Text(
+          noLabel,
+          style: TextStyle(fontSize: 18),
+        ),
+        style: ElevatedButton.styleFrom(
+          primary: Colors.red[700],
+        ),
+      ),
+      ElevatedButton.icon(
+        onPressed: () async {
+          bool result = await showConfirmation(
+                context: context,
+                title: 'Confirmation',
+                text: yesConfirmationMessage,
+              ) ??
+              false;
+          if (result == true) {
+            onYes();
+          }
+        },
+        icon: const Icon(Icons.check, size: 36),
+        label: Text(
+          yesLabel,
+          style: const TextStyle(fontSize: 18),
+        ),
+        style: ElevatedButton.styleFrom(
+          primary: Colors.green[700],
+        ),
+      ),
+    ],
   );
 }

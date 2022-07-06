@@ -55,53 +55,15 @@ class TransactionCard extends StatelessWidget {
             ),
             const Divider(height: 1),
             if (transaction.state == TransactionState.actionNeeded) ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      bool result = await showConfirmation(
-                            context: context,
-                            title: 'Confirmation',
-                            text: 'Dispute this transaction?',
-                          ) ??
-                          false;
-                      if (result == true) {
-                        _firestore.transactionAction(transaction, false);
-                      }
-                    },
-                    icon: const Icon(Icons.close, size: 32),
-                    label: const Text(
-                      'Dispute',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red[700],
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      bool result = await showConfirmation(
-                            context: context,
-                            title: 'Confirmation',
-                            text: 'Appove this transaction?',
-                          ) ??
-                          false;
-                      if (result == true) {
-                        _firestore.transactionAction(transaction, true);
-                      }
-                    },
-                    icon: const Icon(Icons.check, size: 36),
-                    label: const Text(
-                      'Approve',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.green[700],
-                    ),
-                  ),
-                ],
-              )
+              yesOrNo(
+                context,
+                yesLabel: 'Approve',
+                noLabel: 'Dispute',
+                yesConfirmationMessage: 'Approve this transaction?',
+                noConfirmationMessage: 'Dispute this transaction?',
+                onYes: () => _firestore.transactionAction(transaction, true),
+                onNo: () => _firestore.transactionAction(transaction, false),
+              ),
             ] else if (transaction.state == TransactionState.approved) ...[
               const Text(
                 'Approved',

@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum EventType { text, email }
+enum EventType { text, email, call }
 
 class Event {
   String id;
   String sender;
   final String title;
   final EventType type;
-  final String dialog;
+  final List<String> dialog;
   String? question;
   bool? correctAnswer;
   bool completed;
@@ -16,10 +16,10 @@ class Event {
 
   Event({
     this.id = '',
-    this.sender = '',
+    this.sender = 'unknown',
     required this.title,
     required this.type,
-    this.dialog = '',
+    required this.dialog,
     this.question,
     this.completed = false,
     this.timeSent,

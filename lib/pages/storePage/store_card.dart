@@ -75,14 +75,23 @@ class StoreItemCard extends StatelessWidget {
               room != ''
                   ? ElevatedButton(
                       onPressed: () async {
-                        bool result = await showConfirmation(
+                        if (await _firestore.waitingTransactionAction()) {
+                          showConfirmation(
                               context: context,
-                              title: 'Confirmation',
-                              text: 'Purchase this item?',
-                            ) ??
-                            false;
-                        if (result == true) {
-                          buyItem();
+                              static: true,
+                              title: 'Purchase Failed',
+                              text:
+                                  'Make sure all transactions are resolved to make a new purchase.');
+                        } else {
+                          bool result = await showConfirmation(
+                                context: context,
+                                title: 'Confirmation',
+                                text: 'Purchase this item?',
+                              ) ??
+                              false;
+                          if (result == true) {
+                            buyItem();
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(

@@ -30,7 +30,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     MoneyPage(),
     ContactPage(),
     EventPage(),
-    //MessagePage(),
+    // MessagePage(),
     InfoPage(),
   ];
   List<String> pageTitles = const [
@@ -38,7 +38,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     '/money',
     '/contacts',
     '/event',
-    //'/mail',
+    // '/mail',
     '/info',
   ];
 
