@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:projectmercury/models/event.dart';
 import 'package:projectmercury/utils/utils.dart';
 
@@ -44,6 +45,11 @@ class EventCard extends StatelessWidget {
                 ],
               ),
               ElevatedButton(
+                child: const Text('Open'),
+                style: ElevatedButton.styleFrom(
+                    primary: event.completed
+                        ? Colors.grey
+                        : Theme.of(context).colorScheme.primary),
                 onPressed: () {
                   showDialog(
                       context: context,
@@ -73,7 +79,7 @@ class EventCard extends StatelessWidget {
                                         indent: 0,
                                       ),
                                       Text(
-                                        event.question ?? '',
+                                        event.question,
                                         style: const TextStyle(fontSize: 20),
                                       ),
                                       yesOrNo(
@@ -92,7 +98,6 @@ class EventCard extends StatelessWidget {
                             ),
                           )));
                 },
-                child: const Text('Open'),
               ),
             ],
           ),
@@ -174,12 +179,115 @@ class _EmailEvent extends StatelessWidget {
   }
 }
 
-class _CallEvent extends StatelessWidget {
+class _CallEvent extends StatefulWidget {
   final Event event;
   const _CallEvent({required this.event, Key? key}) : super(key: key);
 
   @override
+  State<_CallEvent> createState() => _CallEventState();
+}
+
+class _CallEventState extends State<_CallEvent> {
+  final audioPlayer = AudioPlayer();
+  bool isPlaying = false;
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    setAudio();
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      setState(() {
+        isPlaying = state == PlayerState.playing;
+      });
+    });
+    audioPlayer.onDurationChanged.listen((newDuration) {
+      setState(() {
+        duration = newDuration;
+      });
+    });
+    audioPlayer.onPositionChanged.listen((newPosition) {
+      setState(() {
+        position = newPosition;
+      });
+    });
+    audioPlayer.onPlayerComplete.listen((event) {
+      setState(() {
+        isPlaying = false;
+      });
+    });
+  }
+
+  Future setAudio() async {
+    audioPlayer.setSourceAsset('callAudio/${widget.event.audioPath}');
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      children: [
+        Text(
+          widget.event.sender,
+          style: const TextStyle(fontSize: 32),
+        ),
+        Slider(
+          min: 0,
+          max: duration.inSeconds.toDouble(),
+          value: position.inSeconds.toDouble(),
+          onChanged: (value) async {
+            final position = Duration(seconds: value.toInt());
+            await audioPlayer.seek(position);
+          },
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(formatTime(position)),
+            Text(formatTime(duration)),
+          ],
+        ),
+        ElevatedButton.icon(
+          onPressed: () async {
+            if (isPlaying) {
+              await audioPlayer.pause();
+            } else {
+              await audioPlayer.resume();
+            }
+          },
+          icon: Icon(
+            isPlaying ? Icons.pause : Icons.play_arrow,
+            size: 24,
+          ),
+          label: Text(isPlaying ? 'Pause' : 'Play',
+              style: const TextStyle(fontSize: 18)),
+        ),
+        const Divider(),
+        const Text(
+          'Transcript:',
+          style: TextStyle(fontSize: 24),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (String dialog in widget.event.dialog) ...[
+              Text(
+                dialog,
+                style: const TextStyle(fontSize: 24),
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
   }
 }

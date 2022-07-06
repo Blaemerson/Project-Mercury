@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  audioplayers: ^1.0.1
   badges: ^2.0.2
   cloud_firestore: ^3.1.14
   cupertino_icons: ^1.0.2
@@ -60,6 +61,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets: #note - assets are temporary placeholders
     - assets/
+    - assets/callAudio/
     - assets/furniture/
     - assets/textures/
     - assets/contacts/

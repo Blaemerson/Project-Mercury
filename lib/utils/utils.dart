@@ -27,6 +27,14 @@ String timeAgo(DateTime d) {
   return "just now";
 }
 
+// format time in HH:mm:ss format
+String formatTime(Duration duration) {
+  String twoDigits(int n) => n.toString().padLeft(2, "0");
+  String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+  String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+  return "${twoDigits(duration.inHours) != '00' ? '${twoDigits(duration.inHours)}:' : ''}$twoDigitMinutes:$twoDigitSeconds";
+}
+
 // shows pop-up with yes/no options. Returns true if 'yes' selected; else false.
 Future<bool?> showConfirmation({
   required BuildContext context,

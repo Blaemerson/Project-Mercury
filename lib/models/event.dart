@@ -8,9 +8,10 @@ class Event {
   final String title;
   final EventType type;
   final List<String> dialog;
-  String? question;
+  String question;
   bool? correctAnswer;
   bool completed;
+  String? audioPath;
   DateTime? timeSent;
   DateTime? timeActed;
 
@@ -20,8 +21,9 @@ class Event {
     required this.title,
     required this.type,
     required this.dialog,
-    this.question,
+    this.question = 'Give information?',
     this.completed = false,
+    this.audioPath,
     this.timeSent,
     this.timeActed,
   });
@@ -34,6 +36,7 @@ class Event {
       'dialog': dialog,
       'question': question,
       'completed': completed,
+      'audioPath': audioPath,
       'timeSent': timeSent,
       'timeActed': timeActed,
     });
@@ -47,6 +50,7 @@ class Event {
       dialog: snap['dialog'],
       question: snap['question'],
       completed: snap['completed'],
+      audioPath: snap['audioPath'],
       timeSent: snap['timeSent'] != null
           ? (snap['timeSent'] as Timestamp).toDate()
           : null,

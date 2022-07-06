@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
+import 'package:projectmercury/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TimerController with ChangeNotifier {
@@ -12,8 +13,8 @@ class TimerController with ChangeNotifier {
   int _sessionTime = 0;
   Timer? _timer;
 
-  String get totalTime => _printDuration(Duration(seconds: _totalTime));
-  String get sessionTime => _printDuration(Duration(seconds: _sessionTime));
+  String get totalTime => formatTime(Duration(seconds: _totalTime));
+  String get sessionTime => formatTime(Duration(seconds: _sessionTime));
 
 // start timer
   void start() async {
@@ -30,14 +31,6 @@ class TimerController with ChangeNotifier {
       incrementLocalTime('sessionTime');
       notifyListeners();
     });
-  }
-
-// format time in HH:mm:ss format
-  String _printDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
 // run when new session started
