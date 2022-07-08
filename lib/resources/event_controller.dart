@@ -45,8 +45,9 @@ class EventController with ChangeNotifier {
     deployable.isNotEmpty
         ? Future.delayed(
             Duration(
-                seconds: Random().nextInt(eventMaxDelay - eventMinDelay) +
-                    eventMinDelay),
+                seconds: /*Random().nextInt(eventMaxDelay - eventMinDelay) +
+                    eventMinDelay*/
+                    0),
             (() => _firestore.addEvent(deployable.first)),
           )
         : null;

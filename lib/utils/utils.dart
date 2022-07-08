@@ -134,6 +134,7 @@ Widget yesOrNo(
   BuildContext context, {
   required String yesLabel,
   required String noLabel,
+  String confirmationTitle = 'Confirmation',
   required String yesConfirmationMessage,
   required String noConfirmationMessage,
   required Function() onYes,
@@ -146,7 +147,7 @@ Widget yesOrNo(
         onPressed: () async {
           bool result = await showConfirmation(
                 context: context,
-                title: 'Confirmation',
+                title: confirmationTitle,
                 text: noConfirmationMessage,
               ) ??
               false;
@@ -167,7 +168,7 @@ Widget yesOrNo(
         onPressed: () async {
           bool result = await showConfirmation(
                 context: context,
-                title: 'Confirmation',
+                title: confirmationTitle,
                 text: yesConfirmationMessage,
               ) ??
               false;

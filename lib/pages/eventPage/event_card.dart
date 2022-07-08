@@ -130,8 +130,11 @@ class _EventDialogState extends State<_EventDialog> {
                         context,
                         yesLabel: 'Approve',
                         noLabel: 'Reject',
-                        yesConfirmationMessage: '',
-                        noConfirmationMessage: '',
+                        confirmationTitle: 'Are you sure?',
+                        yesConfirmationMessage:
+                            '${widget.event.question}\nYou selected: Approve',
+                        noConfirmationMessage:
+                            '${widget.event.question}\nYou selected: Reject',
                         onYes: () {
                           setState(() {
                             widget.event.state = EventState.approved;
