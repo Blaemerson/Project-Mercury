@@ -6,8 +6,8 @@ const int maxOvercharge = 30; // * 10
 const int minOvercharge = 1; // * 10
 
 //Message setting
-const int messageMaxDelay = 30; //seconds
-const int messageMinDelay = 10; //seconds
+const int eventMaxDelay = 30; //seconds
+const int eventMinDelay = 10; //seconds
 
 // Transactions
 Transaction initialTransaction = Transaction(

@@ -9,7 +9,6 @@ import 'package:projectmercury/resources/time_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:projectmercury/pages/homePage/home_page.dart';
 import 'package:projectmercury/pages/infoPage/info_page.dart';
-import 'package:projectmercury/pages/messagePage/messages_page.dart';
 import 'package:projectmercury/pages/moneyPage/money_page.dart';
 
 class NavigationScreen extends StatefulWidget {
@@ -30,7 +29,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     MoneyPage(),
     ContactPage(),
     EventPage(),
-    // MessagePage(),
     InfoPage(),
   ];
   List<String> pageTitles = const [
@@ -38,7 +36,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     '/money',
     '/contacts',
     '/event',
-    // '/mail',
     '/info',
   ];
 

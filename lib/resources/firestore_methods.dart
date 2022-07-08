@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projectmercury/models/event.dart';
-import 'package:projectmercury/models/message.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/models/user.dart' as model;
+import 'package:projectmercury/pages/eventPage/event_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_path.dart';
@@ -44,6 +44,7 @@ class FirestoreMethods {
     await _firestoreService.deleteCollection(
         path: FirestorePath.transactions());
     await _firestoreService.deleteCollection(path: FirestorePath.messages());
+    await _firestoreService.deleteCollection(path: FirestorePath.events());
     initializeData(locator.get<AuthMethods>().currentUser);
   }
 
@@ -106,72 +107,15 @@ class FirestoreMethods {
             room != null ? query.where('room', isEqualTo: room) : query,
       );
 
-  Future<bool> waitingMessageAction() async {
-    List<Message> messages = await _firestoreService.collectionFuture(
-        path: FirestorePath.messages(),
-        builder: (data) => Message.fromSnap(data),
+  Future<bool> waitingEventAction() async {
+    List<Event> events = await _firestoreService.collectionFuture(
+        path: FirestorePath.events(),
+        builder: (data) => Event.fromSnap(data),
         queryBuilder: (query) =>
             query.where('state', isEqualTo: 'actionNeeded').limit(1));
-    int data = messages.length;
+    int data = events.length;
     return data > 0;
   }
-
-  Future<void> messageAction(Message message, bool give) async {
-    if (give == true) {
-      updateMessageState(message.id, MessageState.infoGiven);
-      if (message.sender.trustedWith.contains(message.requestedItem)) {
-        updateScore(1);
-      } else {
-        //penalty?
-      }
-    } else {
-      if (!message.sender.trustedWith.contains(message.requestedItem)) {
-        updateMessageState(message.id, MessageState.infoDenied);
-        updateScore(1);
-      } else {
-        //penalty?
-      }
-    }
-    locator.get<EventController>().update();
-  }
-
-// add new message data
-  Future<void> addMessage(
-    Message message,
-  ) async {
-    await _firestoreService.addDocument(
-        path: FirestorePath.messages(),
-        data: message.toJson()..addAll({'timeSent': DateTime.now()}));
-    locator.get<EventController>().update();
-  }
-
-  Future<void> updateMessageState(String id, MessageState state) async {
-    await _firestoreService.updateDocument(
-        path: FirestorePath.message(id),
-        data: {'state': state.name, 'timeActed': DateTime.now()});
-    await Future.delayed(
-      const Duration(seconds: 1),
-      () => _firestoreService.updateDocument(
-          path: FirestorePath.message(id),
-          data: {'displayState': FieldValue.increment(1)}),
-    );
-    await Future.delayed(
-      const Duration(seconds: 2),
-      () => _firestoreService.updateDocument(
-          path: FirestorePath.message(id),
-          data: {'displayState': FieldValue.increment(1)}),
-    );
-  }
-
-// query of messages
-  Query<Message> get messageQuery => _firestoreService.collectionQuery(
-      path: FirestorePath.messages(),
-      queryBuilder: (query) => query
-          .orderBy('timeSent', descending: true)
-          .withConverter(
-              fromFirestore: (snapshot, _) =>
-                  Message.fromSnap(snapshot.data()!),
-              toFirestore: (message, _) => message.toJson()));
 
   Future<void> addEvent(Event event) async {
     await _firestoreService.addDocument(
@@ -180,6 +124,38 @@ class FirestoreMethods {
     locator.get<EventController>().update();
   }
 
+  Future<void> eventAction(Event event, bool approve) async {
+    if (approve == true) {
+      updateEventState(event.id, EventState.approved);
+      if (event.correctAnswer == true) {
+        updateScore(1);
+      } else {
+        //penalty?
+      }
+    } else {
+      updateEventState(event.id, EventState.rejected);
+      if (event.correctAnswer == false) {
+        updateScore(1);
+      } else {
+        //penalty?
+      }
+    }
+    locator.get<EventController>().update();
+  }
+
+  Future<void> updateEventState(String id, EventState state) async {
+    await _firestoreService.updateDocument(
+      path: FirestorePath.event(id),
+      data: {'state': state.name, 'timeActed': DateTime.now()},
+    );
+  }
+
+  Future<List<Event>> get eventsFuture => _firestoreService.collectionFuture(
+        path: FirestorePath.events(),
+        builder: (data) => Event.fromSnap(data),
+      );
+
+// query of events
   Query<Event> get eventQuery => _firestoreService.collectionQuery(
       path: FirestorePath.events(),
       queryBuilder: (query) => query

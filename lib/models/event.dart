@@ -2,27 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum EventType { text, email, call }
 
+enum EventState { actionNeeded, rejected, approved }
+
 class Event {
   String id;
+  final String eventId;
   String sender;
   final String title;
   final EventType type;
-  final List<String> dialog;
+  final List dialog;
   String question;
   bool? correctAnswer;
-  bool completed;
+  EventState state;
   String? audioPath;
   DateTime? timeSent;
   DateTime? timeActed;
 
   Event({
     this.id = '',
+    required this.eventId,
     this.sender = 'unknown',
     required this.title,
     required this.type,
     required this.dialog,
     this.question = 'Give information?',
-    this.completed = false,
+    this.state = EventState.actionNeeded,
     this.audioPath,
     this.timeSent,
     this.timeActed,
@@ -31,11 +35,12 @@ class Event {
   Map<String, dynamic> toJson() {
     return ({
       'id': id,
+      'eventId': eventId,
       'title': title,
       'type': type.name,
       'dialog': dialog,
       'question': question,
-      'completed': completed,
+      'state': state.name,
       'audioPath': audioPath,
       'timeSent': timeSent,
       'timeActed': timeActed,
@@ -45,11 +50,12 @@ class Event {
   static Event fromSnap(Map<String, dynamic> snap) {
     return Event(
       id: snap['id'],
+      eventId: snap['eventId'],
       title: snap['title'],
       type: EventType.values.byName(snap['type']),
       dialog: snap['dialog'],
       question: snap['question'],
-      completed: snap['completed'],
+      state: EventState.values.byName(snap['state']),
       audioPath: snap['audioPath'],
       timeSent: snap['timeSent'] != null
           ? (snap['timeSent'] as Timestamp).toDate()

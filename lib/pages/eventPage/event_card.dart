@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:projectmercury/models/event.dart';
+import 'package:projectmercury/resources/firestore_methods.dart';
+import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/utils.dart';
 
 class EventCard extends StatelessWidget {
@@ -11,99 +13,161 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Container(
-        decoration: elevatedCardDecor(context),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            decoration: elevatedCardDecor(context),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    event.type == EventType.email
-                        ? Icons.email_outlined
-                        : event.type == EventType.text
-                            ? Icons.textsms_outlined
-                            : event.type == EventType.call
-                                ? Icons.call_outlined
-                                : Icons.question_mark,
-                    size: 30,
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(
-                          '${event.type.name} from ${event.sender} (${timeAgo(event.timeSent!)})',
-                          style: const TextStyle(fontSize: 12)),
-                      Text(event.title, style: const TextStyle(fontSize: 18)),
+                      Icon(
+                        event.type == EventType.email
+                            ? Icons.email_outlined
+                            : event.type == EventType.text
+                                ? Icons.textsms_outlined
+                                : event.type == EventType.call
+                                    ? Icons.call_outlined
+                                    : Icons.question_mark,
+                        size: 30,
+                      ),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              '${event.type.name} from ${event.sender} (${timeAgo(event.timeSent!)})',
+                              style: const TextStyle(fontSize: 12)),
+                          Text(event.title,
+                              style: const TextStyle(fontSize: 18)),
+                        ],
+                      ),
                     ],
+                  ),
+                  ElevatedButton(
+                    child: const Text('Open'),
+                    style: ElevatedButton.styleFrom(
+                      primary: event.state == EventState.actionNeeded
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.grey[700],
+                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => _EventDialog(event: event));
+                    },
                   ),
                 ],
               ),
-              ElevatedButton(
-                child: const Text('Open'),
-                style: ElevatedButton.styleFrom(
-                    primary: event.completed
-                        ? Colors.grey
-                        : Theme.of(context).colorScheme.primary),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => Dialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.height * .5,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: SingleChildScrollView(
-                                      child: event.type == EventType.text
-                                          ? _TextEvent(event: event)
-                                          : event.type == EventType.email
-                                              ? _EmailEvent(event: event)
-                                              : _CallEvent(event: event),
-                                    ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      const Divider(
-                                        indent: 0,
-                                      ),
-                                      Text(
-                                        event.question,
-                                        style: const TextStyle(fontSize: 20),
-                                      ),
-                                      yesOrNo(
-                                        context,
-                                        yesLabel: 'Approve',
-                                        noLabel: 'Reject',
-                                        yesConfirmationMessage: '',
-                                        noConfirmationMessage: '',
-                                        onYes: () {},
-                                        onNo: () {},
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )));
-                },
-              ),
-            ],
+            ),
           ),
-        ),
+          event.state != EventState.actionNeeded
+              ? Image.asset(
+                  'assets/completed.png',
+                  height: 75,
+                  fit: BoxFit.fitHeight,
+                  color: const Color.fromARGB(124, 255, 0, 0),
+                )
+              : Container(),
+        ],
       ),
     );
+  }
+}
+
+class _EventDialog extends StatefulWidget {
+  final Event event;
+
+  const _EventDialog({
+    Key? key,
+    required this.event,
+  }) : super(key: key);
+
+  @override
+  State<_EventDialog> createState() => _EventDialogState();
+}
+
+class _EventDialogState extends State<_EventDialog> {
+  @override
+  Widget build(BuildContext context) {
+    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
+
+    return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * .5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: widget.event.type == EventType.text
+                        ? _TextEvent(event: widget.event)
+                        : widget.event.type == EventType.email
+                            ? _EmailEvent(event: widget.event)
+                            : _CallEvent(event: widget.event),
+                  ),
+                ),
+                Column(
+                  children: [
+                    const Divider(
+                      indent: 0,
+                    ),
+                    Text(
+                      widget.event.question,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    if (widget.event.state == EventState.actionNeeded) ...[
+                      yesOrNo(
+                        context,
+                        yesLabel: 'Approve',
+                        noLabel: 'Reject',
+                        yesConfirmationMessage: '',
+                        noConfirmationMessage: '',
+                        onYes: () {
+                          setState(() {
+                            widget.event.state = EventState.approved;
+                          });
+                          _firestore.eventAction(widget.event, true);
+                        },
+                        onNo: () {
+                          setState(() {
+                            widget.event.state = EventState.rejected;
+                          });
+                          _firestore.eventAction(widget.event, false);
+                        },
+                      )
+                    ] else if (widget.event.state == EventState.approved) ...[
+                      const Text(
+                        'Approved',
+                        style: TextStyle(
+                          fontSize: 32,
+                          color: Colors.green,
+                        ),
+                      )
+                    ] else ...[
+                      const Text(
+                        'Rejected',
+                        style: TextStyle(
+                          fontSize: 32,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
 

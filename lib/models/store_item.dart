@@ -4,13 +4,11 @@ class StoreItem {
   final String name;
   final num price;
   final String item;
-  /* final String variant; */
 
   const StoreItem({
     this.name = '',
     this.price = 0,
     this.item = '',
-    /* this.variant = '', */
   });
 
   Map<String, dynamic> toJson() {
@@ -18,7 +16,6 @@ class StoreItem {
       'name': name,
       'price': price,
       'item': item,
-      /* 'variant': variant, */
     });
   }
 
@@ -27,7 +24,6 @@ class StoreItem {
       name: snap['name'],
       price: snap['price'],
       item: snap['item'],
-      /* variant: snap['variant'], */
     );
   }
 }
@@ -39,14 +35,12 @@ class PurchasedItem extends StoreItem {
     name = '',
     price = 0,
     item = '',
-    /* variant = '', */
     this.room = '',
     this.timeBought,
   }) : super(
           name: name,
           price: price,
           item: item,
-          /* variant: variant, */
         );
 
   @override
@@ -55,7 +49,6 @@ class PurchasedItem extends StoreItem {
       'name': name,
       'price': price,
       'item': item,
-      /* 'variant': variant, */
       'room': room,
       'timeBought': timeBought,
     });
@@ -66,7 +59,6 @@ class PurchasedItem extends StoreItem {
       name: snap['name'],
       price: snap['price'],
       item: snap['item'],
-      /* variant: snap['variant'], */
       room: snap['room'],
       timeBought: snap['timeBought'] != null
           ? (snap['timeBought'] as Timestamp).toDate()

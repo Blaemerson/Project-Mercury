@@ -81,6 +81,8 @@ class ContactCard extends StatelessWidget {
             context: context,
             builder: (context) {
               return Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
                 elevation: 3,
                 child: Container(
                   height: 500,
