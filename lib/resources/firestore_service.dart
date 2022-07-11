@@ -31,17 +31,21 @@ class FirestoreService {
         .onError((error, stackTrace) => debugPrint('$error'));
   }
 
-// add a document to a specified collection in Firestore
-  Future<void> addDocument({
+// add a document to a specified collection in Firestore and returns id
+  Future<String> addDocument({
     required String path,
     required Map<String, dynamic> data,
     String? myId,
   }) async {
     final ref = FirebaseFirestore.instance.collection(path);
+    String? id;
     myId == null
         ? await ref
             .add(data)
-            .then((doc) => doc.update({'id': doc.id}))
+            .then((doc) {
+              id = doc.id;
+              doc.update({'id': id});
+            })
             .then((_) => debugPrint('Added to $path: $data'))
             .onError((error, stackTrace) => debugPrint('$error'))
         : await ref
@@ -49,6 +53,7 @@ class FirestoreService {
             .set(data)
             .then((_) => debugPrint('Added to $path: $data'))
             .onError((error, stackTrace) => debugPrint('$error'));
+    return id ?? myId ?? '';
   }
 
 // delete a document from Firestore

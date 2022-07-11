@@ -86,6 +86,7 @@ class StorePage extends StatelessWidget {
                         storeItem: getItems(sellableItems)[index],
                         room: room,
                         overchargeRate: slot != null ? slot!.overchargeRate : 0,
+                        doubleCharge: slot != null ? slot!.doubleCharge : false,
                       );
                     },
                     itemCount: getItems(sellableItems).length,
