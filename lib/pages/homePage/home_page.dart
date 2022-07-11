@@ -29,14 +29,9 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text('Home'),
         ),
-        body: InteractiveViewer(
-          boundaryMargin: const EdgeInsets.fromLTRB(80, 0, 40, 0),
-          minScale: 1.0,
-          maxScale: 3.0,
-          child: Center(
-            child: FittedBox(
-              child: _currentRoom ?? _homeLayout,
-            ),
+        body: Center(
+          child: FittedBox(
+            child: _currentRoom ?? _homeLayout,
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -107,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 )
                               : Badge(
-                                  showBadge: room.items
+                                  showBadge: room.openSlots
                                       .where((item) => item.item == null)
                                       .isNotEmpty,
                                   badgeContent: Icon(
@@ -183,7 +178,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           context: context,
                           builder: (context) {
-                            return StorePage(room: _currentRoom);
+                            return StorePage(room: _currentRoom.name);
                           },
                         );
                       }

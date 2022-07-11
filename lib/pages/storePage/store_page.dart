@@ -7,23 +7,23 @@ import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/widgets/room.dart';
 
 class StorePage extends StatelessWidget {
-  final Room room;
-  final List<String> slotItems;
+  final String room;
+  final List<String> items;
   const StorePage({
     required this.room,
-    this.slotItems = const <String>[],
+    this.items = const <String>[],
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<String> sellableItems = [];
-    room.items
-        .where((furniture) => furniture.item == null)
-        .forEach((furniture) {
-      sellableItems.addAll(slotItems.isNotEmpty ? slotItems : furniture.possibleItems);
-    });
-    sellableItems = sellableItems.toSet().toList();
+    /* List<String> sellableItems = []; */
+    /* room.items */
+    /*     .where((furniture) => furniture.item == null) */
+    /*     .forEach((furniture) { */
+    /*   sellableItems.addAll(items.isNotEmpty ? items : furniture.possibleItems); */
+    /* }); */
+    /* sellableItems = sellableItems.toSet().toList(); */
 
     List<StoreItem> getItems(List<String> items) {
       return storeItems.where((item) => items.contains(item.item)).toList();
@@ -68,7 +68,7 @@ class StorePage extends StatelessWidget {
                   ),
                 ),
               ),
-              if (sellableItems.isNotEmpty) ...[
+              if (items.isNotEmpty) ...[
                 /* for (String item in sellableItems) const Divider(), */
                 const Center(
                   child: Text(
@@ -81,18 +81,18 @@ class StorePage extends StatelessWidget {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       return StoreItemCard(
-                        storeItem: getItems(sellableItems)[index],
-                        room: room.name,
+                        storeItem: getItems(items)[index],
+                        room: room,
                       );
                     },
-                    itemCount: getItems(sellableItems).length,
+                    itemCount: getItems(items).length,
                     scrollDirection: Axis.horizontal,
                   ),
                 ),
               ] else ...[
                 Center(
                   child: Text(
-                    'Congratulations! Your ${room.name} is fully furnished.',
+                    'Congratulations! Your $room is fully furnished.',
                     style: const TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   ),
@@ -101,7 +101,7 @@ class StorePage extends StatelessWidget {
               StreamBuilder<List<PurchasedItem>>(
                 stream: locator
                     .get<FirestoreMethods>()
-                    .itemsStream(room: room.name),
+                    .itemsStream(room: room),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List<PurchasedItem> roomItems = snapshot.data!;
