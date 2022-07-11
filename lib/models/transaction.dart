@@ -11,6 +11,7 @@ class Transaction {
   final String description;
   final num amount;
   num overcharge;
+  String? cloneId;
   DateTime? timeStamp;
   DateTime? timeActed;
   TransactionState state;
@@ -20,6 +21,7 @@ class Transaction {
     required this.description,
     required this.amount,
     this.overcharge = 0,
+    this.cloneId,
     this.timeStamp,
     this.timeActed,
     this.state = TransactionState.actionNeeded,
@@ -31,6 +33,7 @@ class Transaction {
       'description': description,
       'amount': amount,
       'overcharge': overcharge,
+      'cloneId': cloneId,
       'timeStamp': timeStamp,
       'timeActed': timeActed,
       'state': state.name,
@@ -43,6 +46,7 @@ class Transaction {
       description: snap['description'],
       amount: snap['amount'],
       overcharge: snap['overcharge'] ?? 0,
+      cloneId: snap['cloneId'],
       timeStamp: snap['timeStamp'] != null
           ? (snap['timeStamp'] as Timestamp).toDate()
           : null,

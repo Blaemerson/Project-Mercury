@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/furniture_slot.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/storePage/store_card.dart';
 import 'package:projectmercury/pages/storePage/store_data.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/widgets/room.dart';
 
 class StorePage extends StatelessWidget {
   final String room;
   final List<String> items;
+  final FurnitureSlot? slot;
   const StorePage({
     required this.room,
     this.items = const <String>[],
+    this.slot,
     Key? key,
   }) : super(key: key);
 
@@ -83,6 +85,8 @@ class StorePage extends StatelessWidget {
                       return StoreItemCard(
                         storeItem: getItems(items)[index],
                         room: room,
+                        overchargeRate: slot != null ? slot!.overchargeRate : 0,
+                        doubleCharge: slot != null ? slot!.doubleCharge : false,
                       );
                     },
                     itemCount: getItems(items).length,
@@ -99,9 +103,7 @@ class StorePage extends StatelessWidget {
                 ),
               ],
               StreamBuilder<List<PurchasedItem>>(
-                stream: locator
-                    .get<FirestoreMethods>()
-                    .itemsStream(room: room),
+                stream: locator.get<FirestoreMethods>().itemsStream(room: room),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List<PurchasedItem> roomItems = snapshot.data!;
@@ -120,7 +122,6 @@ class StorePage extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return StoreItemCard(
                                 storeItem: roomItems[index],
-                                room: '',
                               );
                             },
                             itemCount: roomItems.length,

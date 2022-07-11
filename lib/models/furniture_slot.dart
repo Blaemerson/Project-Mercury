@@ -3,7 +3,7 @@ import 'package:projectmercury/pages/storePage/store_page.dart';
 import 'package:projectmercury/widgets/furniture_card.dart';
 import 'dart:math' as math;
 
-class Slot extends StatelessWidget {
+class FurnitureSlot extends StatelessWidget {
   final String room;
   final double width;
   final double length;
@@ -15,7 +15,7 @@ class Slot extends StatelessWidget {
   String? item;
   final List<FurnitureCard> items;
 
-  Slot({
+  FurnitureSlot({
     Key? key,
     required this.width,
     required this.height,
@@ -56,6 +56,7 @@ class Slot extends StatelessWidget {
             builder: (context) {
               return StorePage(
                 items: items.map((e) => e.name).toList(),
+                slot: this,
                 room: room,
               );
             },

@@ -50,7 +50,7 @@ Room bedroom = Room(
     ),
   ],
   openSlots: [
-    Slot(
+    FurnitureSlot(
       room: 'bedroom',
       width: 45,
       height: 20,
@@ -116,7 +116,7 @@ Room livingroom = Room(
     ),
   ],
   openSlots: [
-    Slot(
+    FurnitureSlot(
       room: 'livingroom',
       length: 90,
       width: 90,
@@ -151,7 +151,7 @@ Room livingroom = Room(
             height: 70),
       ],
     ),
-    Slot(
+    FurnitureSlot(
       room: 'livingroom',
       length: 40,
       width: 40,
@@ -175,7 +175,7 @@ Room livingroom = Room(
         ),
       ],
     ),
-    Slot(
+    FurnitureSlot(
       room: 'livingroom',
       length: 50,
       width: 25,
@@ -206,7 +206,7 @@ Room livingroom = Room(
         ),
       ],
     ),
-    Slot(
+    FurnitureSlot(
       room: 'livingroom',
       length: 60,
       width: 30,
