@@ -5,6 +5,7 @@ class FurnitureSlot {
   final double distanceFromLeft;
   final double distanceFromRight;
   final String orientation;
+  final num overchargeRate;
   final List<String> possibleItems;
   final double scale;
   String? item;
@@ -13,6 +14,7 @@ class FurnitureSlot {
     required this.height,
     required this.distanceFromLeft,
     required this.distanceFromRight,
+    this.overchargeRate = 0,
     this.possibleItems = const <String>[],
     this.orientation = '',
     this.scale = 3,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/furniture_slot.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/storePage/store_card.dart';
 import 'package:projectmercury/pages/storePage/store_data.dart';
@@ -8,10 +9,10 @@ import 'package:projectmercury/widgets/room.dart';
 
 class StorePage extends StatelessWidget {
   final Room room;
-  final List<String> slotItems;
+  final FurnitureSlot? slot;
   const StorePage({
     required this.room,
-    this.slotItems = const <String>[],
+    this.slot,
     Key? key,
   }) : super(key: key);
 
@@ -21,7 +22,8 @@ class StorePage extends StatelessWidget {
     room.items
         .where((furniture) => furniture.item == null)
         .forEach((furniture) {
-      sellableItems.addAll(slotItems.isNotEmpty ? slotItems : furniture.possibleItems);
+      sellableItems
+          .addAll(slot != null ? slot!.possibleItems : furniture.possibleItems);
     });
     sellableItems = sellableItems.toSet().toList();
 
@@ -82,7 +84,8 @@ class StorePage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return StoreItemCard(
                         storeItem: getItems(sellableItems)[index],
-                        room: room.name,
+                        room: room,
+                        overchargeRate: slot != null ? slot!.overchargeRate : 0,
                       );
                     },
                     itemCount: getItems(sellableItems).length,
@@ -120,7 +123,6 @@ class StorePage extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return StoreItemCard(
                                 storeItem: roomItems[index],
-                                room: '',
                               );
                             },
                             itemCount: roomItems.length,

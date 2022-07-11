@@ -61,7 +61,6 @@ const List<StoreItem> storeItems = [
     price: 100,
     item: 'chairWooden',
   ),
-
   StoreItem(
     name: 'Red Bed',
     price: 400,

@@ -7,14 +7,17 @@ import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
 import 'package:projectmercury/utils/utils.dart';
+import 'package:projectmercury/widgets/room.dart';
 
 class StoreItemCard extends StatelessWidget {
   final StoreItem storeItem;
-  final String room;
+  final Room? room;
+  final num overchargeRate;
   const StoreItemCard({
     Key? key,
     required this.storeItem,
-    required this.room,
+    this.room,
+    this.overchargeRate = 0,
   }) : super(key: key);
 
   @override
@@ -25,24 +28,28 @@ class StoreItemCard extends StatelessWidget {
       num currentBalance =
           await _firestore.userFuture.then((value) => value.balance);
       if (currentBalance > storeItem.price) {
-        _firestore.addItem(storeItem, room);
-        double overcharge = Random().nextDouble();
-        if (overcharge > overchargeFrequency) {
-          _firestore.addTransaction(
-            Transaction(
-              description: 'Purchased ${storeItem.name}',
-              amount: -storeItem.price,
-            ),
-          );
-        } else {
-          int overAmount = (Random().nextInt(maxOvercharge - minOvercharge) +
-                  minOvercharge) *
-              10;
+        _firestore.addItem(storeItem, room!.name);
+        if (randomOvercharge) {
+          int overAmount = 0;
+          double overcharge = Random().nextDouble();
+          if (overcharge < overchargeFrequency) {
+            overAmount = (Random().nextInt(maxOvercharge - minOvercharge) +
+                    minOvercharge) *
+                10;
+          }
           _firestore.addTransaction(
             Transaction(
               description: 'Purchased ${storeItem.name}',
               amount: -(storeItem.price + overAmount),
               overcharge: overAmount,
+            ),
+          );
+        } else {
+          _firestore.addTransaction(
+            Transaction(
+              description: 'Purchased ${storeItem.name}',
+              amount: -(storeItem.price * (1 + overchargeRate)),
+              overcharge: storeItem.price * overchargeRate,
             ),
           );
         }
@@ -72,7 +79,7 @@ class StoreItemCard extends StatelessWidget {
                 height: 50,
               ),
               Text(formatCurrency.format(storeItem.price)),
-              room != ''
+              room != null
                   ? ElevatedButton(
                       onPressed: () async {
                         if (await _firestore.waitingTransactionAction()) {

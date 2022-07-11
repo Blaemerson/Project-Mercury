@@ -143,9 +143,15 @@ class Room extends StatelessWidget {
                   /* Items */
                   for (FurnitureSlot slot in items) ...[
                     Positioned(
-                    // TODO: Setup furniture positions depending regardless of furniture type.
-                      left: (extendLeft * slot.distanceFromLeft) - (['tvMounted', 'paintingRooster'].contains(slot.item) ? 50 : 0),
-                      bottom: (extendRight * slot.distanceFromRight) - (['tvMounted', 'paintingRooster'].contains(slot.item) ? 40 : 0),
+                      // TODO: Setup furniture positions depending regardless of furniture type.
+                      left: (extendLeft * slot.distanceFromLeft) -
+                          (['tvMounted', 'paintingRooster'].contains(slot.item)
+                              ? 50
+                              : 0),
+                      bottom: (extendRight * slot.distanceFromRight) -
+                          (['tvMounted', 'paintingRooster'].contains(slot.item)
+                              ? 40
+                              : 0),
                       child: slot.item == null
                           ? GestureDetector(
                               onTap: () {
@@ -159,9 +165,7 @@ class Room extends StatelessWidget {
                                   ),
                                   context: context,
                                   builder: (context) {
-                                    return StorePage(
-                                        room: this,
-                                        slotItems: slot.possibleItems);
+                                    return StorePage(room: this, slot: slot);
                                   },
                                 );
                               },
