@@ -56,7 +56,7 @@ Room bedroom = Room(
       height: 20,
       length: 50,
       yPosition: 150,
-      xPosition: 60,
+      xPosition: 50,
       overchargeRate: 0.5,
       items: const [
         FurnitureCard(
@@ -118,11 +118,11 @@ Room livingroom = Room(
   openSlots: [
     FurnitureSlot(
       room: 'livingroom',
-      length: 90,
-      width: 90,
-      height: 20,
+      length: 60,
+      width: 60,
+      height: 25,
       yPosition: 120,
-      xPosition: 150,
+      xPosition: 170,
       doubleCharge: true,
       items: const [
         FurnitureCard(
@@ -153,11 +153,11 @@ Room livingroom = Room(
     ),
     FurnitureSlot(
       room: 'livingroom',
-      length: 40,
-      width: 40,
-      height: 40,
-      yPosition: 40,
-      xPosition: 40,
+      length: 35,
+      width: 35,
+      height: 35,
+      yPosition: 70,
+      xPosition: 70,
       items: const [
         FurnitureCard(
           name: 'chairCozy',
@@ -177,11 +177,11 @@ Room livingroom = Room(
     ),
     FurnitureSlot(
       room: 'livingroom',
-      length: 50,
-      width: 25,
-      height: 50,
-      yPosition: 10,
-      xPosition: 130,
+      length: 40,
+      width: 30,
+      height: 40,
+      yPosition: 40,
+      xPosition: 150,
       items: const [
         FurnitureCard(
           name: 'tvVintage',

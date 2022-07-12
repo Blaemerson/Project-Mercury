@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/storePage/store_page.dart';
+import 'package:projectmercury/widgets/cube.dart';
 import 'package:projectmercury/widgets/furniture_card.dart';
 import 'dart:math' as math;
 
@@ -37,11 +38,9 @@ class FurnitureSlot extends StatelessWidget {
     return Positioned(
       left: yPosition,
       bottom: xPosition,
-      child: Container(
-        transform: Matrix4.identity()
-          ..rotateX(math.pi)
-          ..rotateZ(math.pi),
-        transformAlignment: Alignment.center,
+      child: Transform(
+        transform: Matrix4.identity(),
+        alignment: Alignment.center,
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () => showModalBottomSheet(
@@ -61,36 +60,7 @@ class FurnitureSlot extends StatelessWidget {
               );
             },
           ),
-          child: Stack(
-            children: [
-              Container(
-                width: height,
-                height: length,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  color: const Color.fromARGB(170, 200, 200, 200),
-                ),
-                transform: Matrix4.identity()..rotateY(-90 * math.pi / 180),
-              ),
-              Container(
-                width: width,
-                height: height,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  color: const Color.fromARGB(170, 200, 200, 200),
-                ),
-                transform: Matrix4.identity()..rotateX(90 * math.pi / 180),
-              ),
-              Container(
-                width: width,
-                height: length,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  color: const Color.fromARGB(170, 200, 200, 200),
-                ),
-              ),
-            ],
-          ),
+          child: Cube(width: width, height: length, depth: height),
         ),
       ),
     );
