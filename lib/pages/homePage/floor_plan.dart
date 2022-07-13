@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/pages/homePage/isometric.dart';
+import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/widgets/isometric.dart';
-import 'package:projectmercury/widgets/room.dart';
 
 class FloorPlan extends StatelessWidget {
   const FloorPlan({Key? key}) : super(key: key);

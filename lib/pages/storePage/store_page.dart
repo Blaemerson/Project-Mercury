@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:projectmercury/models/furniture_slot.dart';
+import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/storePage/store_card.dart';
 import 'package:projectmercury/pages/storePage/store_data.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/widgets/furniture_card.dart';
 
 class StorePage extends StatelessWidget {
   final String room;

@@ -1,6 +1,6 @@
-import 'package:projectmercury/models/furniture_slot.dart';
-import 'package:projectmercury/widgets/furniture_card.dart';
-import 'package:projectmercury/widgets/room.dart';
+import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/slot.dart';
+import 'package:projectmercury/pages/homePage/room.dart';
 
 class Rooms {
   Room? _room;

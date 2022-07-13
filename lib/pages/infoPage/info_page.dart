@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/resources/time_controller.dart';
-import 'package:projectmercury/widgets/room.dart';
 import 'package:provider/provider.dart';
 
 class InfoPage extends StatefulWidget {

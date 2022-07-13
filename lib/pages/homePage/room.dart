@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/slot.dart';
 import 'dart:math' as math;
 
 import 'package:projectmercury/models/store_item.dart';
+import 'package:projectmercury/pages/homePage/furniture_card.dart';
+import 'package:projectmercury/pages/homePage/furniture_slot.dart';
+import 'package:projectmercury/pages/homePage/isometric.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/models/furniture_slot.dart';
-import 'package:projectmercury/widgets/furniture_card.dart';
-import 'package:projectmercury/widgets/isometric.dart';
 
 class Room extends StatefulWidget {
   final String name;
