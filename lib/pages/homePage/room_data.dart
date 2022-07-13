@@ -23,9 +23,6 @@ class Rooms {
   }
 }
 
-// variant = null for open slots
-// variant = '' for static slots
-// Items are (for now), positioned by their percent distance from each wall.
 Room bedroom = Room(
   name: 'bedroom',
   width: 200,
@@ -34,14 +31,14 @@ Room bedroom = Room(
   floorTexture: "assets/textures/woodBoards.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
   items: const [
-    FurnitureCard(
+    Furniture(
       width: 60,
       height: 60,
       xPosition: 25,
       yPosition: 180,
       name: 'door_NE',
     ),
-    FurnitureCard(
+    Furniture(
       width: 50,
       height: 30,
       yPosition: 110,
@@ -49,8 +46,8 @@ Room bedroom = Room(
       name: 'bedside_table',
     ),
   ],
-  openSlots: [
-    FurnitureSlot(
+  slots: [
+    Slot(
       room: 'bedroom',
       width: 45,
       height: 20,
@@ -59,21 +56,21 @@ Room bedroom = Room(
       xPosition: 50,
       overchargeRate: 0.5,
       items: const [
-        FurnitureCard(
+        Furniture(
           name: 'bed1',
           yPosition: 140,
           xPosition: 70,
           width: 70,
           height: 60,
         ),
-        FurnitureCard(
+        Furniture(
           name: 'bed2',
           yPosition: 140,
           xPosition: 70,
           width: 70,
           height: 60,
         ),
-        FurnitureCard(
+        Furniture(
           name: 'bed3',
           yPosition: 140,
           xPosition: 70,
@@ -93,21 +90,21 @@ Room livingroom = Room(
   wallTexture: 'assets/textures/floralWall.jpg',
   name: 'livingroom',
   items: const [
-    FurnitureCard(
+    Furniture(
       width: 100,
       height: 100,
       yPosition: 100,
       xPosition: 0,
       name: 'fireplace',
     ),
-    FurnitureCard(
+    Furniture(
       width: 60,
       height: 60,
       yPosition: 25,
       xPosition: 200,
       name: 'door_NW',
     ),
-    FurnitureCard(
+    Furniture(
       width: 60,
       height: 60,
       yPosition: 200,
@@ -115,8 +112,8 @@ Room livingroom = Room(
       name: 'door_NE',
     ),
   ],
-  openSlots: [
-    FurnitureSlot(
+  slots: [
+    Slot(
       room: 'livingroom',
       length: 60,
       width: 60,
@@ -125,33 +122,37 @@ Room livingroom = Room(
       xPosition: 170,
       doubleCharge: true,
       items: const [
-        FurnitureCard(
-            name: 'rugBear',
-            xPosition: 150,
-            yPosition: 120,
-            width: 100,
-            height: 100),
-        FurnitureCard(
-            name: 'rugRed',
-            xPosition: 150,
-            yPosition: 120,
-            width: 150,
-            height: 150),
-        FurnitureCard(
-            name: 'yogaMat',
-            xPosition: 150,
-            yPosition: 120,
-            width: 70,
-            height: 70),
-        FurnitureCard(
-            name: 'coffeeTable',
-            xPosition: 170,
-            yPosition: 140,
-            width: 70,
-            height: 70),
+        Furniture(
+          name: 'rugBear',
+          xPosition: 150,
+          yPosition: 120,
+          width: 100,
+          height: 100,
+        ),
+        Furniture(
+          name: 'rugRed',
+          xPosition: 150,
+          yPosition: 120,
+          width: 150,
+          height: 150,
+        ),
+        Furniture(
+          name: 'yogaMat',
+          xPosition: 150,
+          yPosition: 120,
+          width: 70,
+          height: 70,
+        ),
+        Furniture(
+          name: 'coffeeTable',
+          xPosition: 170,
+          yPosition: 140,
+          width: 70,
+          height: 70,
+        ),
       ],
     ),
-    FurnitureSlot(
+    Slot(
       room: 'livingroom',
       length: 35,
       width: 35,
@@ -159,14 +160,14 @@ Room livingroom = Room(
       yPosition: 70,
       xPosition: 70,
       items: const [
-        FurnitureCard(
+        Furniture(
           name: 'chairCozy',
           xPosition: 50,
           yPosition: 60,
           width: 45,
           height: 60,
         ),
-        FurnitureCard(
+        Furniture(
           name: 'chairWooden',
           xPosition: 50,
           yPosition: 60,
@@ -175,7 +176,7 @@ Room livingroom = Room(
         ),
       ],
     ),
-    FurnitureSlot(
+    Slot(
       room: 'livingroom',
       length: 40,
       width: 30,
@@ -183,21 +184,21 @@ Room livingroom = Room(
       yPosition: 40,
       xPosition: 150,
       items: const [
-        FurnitureCard(
+        Furniture(
           name: 'tvVintage',
           xPosition: 150,
           yPosition: 50,
           width: 50,
           height: 40,
         ),
-        FurnitureCard(
+        Furniture(
           name: 'tvMounted',
           yPosition: 0,
           xPosition: 120,
           width: 80,
           height: 50,
         ),
-        FurnitureCard(
+        Furniture(
           name: 'paintingRooster',
           yPosition: 10,
           xPosition: 120,
@@ -206,7 +207,7 @@ Room livingroom = Room(
         ),
       ],
     ),
-    FurnitureSlot(
+    Slot(
       room: 'livingroom',
       length: 60,
       width: 30,
@@ -214,21 +215,21 @@ Room livingroom = Room(
       yPosition: 200,
       xPosition: 150,
       items: const [
-        FurnitureCard(
+        Furniture(
           name: 'sofaLeather',
           yPosition: 200,
           xPosition: 185,
           width: 100,
           height: 60,
         ),
-        FurnitureCard(
+        Furniture(
           name: 'sofaRed',
           yPosition: 200,
           xPosition: 185,
           width: 100,
           height: 60,
         ),
-        FurnitureCard(
+        Furniture(
           name: 'sofaModern',
           yPosition: 200,
           xPosition: 185,
@@ -248,21 +249,21 @@ Room bathroom = const Room(
   floorTexture: "assets/textures/bathroomTiles.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
   items: [
-    FurnitureCard(
+    Furniture(
       width: 60,
       height: 60,
       yPosition: 40,
       xPosition: 40,
       name: 'shower',
     ),
-    FurnitureCard(
+    Furniture(
       width: 40,
       height: 40,
       yPosition: 150,
       xPosition: 60,
       name: 'toilet',
     ),
-    FurnitureCard(
+    Furniture(
       width: 40,
       height: 40,
       yPosition: 60,
@@ -270,7 +271,7 @@ Room bathroom = const Room(
       name: 'sink',
     ),
   ],
-  openSlots: [],
+  slots: [],
 );
 
 Room kitchen = const Room(
@@ -281,21 +282,21 @@ Room kitchen = const Room(
   floorTexture: "assets/textures/woodBoards.jpg",
   wallTexture: "assets/textures/floralWall.jpg",
   items: [
-    FurnitureCard(
+    Furniture(
       width: 60,
       height: 60,
       yPosition: 50,
       xPosition: 30,
       name: 'refridgerator',
     ),
-    FurnitureCard(
+    Furniture(
       width: 80,
       height: 60,
       yPosition: 120,
       xPosition: 50,
       name: 'kitchencounters',
     ),
-    FurnitureCard(
+    Furniture(
       width: 60,
       height: 60,
       yPosition: 180,
@@ -303,7 +304,7 @@ Room kitchen = const Room(
       name: 'door_NE',
     ),
   ],
-  openSlots: [],
+  slots: [],
 );
 
 Room diningroom = const Room(
@@ -314,7 +315,7 @@ Room diningroom = const Room(
   floorTexture: "assets/textures/woodBoards.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
   items: [
-    FurnitureCard(
+    Furniture(
       width: 60,
       height: 60,
       yPosition: 170,
@@ -322,7 +323,7 @@ Room diningroom = const Room(
       name: 'door_NE',
     ),
   ],
-  openSlots: [],
+  slots: [],
 );
 
 Room washroom = const Room(
@@ -333,14 +334,14 @@ Room washroom = const Room(
   floorTexture: "assets/textures/bathroomTiles.jpg",
   wallTexture: "assets/textures/greyWall.jpg",
   items: [
-    FurnitureCard(
+    Furniture(
       width: 40,
       height: 40,
       yPosition: 80,
       xPosition: 60,
       name: 'dryer',
     ),
-    FurnitureCard(
+    Furniture(
       width: 40,
       height: 40,
       yPosition: 110,
@@ -348,5 +349,5 @@ Room washroom = const Room(
       name: 'washer',
     ),
   ],
-  openSlots: [],
+  slots: [],
 );

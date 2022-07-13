@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/storePage/store_page.dart';
 import 'package:projectmercury/widgets/cube.dart';
 import 'package:projectmercury/widgets/furniture_card.dart';
-import 'dart:math' as math;
 
-class FurnitureSlot extends StatelessWidget {
+// Holds data relating to furniture slot
+class Slot {
   final String room;
   final double width;
   final double length;
@@ -14,30 +14,39 @@ class FurnitureSlot extends StatelessWidget {
   final num overchargeRate; // hardcode transaction overcharge
   final bool doubleCharge; // item charged twice (overrides overchargeRate)
   String? item;
-  final List<FurnitureCard> items;
+  final List<Furniture> items;
 
-  FurnitureSlot({
-    Key? key,
+  Slot({
+    required this.room,
     required this.width,
+    required this.length,
     required this.height,
     required this.yPosition,
     required this.xPosition,
-    required this.items,
-    required this.length,
-    required this.room,
     this.overchargeRate = 0,
     this.doubleCharge = false,
-  }) : super(key: key);
+    required this.items,
+  });
 
   set(String? item) {
     this.item = item;
   }
+}
+
+// Builds the furniture slot
+class FurnitureSlot extends StatelessWidget {
+  final Slot slot;
+
+  const FurnitureSlot({
+    Key? key,
+    required this.slot,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: yPosition,
-      bottom: xPosition,
+      left: slot.yPosition,
+      bottom: slot.xPosition,
       child: Transform(
         transform: Matrix4.identity(),
         alignment: Alignment.center,
@@ -54,37 +63,18 @@ class FurnitureSlot extends StatelessWidget {
             context: context,
             builder: (context) {
               return StorePage(
-                items: items.map((e) => e.name).toList(),
-                slot: this,
-                room: room,
+                room: slot.room,
+                slot: slot,
               );
             },
           ),
-          child: Cube(width: width, height: length, depth: height),
+          child: Cube(
+            width: slot.width,
+            height: slot.length,
+            depth: slot.height,
+          ),
         ),
       ),
     );
   }
 }
-
-/// Creates a slot for furniture to be placed in a room.
-/* class FurnitureSlot { */
-/*   final double width; */
-/*   final double height; */
-/*   final double yPosition; */
-/*   final double xPosition; */
-/*   final List<String> possibleItems; */
-/*   String? item; */
-/*   FurnitureSlot({ */
-/*     required this.width, */
-/*     required this.height, */
-/*     required this.yPosition, */
-/*     required this.xPosition, */
-/*     this.possibleItems = const <String>[], */
-/*     this.item, */
-/*   }); */
-/**/
-/*   set(String? item) { */
-/*     this.item = item; */
-/*   } */
-/* } */

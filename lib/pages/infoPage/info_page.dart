@@ -170,11 +170,9 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   List<int> _calculateRoomProgress(Room sessionRoom) {
-    var dynamicSlots =
-        sessionRoom.openSlots.where((element) => element.item == null);
-    int slotsTotal = sessionRoom.openSlots.length;
+    int slotsTotal = sessionRoom.slots.length;
     int slotsFilled =
-        sessionRoom.openSlots.where((element) => element.item != null).length;
+        sessionRoom.slots.where((element) => element.item != null).length;
     return [slotsFilled, slotsTotal];
   }
 }

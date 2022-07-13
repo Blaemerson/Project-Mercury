@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
           child: FittedBox(
             child: _currentRoom ?? _homeLayout,
           ),
+          /* child: R(height: 100, width: 150, length: 150), */
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(
@@ -102,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 )
                               : Badge(
-                                  showBadge: room.openSlots
+                                  showBadge: room.slots
                                       .where((item) => item.item == null)
                                       .isNotEmpty,
                                   badgeContent: Icon(
