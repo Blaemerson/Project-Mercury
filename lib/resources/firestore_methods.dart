@@ -1,21 +1,72 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projectmercury/models/event.dart';
+import 'package:projectmercury/models/furniture_slot.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/models/user.dart' as model;
-import 'package:projectmercury/pages/eventPage/event_data.dart';
+import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_path.dart';
 import 'package:projectmercury/resources/firestore_service.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
+import 'package:projectmercury/widgets/room.dart';
 
 import '../models/store_item.dart';
 
 //main firestore methods
 class FirestoreMethods {
   final FirestoreService _firestoreService = FirestoreService.instance;
+  late StreamSubscription _itemsSubscription;
+  late StreamSubscription _eventsSubscription;
+  late StreamSubscription _transactionsSubscription;
+
+  Future<void> initializeSubscriptions() async {
+    _itemsSubscription = _firestoreService
+        .collectionStream(
+            path: FirestorePath.items(),
+            builder: (data) => PurchasedItem.fromSnap(data))
+        .listen((event) {
+      for (Room room in locator.get<Rooms>().rooms) {
+        for (FurnitureSlot slot in room.items) {
+          if (slot.item != '' && slot.possibleItems.isNotEmpty) {
+            slot.set(null);
+          }
+        }
+        List<PurchasedItem> roomItems =
+            event.where((element) => element.room == room.name).toList();
+        if (roomItems.isNotEmpty) {
+          for (PurchasedItem purchase in roomItems) {
+            List<FurnitureSlot> matchingSlot = room.items
+                .where((slot) => slot.possibleItems.contains(purchase.item))
+                .toList();
+            matchingSlot.isNotEmpty
+                ? matchingSlot.first.set(purchase.item)
+                : null;
+          }
+        }
+      }
+    });
+    _eventsSubscription = _firestoreService
+        .collectionStream(
+            path: FirestorePath.events(),
+            builder: (data) => Event.fromSnap(data))
+        .listen((event) {});
+    _transactionsSubscription = _firestoreService
+        .collectionStream(
+            path: FirestorePath.transactions(),
+            builder: (data) => Event.fromSnap(data))
+        .listen((event) {});
+  }
+
+  Future<void> cancelSubscriptions() async {
+    _itemsSubscription.cancel();
+    _eventsSubscription.cancel();
+    _transactionsSubscription.cancel();
+  }
 
 // initialize data
   Future<void> initializeData(User user) async {
@@ -217,7 +268,7 @@ class FirestoreMethods {
           addTransaction(
             model.Transaction(
               description: 'Double Charge Refund',
-              amount: transaction.amount,
+              amount: -transaction.amount,
               state: model.TransactionState.approved,
             ),
           );

@@ -22,17 +22,22 @@ class _InfoPageState extends State<InfoPage> {
     final TimerController _timer = locator.get<TimerController>();
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
-    int session = locator.get<EventController>().session;
-    Room sessionRoom = locator
-        .get<Rooms>()
-        .rooms
-        .where((element) => element.unlockOrder == session)
-        .first;
+    Room? sessionRoom;
+    double progress = 0;
+    List<int> roomProgress = [0, 1];
 
-// TODO: calculate session progress
-    List<int> roomProgress = _calculateRoomProgress(sessionRoom);
-    double progress =
-        roomProgress[1] != 0 ? roomProgress[0] / roomProgress[1] : 1;
+    int session = locator.get<EventController>().session;
+    if (session > 0) {
+      Room sessionRoom = locator
+          .get<Rooms>()
+          .rooms
+          .where((element) => element.unlockOrder == session)
+          .first;
+
+      // TODO: calculate session progress
+      roomProgress = _calculateRoomProgress(sessionRoom);
+      progress = roomProgress[1] != 0 ? roomProgress[0] / roomProgress[1] : 1;
+    }
     // progress = 1; // override progress for testing
 
     return ChangeNotifierProvider.value(
@@ -110,11 +115,13 @@ class _InfoPageState extends State<InfoPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      roomProgress[0] == roomProgress[1]
-                          ? const Icon(Icons.check_box_outlined)
-                          : const Icon(Icons.check_box_outline_blank),
-                      Text(
-                          'Fully furnish ${sessionRoom.name}: ${roomProgress.join('/')}'),
+                      if (sessionRoom != null) ...[
+                        roomProgress[0] == roomProgress[1]
+                            ? const Icon(Icons.check_box_outlined)
+                            : const Icon(Icons.check_box_outline_blank),
+                        Text(
+                            'Fully furnish ${sessionRoom.name}: ${roomProgress.join('/')}'),
+                      ],
                     ],
                   ),
                 ],
@@ -170,11 +177,13 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   List<int> _calculateRoomProgress(Room sessionRoom) {
-    var dynamicSlots =
-        sessionRoom.items.where((element) => element.item != '' && element.possibleItems.isNotEmpty);
+    var dynamicSlots = sessionRoom.items.where(
+        (element) => element.item != '' && element.possibleItems.isNotEmpty);
     int slotsTotal = dynamicSlots.length;
-    int slotsFilled =
-        dynamicSlots.where((element) => element.item != null && element.possibleItems.isNotEmpty).length;
+    int slotsFilled = dynamicSlots
+        .where((element) =>
+            element.item != null && element.possibleItems.isNotEmpty)
+        .length;
     return [slotsFilled, slotsTotal];
   }
 }

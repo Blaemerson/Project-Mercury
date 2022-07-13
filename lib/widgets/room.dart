@@ -47,23 +47,23 @@ class Room extends StatelessWidget {
         child: StreamBuilder<List<PurchasedItem>>(
             stream: locator.get<FirestoreMethods>().itemsStream(room: name),
             builder: (context, roomItems) {
-              if (roomItems.hasData) {
-                // reset then place items in room
-                for (FurnitureSlot slot in items) {
-                  if (slot.item != '' && slot.possibleItems.isNotEmpty) {
-                    slot.set(null);
-                  }
-                }
-                for (PurchasedItem purchase in roomItems.data!) {
-                  List<FurnitureSlot> matchingSlot = items
-                      .where(
-                          (slot) => slot.possibleItems.contains(purchase.item))
-                      .toList();
-                  matchingSlot.isNotEmpty
-                      ? matchingSlot.first.set(purchase.item)
-                      : null;
-                }
-              }
+              // if (roomItems.hasData) {
+              //   // reset then place items in room
+              //   for (FurnitureSlot slot in items) {
+              //     if (slot.item != '' && slot.possibleItems.isNotEmpty) {
+              //       slot.set(null);
+              //     }
+              //   }
+              //   for (PurchasedItem purchase in roomItems.data!) {
+              //     List<FurnitureSlot> matchingSlot = items
+              //         .where(
+              //             (slot) => slot.possibleItems.contains(purchase.item))
+              //         .toList();
+              //     matchingSlot.isNotEmpty
+              //         ? matchingSlot.first.set(purchase.item)
+              //         : null;
+              //   }
+              // }
 
               return Stack(
                 alignment: AlignmentDirectional.bottomEnd,

@@ -4,6 +4,7 @@ import 'package:projectmercury/pages/contactPage/contacts_page.dart';
 import 'package:projectmercury/pages/eventPage/event_page.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
+import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/resources/time_controller.dart';
 import 'package:provider/provider.dart';
@@ -49,12 +50,14 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
+    locator.get<FirestoreMethods>().initializeSubscriptions();
     _timer.start();
   }
 
   @override
   void dispose() {
     super.dispose();
+    locator.get<FirestoreMethods>().cancel();
     _timer.cancel();
   }
 
