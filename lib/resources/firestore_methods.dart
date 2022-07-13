@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projectmercury/models/event.dart';
-import 'package:projectmercury/models/furniture_slot.dart';
+import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/models/user.dart' as model;
+import 'package:projectmercury/pages/homePage/furniture_slot.dart';
+import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
@@ -13,7 +15,6 @@ import 'package:projectmercury/resources/firestore_path.dart';
 import 'package:projectmercury/resources/firestore_service.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
-import 'package:projectmercury/widgets/room.dart';
 
 import '../models/store_item.dart';
 
@@ -30,9 +31,10 @@ class FirestoreMethods {
             path: FirestorePath.items(),
             builder: (data) => PurchasedItem.fromSnap(data))
         .listen((event) {
+      // update room slots
       for (Room room in locator.get<Rooms>().rooms) {
-        for (FurnitureSlot slot in room.items) {
-          if (slot.item != '' && slot.possibleItems.isNotEmpty) {
+        for (Slot slot in room.slots) {
+          if (slot.item != null) {
             slot.set(null);
           }
         }
@@ -40,8 +42,11 @@ class FirestoreMethods {
             event.where((element) => element.room == room.name).toList();
         if (roomItems.isNotEmpty) {
           for (PurchasedItem purchase in roomItems) {
-            List<FurnitureSlot> matchingSlot = room.items
-                .where((slot) => slot.possibleItems.contains(purchase.item))
+            List<Slot> matchingSlot = room.slots
+                .where((slot) => slot.items
+                    .map((e) => e.name)
+                    .toList()
+                    .contains(purchase.item))
                 .toList();
             matchingSlot.isNotEmpty
                 ? matchingSlot.first.set(purchase.item)

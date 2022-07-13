@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/pages/homePage/isometric.dart';
+import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/widgets/isometric.dart';
-import 'package:projectmercury/widgets/room.dart';
 
 class FloorPlan extends StatelessWidget {
   const FloorPlan({Key? key}) : super(key: key);
@@ -19,6 +19,7 @@ class FloorPlan extends StatelessWidget {
           children: [
             /*Washroom*/
             Positioned(
+              left: 0,
               bottom: 0,
               child: Actor(
                 child: _rooms[5],
@@ -27,7 +28,8 @@ class FloorPlan extends StatelessWidget {
 
             /*Kitchen*/
             Positioned(
-              bottom: _rooms[5].extendRight,
+              left: 0,
+              bottom: _rooms[5].length,
               child: Actor(
                 child: _rooms[3],
               ),
@@ -35,7 +37,8 @@ class FloorPlan extends StatelessWidget {
 
             /*Diningroom*/
             Positioned(
-              bottom: _rooms[5].extendRight + _rooms[3].extendRight,
+              left: 0,
+              bottom: _rooms[5].length + _rooms[3].length,
               child: Actor(
                 child: _rooms[4],
               ),
@@ -43,26 +46,24 @@ class FloorPlan extends StatelessWidget {
 
             /*Bathroom*/
             Positioned(
-              left: _rooms[5].extendLeft,
+              left: _rooms[5].width,
               bottom: 0,
               child: Actor(
                 child: _rooms[2],
               ),
             ),
-
             /*Bedroom*/
             Positioned(
-              left: _rooms[5].extendLeft,
-              bottom: _rooms[2].extendRight,
+              left: _rooms[3].width,
+              bottom: _rooms[2].length,
               child: Actor(
                 child: _rooms[0],
               ),
             ),
-
             /*Livingroom*/
             Positioned(
-              left: _rooms[5].extendLeft,
-              bottom: _rooms[2].extendRight + _rooms[0].extendRight,
+              left: _rooms[4].width,
+              bottom: _rooms[0].length + _rooms[2].length,
               child: Actor(
                 child: _rooms[1],
               ),

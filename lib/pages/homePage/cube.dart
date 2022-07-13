@@ -47,7 +47,7 @@ class Cube extends StatelessWidget {
     if (rotateY < xFov) {
       children = [left, back, right];
     } else if (rotateY < math.pi / 2 - yFov) {
-      children = [left, back];
+      children = [right, back];
     } else if (rotateY < math.pi / 2 + yFov) {
       children = [front, left, back];
     } else if (rotateY < math.pi - xFov) {
@@ -69,7 +69,7 @@ class Cube extends StatelessWidget {
     } else if (rotateX < zFov && rotateX > -zFov) {
       children.addAll([bottom, top]);
     } else if (rotateX <= math.pi / 2) {
-      children.add(bottom);
+      children.add(top);
     }
 
     return Transform(
@@ -78,7 +78,10 @@ class Cube extends StatelessWidget {
         ..rotateX(rotateX)
         ..rotateY(rotateY),
       alignment: Alignment.center,
-      child: Stack(children: children),
+      child: SizedBox(
+          width: width + (depth != width ? depth : 0),
+          height: height + (width != height ? width : 0),
+          child: Stack(children: children)),
     );
   }
 
@@ -125,8 +128,8 @@ class Cube extends StatelessWidget {
     }
 
     final BoxDecoration dec = BoxDecoration(
-      border: Border.all(color: Colors.brown, width: 0.5),
-      color: const Color.fromARGB(70, 255, 255, 255),
+      border: Border.all(color: Colors.brown, width: 1.0),
+      color: const Color.fromARGB(140, 200, 200, 200),
     );
 
     final face = Transform(

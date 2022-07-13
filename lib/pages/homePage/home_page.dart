@@ -2,12 +2,12 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:projectmercury/pages/homePage/floor_plan.dart';
+import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/pages/storePage/store_page.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/utils.dart';
-import 'package:projectmercury/widgets/room.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,15 +29,11 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text('Home'),
         ),
-        body: InteractiveViewer(
-          boundaryMargin: const EdgeInsets.fromLTRB(80, 0, 40, 0),
-          minScale: 1.0,
-          maxScale: 3.0,
-          child: Center(
-            child: FittedBox(
-              child: _currentRoom ?? _homeLayout,
-            ),
+        body: Center(
+          child: FittedBox(
+            child: _currentRoom ?? _homeLayout,
           ),
+          /* child: R(height: 100, width: 150, length: 150), */
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(
@@ -107,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 )
                               : Badge(
-                                  showBadge: room.items
+                                  showBadge: room.slots
                                       .where((item) => item.item == null)
                                       .isNotEmpty,
                                   badgeContent: Icon(
@@ -183,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           context: context,
                           builder: (context) {
-                            return StorePage(room: _currentRoom);
+                            return StorePage(room: _currentRoom.name);
                           },
                         );
                       }

@@ -1,34 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:projectmercury/models/furniture_slot.dart';
+import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/storePage/store_card.dart';
 import 'package:projectmercury/pages/storePage/store_data.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/widgets/room.dart';
 
 class StorePage extends StatelessWidget {
-  final Room room;
-  final FurnitureSlot? slot;
+  final String room;
+  /* final List<String> items; */
+  final Slot? slot;
   const StorePage({
     required this.room,
+    /* this.items = const <String>[], */
     this.slot,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<String> sellableItems = [];
-    room.items
-        .where((furniture) => furniture.item == null)
-        .forEach((furniture) {
-      sellableItems
-          .addAll(slot != null ? slot!.possibleItems : furniture.possibleItems);
-    });
-    sellableItems = sellableItems.toSet().toList();
+    /* List<String> sellableItems = []; */
+    /* room.items */
+    /*     .where((furniture) => furniture.item == null) */
+    /*     .forEach((furniture) { */
+    /*   sellableItems.addAll(items.isNotEmpty ? items : furniture.possibleItems); */
+    /* }); */
+    /* sellableItems = sellableItems.toSet().toList(); */
 
-    List<StoreItem> getItems(List<String> items) {
-      return storeItems.where((item) => items.contains(item.item)).toList();
+    List<StoreItem> getItems(List<Furniture> items) {
+      return storeItems
+          .where(
+              (item) => items.map((e) => e.name).toList().contains(item.item))
+          .toList();
     }
 
     Widget makeDismissible({required Widget child}) {
@@ -70,7 +74,7 @@ class StorePage extends StatelessWidget {
                   ),
                 ),
               ),
-              if (sellableItems.isNotEmpty) ...[
+              if (slot!.items.isNotEmpty) ...[
                 /* for (String item in sellableItems) const Divider(), */
                 const Center(
                   child: Text(
@@ -83,20 +87,20 @@ class StorePage extends StatelessWidget {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       return StoreItemCard(
-                        storeItem: getItems(sellableItems)[index],
-                        room: room,
-                        overchargeRate: slot != null ? slot!.overchargeRate : 0,
-                        doubleCharge: slot != null ? slot!.doubleCharge : false,
+                        storeItem: getItems(slot!.items)[index],
+                        room: slot!.room,
+                        overchargeRate: slot!.overchargeRate,
+                        doubleCharge: slot!.doubleCharge,
                       );
                     },
-                    itemCount: getItems(sellableItems).length,
+                    itemCount: getItems(slot!.items).length,
                     scrollDirection: Axis.horizontal,
                   ),
                 ),
               ] else ...[
                 Center(
                   child: Text(
-                    'Congratulations! Your ${room.name} is fully furnished.',
+                    'Congratulations! Your ${slot!.room} is fully furnished.',
                     style: const TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   ),
@@ -105,7 +109,7 @@ class StorePage extends StatelessWidget {
               StreamBuilder<List<PurchasedItem>>(
                 stream: locator
                     .get<FirestoreMethods>()
-                    .itemsStream(room: room.name),
+                    .itemsStream(room: slot!.room),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List<PurchasedItem> roomItems = snapshot.data!;

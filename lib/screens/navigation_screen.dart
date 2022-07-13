@@ -57,7 +57,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void dispose() {
     super.dispose();
-    locator.get<FirestoreMethods>().cancel();
+    locator.get<FirestoreMethods>().cancelSubscriptions();
     _timer.cancel();
   }
 

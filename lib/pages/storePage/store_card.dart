@@ -7,11 +7,10 @@ import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
 import 'package:projectmercury/utils/utils.dart';
-import 'package:projectmercury/widgets/room.dart';
 
 class StoreItemCard extends StatelessWidget {
   final StoreItem storeItem;
-  final Room? room;
+  final String? room;
   final num overchargeRate;
   final bool doubleCharge;
   const StoreItemCard({
@@ -30,7 +29,7 @@ class StoreItemCard extends StatelessWidget {
       num currentBalance =
           await _firestore.userFuture.then((value) => value.balance);
       if (currentBalance > storeItem.price) {
-        _firestore.addItem(storeItem, room!.name);
+        _firestore.addItem(storeItem, room!);
         if (doubleCharge) {
           _firestore.addTransaction(
             Transaction(

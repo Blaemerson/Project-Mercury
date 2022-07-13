@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/resources/time_controller.dart';
-import 'package:projectmercury/widgets/room.dart';
 import 'package:provider/provider.dart';
 
 class InfoPage extends StatefulWidget {
@@ -177,13 +177,9 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   List<int> _calculateRoomProgress(Room sessionRoom) {
-    var dynamicSlots = sessionRoom.items.where(
-        (element) => element.item != '' && element.possibleItems.isNotEmpty);
-    int slotsTotal = dynamicSlots.length;
-    int slotsFilled = dynamicSlots
-        .where((element) =>
-            element.item != null && element.possibleItems.isNotEmpty)
-        .length;
+    int slotsTotal = sessionRoom.slots.length;
+    int slotsFilled =
+        sessionRoom.slots.where((element) => element.item != null).length;
     return [slotsFilled, slotsTotal];
   }
 }
