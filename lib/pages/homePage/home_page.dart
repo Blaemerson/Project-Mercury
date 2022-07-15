@@ -4,6 +4,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:projectmercury/pages/homePage/floor_plan.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
+import 'package:projectmercury/pages/storePage/receipt_page.dart';
 import 'package:projectmercury/pages/storePage/store_page.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
@@ -167,26 +168,21 @@ class _HomePageState extends State<HomePage> {
               FloatingActionButton(
                 heroTag: null,
                 child: const Icon(Icons.storefront, size: 42),
-                onPressed: _currentRoom != null
-                    ? () {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(16),
-                            ),
-                          ),
-                          context: context,
-                          builder: (context) {
-                            return StorePage(
-                                room: _currentRoom.name,
-                                slot: _currentRoom.slots.first);
-                          },
-                        );
-                      }
-                    : () =>
-                        showSnackBar('Select a room to open store.', context),
+                onPressed: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16),
+                      ),
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return const ReceiptPage();
+                    },
+                  );
+                },
               ),
             ],
           ),

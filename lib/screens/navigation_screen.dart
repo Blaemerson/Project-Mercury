@@ -22,7 +22,6 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
   final TimerController _timer = locator.get<TimerController>();
-  final EventController _event = locator.get<EventController>();
 
   int _pageSelected = 0;
   List<Widget> pages = const [
@@ -64,103 +63,100 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   Widget build(BuildContext context) {
     Navigator.canPop(context) ? Navigator.pop(context) : null;
-    return ChangeNotifierProvider.value(
-      value: _event,
-      child: Scaffold(
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 100),
-          child: pages[_pageSelected],
-        ),
-        bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: Colors.grey,
-                width: 1,
-              ),
+    return Scaffold(
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 100),
+        child: pages[_pageSelected],
+      ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey,
+              width: 1,
             ),
           ),
-          child: Consumer<EventController>(
-            builder: (_, event, __) {
-              return BottomNavigationBar(
-                currentIndex: _pageSelected,
-                iconSize: 50,
-                showUnselectedLabels: true,
-                type: BottomNavigationBarType.fixed,
-                selectedLabelStyle: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+        ),
+        child: Consumer<EventController>(
+          builder: (_, event, __) {
+            return BottomNavigationBar(
+              currentIndex: _pageSelected,
+              iconSize: 50,
+              showUnselectedLabels: true,
+              type: BottomNavigationBarType.fixed,
+              selectedLabelStyle: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              unselectedLabelStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              items: [
+                BottomNavigationBarItem(
+                  icon: Badge(
+                    showBadge: event.showBadge[0],
+                    badgeContent: Icon(
+                      Icons.notification_important,
+                      size: 28,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    child: const Icon(Icons.home),
+                  ),
+                  label: 'Home',
                 ),
-                unselectedLabelStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                BottomNavigationBarItem(
+                  icon: Badge(
+                    showBadge: event.showBadge[1],
+                    badgeContent: Icon(
+                      Icons.notification_important,
+                      size: 28,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    child: const Icon(Icons.money),
+                  ),
+                  label: 'Money',
                 ),
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Badge(
-                      showBadge: event.showBadge[0],
-                      badgeContent: Icon(
-                        Icons.notification_important,
-                        size: 28,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      child: const Icon(Icons.home),
+                BottomNavigationBarItem(
+                  icon: Badge(
+                    showBadge: event.showBadge[2],
+                    badgeContent: Icon(
+                      Icons.notification_important,
+                      size: 28,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    label: 'Home',
+                    child: const Icon(Icons.people),
                   ),
-                  BottomNavigationBarItem(
-                    icon: Badge(
-                      showBadge: event.showBadge[1],
-                      badgeContent: Icon(
-                        Icons.notification_important,
-                        size: 28,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      child: const Icon(Icons.money),
+                  label: 'Contacts',
+                ),
+                BottomNavigationBarItem(
+                  icon: Badge(
+                    showBadge: event.showBadge[3],
+                    badgeContent: Icon(
+                      Icons.notification_important,
+                      size: 28,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    label: 'Money',
+                    child: const Icon(Icons.mail),
                   ),
-                  BottomNavigationBarItem(
-                    icon: Badge(
-                      showBadge: event.showBadge[2],
-                      badgeContent: Icon(
-                        Icons.notification_important,
-                        size: 28,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      child: const Icon(Icons.people),
+                  label: 'Events',
+                ),
+                BottomNavigationBarItem(
+                  icon: Badge(
+                    showBadge: event.showBadge[4],
+                    badgeContent: Icon(
+                      Icons.notification_important,
+                      size: 28,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    label: 'Contacts',
+                    child: const Icon(Icons.info),
                   ),
-                  BottomNavigationBarItem(
-                    icon: Badge(
-                      showBadge: event.showBadge[3],
-                      badgeContent: Icon(
-                        Icons.notification_important,
-                        size: 28,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      child: const Icon(Icons.mail),
-                    ),
-                    label: 'Events',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Badge(
-                      showBadge: event.showBadge[4],
-                      badgeContent: Icon(
-                        Icons.notification_important,
-                        size: 28,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      child: const Icon(Icons.info),
-                    ),
-                    label: 'Info',
-                  ),
-                ],
-                onTap: onNavTapped,
-              );
-            },
-          ),
+                  label: 'Info',
+                ),
+              ],
+              onTap: onNavTapped,
+            );
+          },
         ),
       ),
     );

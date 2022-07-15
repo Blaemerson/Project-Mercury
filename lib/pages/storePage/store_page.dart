@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:projectmercury/models/furniture.dart';
 import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/storePage/store_card.dart';
 import 'package:projectmercury/pages/storePage/store_data.dart';
-import 'package:projectmercury/resources/firestore_methods.dart';
-import 'package:projectmercury/resources/locator.dart';
 
 class StorePage extends StatelessWidget {
   final String room;
@@ -18,12 +15,10 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<StoreItem> getItems(List<Furniture> items) {
-      return storeItems
-          .where(
-              (item) => items.map((e) => e.name).toList().contains(item.item))
-          .toList();
-    }
+    List<StoreItem> slotItems = storeItems
+        .where((item) =>
+            slot!.items.map((e) => e.name).toList().contains(item.item))
+        .toList();
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -58,7 +53,6 @@ class StorePage extends StatelessWidget {
                   ),
                 ),
                 if (slot!.items.isNotEmpty) ...[
-                  /* for (String item in sellableItems) const Divider(), */
                   const Center(
                     child: Text(
                       'Item Selection',
@@ -70,59 +64,17 @@ class StorePage extends StatelessWidget {
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         return StoreItemCard(
-                          storeItem: getItems(slot!.items)[index],
+                          storeItem: slotItems[index],
                           room: slot!.room,
                           overchargeRate: slot!.overchargeRate,
                           doubleCharge: slot!.doubleCharge,
                         );
                       },
-                      itemCount: getItems(slot!.items).length,
+                      itemCount: slotItems.length,
                       scrollDirection: Axis.horizontal,
                     ),
                   ),
-                ] else ...[
-                  Center(
-                    child: Text(
-                      'Congratulations! Your ${slot!.room} is fully furnished.',
-                      style: const TextStyle(fontSize: 20),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
                 ],
-                StreamBuilder<List<PurchasedItem>>(
-                  stream: locator
-                      .get<FirestoreMethods>()
-                      .itemsStream(room: slot!.room),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List<PurchasedItem> roomItems = snapshot.data!;
-                      return Column(
-                        children: [
-                          const Divider(),
-                          const Center(
-                            child: Text(
-                              'Purchased Furnitures',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 120,
-                            child: ListView.builder(
-                              itemBuilder: (context, index) {
-                                return StoreItemCard(
-                                  storeItem: roomItems[index],
-                                );
-                              },
-                              itemCount: roomItems.length,
-                              scrollDirection: Axis.horizontal,
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                    return Container();
-                  },
-                ),
               ],
             ),
           ),

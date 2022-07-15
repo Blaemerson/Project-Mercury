@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:projectmercury/firebase_options.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/screens/welcome_screen.dart';
 import 'package:projectmercury/screens/navigation_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,7 +65,9 @@ class MyApp extends StatelessWidget {
             if (snapshot.hasData) {
               _firestore.initializeData(_auth.currentUser);
               _analytics.setCurrentScreen('/home');
-              return const NavigationScreen();
+              return ChangeNotifierProvider.value(
+                  value: locator.get<EventController>(),
+                  child: const NavigationScreen());
             } else if (snapshot.hasError) {
               return Center(
                 child: Text('${snapshot.error}'),
