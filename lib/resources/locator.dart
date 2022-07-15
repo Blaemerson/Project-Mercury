@@ -1,5 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/analytics_methods.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
@@ -19,5 +18,4 @@ void setupLocator() {
   locator.registerLazySingleton<TimerController>(() => TimerController());
   //methods associated with badges
   locator.registerLazySingleton<EventController>(() => EventController());
-  locator.registerLazySingleton<Rooms>(() => Rooms());
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:projectmercury/pages/homePage/floor_plan.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
-import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/pages/storePage/receipt_page.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
@@ -20,7 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    Room? _currentRoom = locator.get<Rooms>().room;
+    Room? _currentRoom = locator.get<EventController>().currentRoom;
     const _homeLayout = FloorPlan();
 
     return ChangeNotifierProvider.value(
@@ -83,12 +82,13 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           setState(
                             () {
-                              locator.get<Rooms>().set(null);
+                              locator.get<EventController>().setRoom(null);
                             },
                           );
                         },
                       ),
-                      for (Room room in locator.get<Rooms>().rooms) ...[
+                      for (Room room
+                          in locator.get<EventController>().rooms) ...[
                         SpeedDialChild(
                           labelWidget: room.unlockOrder > event.session
                               ? Row(
@@ -146,7 +146,9 @@ class _HomePageState extends State<HomePage> {
                           onTap: room.unlockOrder <= event.session
                               ? () {
                                   setState(() {
-                                    locator.get<Rooms>().set(room);
+                                    locator
+                                        .get<EventController>()
+                                        .setRoom(room);
                                   });
                                 }
                               : null,

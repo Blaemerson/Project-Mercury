@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/homePage/isometric.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
-import 'package:projectmercury/pages/homePage/room_data.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 
 class FloorPlan extends StatelessWidget {
@@ -9,7 +9,7 @@ class FloorPlan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Room> _rooms = locator.get<Rooms>().rooms;
+    List<Room> _rooms = locator.get<EventController>().rooms;
     return SizedBox(
       width: 600,
       height: 705,

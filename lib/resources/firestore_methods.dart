@@ -92,15 +92,14 @@ class FirestoreMethods {
 
 // reset data
   Future<void> resetData() async {
-    await _firestoreService.updateDocument(path: FirestorePath.user(), data: {
+    _firestoreService.updateDocument(path: FirestorePath.user(), data: {
       'score': 0,
       'balance': 0,
       'session': 1,
     });
-    await _firestoreService.deleteCollection(path: FirestorePath.items());
-    await _firestoreService.deleteCollection(
-        path: FirestorePath.transactions());
-    await _firestoreService.deleteCollection(path: FirestorePath.messages());
+    _firestoreService.deleteCollection(path: FirestorePath.items());
+    _firestoreService.deleteCollection(path: FirestorePath.transactions());
+    _firestoreService.deleteCollection(path: FirestorePath.messages());
     await _firestoreService.deleteCollection(path: FirestorePath.events());
     initializeData(locator.get<AuthMethods>().currentUser);
   }

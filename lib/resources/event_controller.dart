@@ -12,6 +12,22 @@ import 'locator.dart';
 class EventController with ChangeNotifier {
   final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
+  Room? _currentRoom;
+  Room? get currentRoom => _currentRoom;
+  setRoom(Room? room) {
+    _currentRoom = room;
+  }
+
+  final List<Room> _rooms = [
+    bedroom,
+    livingroom,
+    bathroom,
+    kitchen,
+    diningroom,
+    washroom,
+  ];
+  List<Room> get rooms => _rooms;
+
   num _balance = 0;
   num get balance => _balance;
 
@@ -42,16 +58,6 @@ class EventController with ChangeNotifier {
   final List<bool> _showBadge = [false, false, false, false, false];
   List<bool> get showBadge => _showBadge;
 
-  Future<void> update() async {
-    waitingTransactionAction() ? _showBadge[1] = true : _showBadge[1] = false;
-    waitingEventAction() ? _showBadge[3] = true : _showBadge[3] = false;
-    sessionProgress == 1 ? _showBadge[4] = true : _showBadge[4] = false;
-    notifyListeners();
-    if (!waitingEventAction()) {
-      deployEvent();
-    }
-  }
-
   bool waitingTransactionAction() {
     return _transactions
         .where((element) => element.state == TransactionState.actionNeeded)
@@ -66,37 +72,40 @@ class EventController with ChangeNotifier {
 
   void onBalanceChanged(num balance) {
     _balance = balance;
+    notifyListeners();
   }
 
   void onSessionChanged(int session) {
     _session = session;
-    _sessionRoom = locator
-        .get<Rooms>()
-        .rooms
-        .where((element) => element.unlockOrder == session)
-        .first;
+    _sessionRoom =
+        rooms.where((element) => element.unlockOrder == session).first;
     calculateRoomProgress();
-    update();
+    notifyListeners();
   }
 
   void onEventsChanged(List<Event> eventList) {
     _deployedEvents = eventList;
     _deployedEvents.sort((a, b) => b.timeSent!.compareTo(a.timeSent!));
+    waitingEventAction() ? _showBadge[3] = true : _showBadge[3] = false;
     calculateEventProgress();
-    update();
+    if (!waitingEventAction()) {
+      deployEvent();
+    }
+    notifyListeners();
   }
 
   void onTransactionsChanged(List<Transaction> transactionList) {
     _transactions = transactionList;
     _transactions.sort((a, b) => b.timeStamp!.compareTo(a.timeStamp!));
-    update();
+    waitingTransactionAction() ? _showBadge[1] = true : _showBadge[1] = false;
+    notifyListeners();
   }
 
   void onItemsChanged(List<PurchasedItem> itemList) {
     _purchasedItems = itemList;
     furnishRoom();
     calculateRoomProgress();
-    update();
+    notifyListeners();
   }
 
   Future<void> deployEvent() async {
@@ -109,7 +118,7 @@ class EventController with ChangeNotifier {
             const Duration(
                 seconds: /*Random().nextInt(eventMaxDelay - eventMinDelay) +
                     eventMinDelay*/
-                    0),
+                    1),
             (() => _firestore.addEvent(deployable.first)),
           )
         : null;
@@ -148,10 +157,11 @@ class EventController with ChangeNotifier {
     int denom = _roomProgress[1] + _eventProgress[1];
     _sessionProgress =
         (_roomProgress[0] + _eventProgress[0]) / (denom != 0 ? denom : 1);
+    sessionProgress == 1 ? _showBadge[4] = true : _showBadge[4] = false;
   }
 
   void furnishRoom() {
-    for (Room room in locator.get<Rooms>().rooms) {
+    for (Room room in rooms) {
       // reset room
       for (Slot slot in room.slots) {
         if (slot.item != null) {

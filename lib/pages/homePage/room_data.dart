@@ -2,27 +2,6 @@ import 'package:projectmercury/models/furniture.dart';
 import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
 
-class Rooms {
-  Room? _room;
-  set(Room? room) {
-    _room = room;
-  }
-
-  Room? get room => _room;
-
-  final List<Room> _rooms = [
-    bedroom,
-    livingroom,
-    bathroom,
-    kitchen,
-    diningroom,
-    washroom,
-  ];
-  List<Room> get rooms {
-    return _rooms;
-  }
-}
-
 Room bedroom = Room(
   name: 'bedroom',
   width: 200,

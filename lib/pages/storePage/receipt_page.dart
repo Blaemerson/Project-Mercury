@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
-import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/pages/storePage/receipt_card.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
@@ -15,7 +14,7 @@ class ReceiptPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<PurchasedItem> items = locator.get<EventController>().purchasedItems;
-    List<Room> rooms = locator.get<Rooms>().rooms;
+    List<Room> rooms = locator.get<EventController>().rooms;
     rooms.sort(
       (a, b) => b.unlockOrder.compareTo(a.unlockOrder),
     );

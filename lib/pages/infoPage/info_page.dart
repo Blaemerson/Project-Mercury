@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
-import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
@@ -131,7 +130,7 @@ class _InfoPageState extends State<InfoPage> {
                       onPressed: progress == 1
                           ? () async {
                               if (locator.get<EventController>().session <
-                                  locator.get<Rooms>().rooms.length) {
+                                  locator.get<EventController>().rooms.length) {
                                 await _firestore.updateSession();
                               }
                             }
