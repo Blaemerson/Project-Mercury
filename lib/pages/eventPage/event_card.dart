@@ -13,69 +13,75 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            decoration: elevatedCardDecor(context),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Container(
+        decoration: elevatedCardDecor(
+          context,
+          color:
+              event.state != EventState.actionNeeded ? Colors.grey[350] : null,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
                 children: [
-                  Row(
+                  Icon(
+                    event.type == EventType.email
+                        ? Icons.email_outlined
+                        : event.type == EventType.text
+                            ? Icons.textsms_outlined
+                            : event.type == EventType.call
+                                ? Icons.call_outlined
+                                : Icons.question_mark,
+                    size: 30,
+                  ),
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        event.type == EventType.email
-                            ? Icons.email_outlined
-                            : event.type == EventType.text
-                                ? Icons.textsms_outlined
-                                : event.type == EventType.call
-                                    ? Icons.call_outlined
-                                    : Icons.question_mark,
-                        size: 30,
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              '${event.type.name} from ${event.sender} (${timeAgo(event.timeSent!)})',
-                              style: const TextStyle(fontSize: 12)),
-                          Text(event.title,
-                              style: const TextStyle(fontSize: 18)),
-                        ],
+                      Text(
+                          '${event.type.name} from ${event.sender} (${timeAgo(event.timeSent!)})',
+                          style: const TextStyle(fontSize: 12)),
+                      Text(event.title, style: const TextStyle(fontSize: 18)),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Status: ',
+                          style: const TextStyle(fontSize: 18),
+                          children: [
+                            event.state == EventState.actionNeeded
+                                ? const TextSpan(
+                                    text: 'Action Needed',
+                                    style: TextStyle(color: Colors.red),
+                                  )
+                                : TextSpan(
+                                    text: 'Completed',
+                                    style: TextStyle(color: Colors.green[800]))
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  ElevatedButton(
-                    child: const Text('Open'),
-                    style: ElevatedButton.styleFrom(
-                      primary: event.state == EventState.actionNeeded
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.grey[700],
-                    ),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => _EventDialog(event: event));
-                    },
-                  ),
                 ],
               ),
-            ),
+              ElevatedButton(
+                child: const Text('Open'),
+                style: ElevatedButton.styleFrom(
+                  primary: event.state == EventState.actionNeeded
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.grey[700],
+                ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => _EventDialog(event: event));
+                },
+              ),
+            ],
           ),
-          event.state != EventState.actionNeeded
-              ? Image.asset(
-                  'assets/completed.png',
-                  height: 75,
-                  fit: BoxFit.fitHeight,
-                  color: const Color.fromARGB(124, 255, 0, 0),
-                )
-              : Container(),
-        ],
+        ),
       ),
     );
   }

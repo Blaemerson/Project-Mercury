@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/global_variables.dart';
@@ -26,46 +27,40 @@ class StoreItemCard extends StatelessWidget {
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
     buyItem() async {
-      num currentBalance =
-          await _firestore.userFuture.then((value) => value.balance);
-      if (currentBalance > storeItem.price) {
-        _firestore.addItem(storeItem, room!);
-        if (doubleCharge) {
+      _firestore.addItem(storeItem, room!);
+      if (doubleCharge) {
+        _firestore.addTransaction(
+          Transaction(
+            description: 'Purchased ${storeItem.name}',
+            amount: -(storeItem.price),
+          ),
+          double: true,
+        );
+      } else {
+        if (randomOvercharge) {
+          int overAmount = 0;
+          double overcharge = Random().nextDouble();
+          if (overcharge < overchargeFrequency) {
+            overAmount = (Random().nextInt(maxOvercharge - minOvercharge) +
+                    minOvercharge) *
+                10;
+          }
           _firestore.addTransaction(
             Transaction(
               description: 'Purchased ${storeItem.name}',
-              amount: -(storeItem.price),
+              amount: -(storeItem.price + overAmount),
+              overcharge: overAmount,
             ),
-            double: true,
           );
         } else {
-          if (randomOvercharge) {
-            int overAmount = 0;
-            double overcharge = Random().nextDouble();
-            if (overcharge < overchargeFrequency) {
-              overAmount = (Random().nextInt(maxOvercharge - minOvercharge) +
-                      minOvercharge) *
-                  10;
-            }
-            _firestore.addTransaction(
-              Transaction(
-                description: 'Purchased ${storeItem.name}',
-                amount: -(storeItem.price + overAmount),
-                overcharge: overAmount,
-              ),
-            );
-          } else {
-            _firestore.addTransaction(
-              Transaction(
-                description: 'Purchased ${storeItem.name}',
-                amount: -(storeItem.price * (1 + overchargeRate)),
-                overcharge: storeItem.price * overchargeRate,
-              ),
-            );
-          }
+          _firestore.addTransaction(
+            Transaction(
+              description: 'Purchased ${storeItem.name}',
+              amount: -(storeItem.price * (1 + overchargeRate)),
+              overcharge: storeItem.price * overchargeRate,
+            ),
+          );
         }
-      } else {
-        showSnackBar('Not enough funds.', context);
       }
       Navigator.pop(context);
     }

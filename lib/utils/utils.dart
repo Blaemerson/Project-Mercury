@@ -116,9 +116,9 @@ void showSnackBar(String text, BuildContext context) {
   );
 }
 
-BoxDecoration elevatedCardDecor(BuildContext context) {
+BoxDecoration elevatedCardDecor(BuildContext context, {Color? color}) {
   return BoxDecoration(
-    color: Theme.of(context).colorScheme.background,
+    color: color ?? Theme.of(context).colorScheme.background,
     boxShadow: [
       BoxShadow(
         blurRadius: 5,
@@ -158,7 +158,7 @@ Widget yesOrNo(
         icon: const Icon(Icons.close, size: 32),
         label: Text(
           noLabel,
-          style: TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
         style: ElevatedButton.styleFrom(
           primary: Colors.red[700],

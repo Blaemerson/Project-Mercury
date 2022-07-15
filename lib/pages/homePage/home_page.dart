@@ -179,7 +179,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                           context: context,
                           builder: (context) {
-                            return StorePage(room: _currentRoom.name);
+                            return StorePage(
+                                room: _currentRoom.name,
+                                slot: _currentRoom.slots.first);
                           },
                         );
                       }

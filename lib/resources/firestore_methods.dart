@@ -3,12 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projectmercury/models/event.dart';
-import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/models/transaction.dart' as model;
 import 'package:projectmercury/models/user.dart' as model;
-import 'package:projectmercury/pages/homePage/furniture_slot.dart';
-import 'package:projectmercury/pages/homePage/room.dart';
-import 'package:projectmercury/pages/homePage/room_data.dart';
 import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_path.dart';
@@ -21,6 +17,8 @@ import '../models/store_item.dart';
 //main firestore methods
 class FirestoreMethods {
   final FirestoreService _firestoreService = FirestoreService.instance;
+  late StreamSubscription _userSubscription;
+  model.User? lastUserData;
   late StreamSubscription _itemsSubscription;
   late StreamSubscription _eventsSubscription;
   late StreamSubscription _transactionsSubscription;
@@ -31,43 +29,47 @@ class FirestoreMethods {
             path: FirestorePath.items(),
             builder: (data) => PurchasedItem.fromSnap(data))
         .listen((event) {
-      // update room slots
-      for (Room room in locator.get<Rooms>().rooms) {
-        for (Slot slot in room.slots) {
-          if (slot.item != null) {
-            slot.set(null);
-          }
-        }
-        List<PurchasedItem> roomItems =
-            event.where((element) => element.room == room.name).toList();
-        if (roomItems.isNotEmpty) {
-          for (PurchasedItem purchase in roomItems) {
-            List<Slot> matchingSlot = room.slots
-                .where((slot) => slot.items
-                    .map((e) => e.name)
-                    .toList()
-                    .contains(purchase.item))
-                .toList();
-            matchingSlot.isNotEmpty
-                ? matchingSlot.first.set(purchase.item)
-                : null;
-          }
-        }
-      }
+      locator.get<EventController>().onItemsChanged(event);
     });
+
     _eventsSubscription = _firestoreService
         .collectionStream(
             path: FirestorePath.events(),
             builder: (data) => Event.fromSnap(data))
-        .listen((event) {});
+        .listen((event) {
+      locator.get<EventController>().onEventsChanged(event);
+    });
+
     _transactionsSubscription = _firestoreService
         .collectionStream(
             path: FirestorePath.transactions(),
-            builder: (data) => Event.fromSnap(data))
-        .listen((event) {});
+            builder: (data) => model.Transaction.fromSnap(data))
+        .listen((event) {
+      locator.get<EventController>().onTransactionsChanged(event);
+    });
+
+    _userSubscription = _firestoreService
+        .documentStream(
+            path: FirestorePath.user(),
+            builder: (data) => model.User.fromSnap(data))
+        .listen((event) {
+      if (lastUserData != null) {
+        if (lastUserData!.session != event.session) {
+          locator.get<EventController>().onSessionChanged(event.session);
+        }
+        if (lastUserData!.balance != event.balance) {
+          locator.get<EventController>().onBalanceChanged(event.balance);
+        }
+      } else {
+        locator.get<EventController>().onSessionChanged(event.session);
+        locator.get<EventController>().onBalanceChanged(event.balance);
+      }
+      lastUserData = event;
+    });
   }
 
   Future<void> cancelSubscriptions() async {
+    _userSubscription.cancel();
     _itemsSubscription.cancel();
     _eventsSubscription.cancel();
     _transactionsSubscription.cancel();
@@ -123,10 +125,6 @@ class FirestoreMethods {
     await _firestoreService.updateDocument(
         path: FirestorePath.user(), data: {'session': FieldValue.increment(1)});
   }
-
-// get user model (one time read)
-  Future<model.User> get userFuture => _firestoreService.documentFuture(
-      path: FirestorePath.user(), builder: (data) => model.User.fromSnap(data));
 
 // stream of user data (listen)
   Stream<model.User> get userStream => _firestoreService.documentStream(
@@ -205,20 +203,6 @@ class FirestoreMethods {
       data: {'state': state.name, 'timeActed': DateTime.now()},
     );
   }
-
-  Future<List<Event>> get eventsFuture => _firestoreService.collectionFuture(
-        path: FirestorePath.events(),
-        builder: (data) => Event.fromSnap(data),
-      );
-
-// query of events
-  Query<Event> get eventQuery => _firestoreService.collectionQuery(
-      path: FirestorePath.events(),
-      queryBuilder: (query) => query
-          .orderBy('timeSent', descending: true)
-          .withConverter(
-              fromFirestore: (snapshot, _) => Event.fromSnap(snapshot.data()!),
-              toFirestore: (event, _) => event.toJson()));
 
   Future<bool> waitingTransactionAction() async {
     List<model.Transaction> transactions =
@@ -320,17 +304,4 @@ class FirestoreMethods {
         path: FirestorePath.transaction(id),
         data: {'state': state.name, 'timeActed': DateTime.now()});
   }
-
-// query of transacitons
-  Query<model.Transaction> get transactionQuery =>
-      _firestoreService.collectionQuery(
-        path: FirestorePath.transactions(),
-        queryBuilder: (query) => query
-            .orderBy('timeStamp', descending: true)
-            .withConverter<model.Transaction>(
-              fromFirestore: (snapshot, _) =>
-                  model.Transaction.fromSnap(snapshot.data()!),
-              toFirestore: (transaction, _) => transaction.toJson(),
-            ),
-      );
 }

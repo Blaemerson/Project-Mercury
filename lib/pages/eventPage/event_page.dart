@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/firestore.dart';
-import 'package:projectmercury/models/event.dart';
 import 'package:projectmercury/pages/eventPage/event_card.dart';
-import 'package:projectmercury/resources/firestore_methods.dart';
-import 'package:projectmercury/resources/locator.dart';
+import 'package:projectmercury/resources/event_controller.dart';
+import 'package:provider/provider.dart';
 
 class EventPage extends StatelessWidget {
   const EventPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Events'),
       ),
       body: Column(
         children: [
-          Flexible(
-            child: FirestoreListView<Event>(
-              query: _firestore.eventQuery,
-              itemBuilder: (context, snapshot) {
-                Event event = snapshot.data();
-                return EventCard(event: event);
-              },
-              pageSize: 3,
-            ),
+          Consumer<EventController>(
+            builder: (_, event, __) {
+              return Flexible(
+                child: ListView.builder(
+                  itemCount: event.deployedEvents.length,
+                  itemBuilder: (context, index) {
+                    return EventCard(event: event.deployedEvents[index]);
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),

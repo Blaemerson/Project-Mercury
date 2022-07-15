@@ -22,7 +22,7 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   final AnalyticsMethods _analytics = locator.get<AnalyticsMethods>();
   final TimerController _timer = locator.get<TimerController>();
-  final EventController _badge = locator.get<EventController>();
+  final EventController _event = locator.get<EventController>();
 
   int _pageSelected = 0;
   List<Widget> pages = const [
@@ -65,7 +65,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   Widget build(BuildContext context) {
     Navigator.canPop(context) ? Navigator.pop(context) : null;
     return ChangeNotifierProvider.value(
-      value: _badge,
+      value: _event,
       child: Scaffold(
         body: AnimatedSwitcher(
           duration: const Duration(milliseconds: 100),
@@ -81,7 +81,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             ),
           ),
           child: Consumer<EventController>(
-            builder: (_, badge, __) {
+            builder: (_, event, __) {
               return BottomNavigationBar(
                 currentIndex: _pageSelected,
                 iconSize: 50,
@@ -98,7 +98,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 items: [
                   BottomNavigationBarItem(
                     icon: Badge(
-                      showBadge: badge.showBadge[0],
+                      showBadge: event.showBadge[0],
                       badgeContent: Icon(
                         Icons.notification_important,
                         size: 28,
@@ -110,7 +110,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                   ),
                   BottomNavigationBarItem(
                     icon: Badge(
-                      showBadge: badge.showBadge[1],
+                      showBadge: event.showBadge[1],
                       badgeContent: Icon(
                         Icons.notification_important,
                         size: 28,
@@ -122,7 +122,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                   ),
                   BottomNavigationBarItem(
                     icon: Badge(
-                      showBadge: badge.showBadge[2],
+                      showBadge: event.showBadge[2],
                       badgeContent: Icon(
                         Icons.notification_important,
                         size: 28,
@@ -134,7 +134,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                   ),
                   BottomNavigationBarItem(
                     icon: Badge(
-                      showBadge: badge.showBadge[3],
+                      showBadge: event.showBadge[3],
                       badgeContent: Icon(
                         Icons.notification_important,
                         size: 28,
@@ -142,11 +142,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
                       ),
                       child: const Icon(Icons.mail),
                     ),
-                    label: 'Mail',
+                    label: 'Events',
                   ),
                   BottomNavigationBarItem(
                     icon: Badge(
-                      showBadge: badge.showBadge[4],
+                      showBadge: event.showBadge[4],
                       badgeContent: Icon(
                         Icons.notification_important,
                         size: 28,

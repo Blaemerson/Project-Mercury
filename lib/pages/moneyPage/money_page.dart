@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/firestore.dart';
-import 'package:projectmercury/models/transaction.dart' as model;
-import 'package:projectmercury/models/user.dart';
-import 'package:projectmercury/resources/firestore_methods.dart';
-import 'package:projectmercury/resources/locator.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/utils/utils.dart';
+import 'package:provider/provider.dart';
 import 'transaction_card.dart';
 
 class MoneyPage extends StatefulWidget {
@@ -17,8 +14,6 @@ class MoneyPage extends StatefulWidget {
 class _MoneyPageState extends State<MoneyPage> {
   @override
   Widget build(BuildContext context) {
-    FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Money'),
@@ -33,22 +28,14 @@ class _MoneyPageState extends State<MoneyPage> {
                   'Account Balance:',
                   style: TextStyle(fontSize: 24),
                 ),
-                StreamBuilder<User>(
-                  stream: _firestore.userStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text(
-                        formatCurrency.format(snapshot.data!.balance),
-                        style: const TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      );
-                    }
+                Consumer<EventController>(
+                  builder: (_, event, __) {
                     return Text(
-                      formatCurrency.format(0),
+                      formatCurrency.format(event.balance),
                       style: const TextStyle(
-                          fontSize: 36, fontWeight: FontWeight.bold),
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                      ),
                     );
                   },
                 ),
@@ -76,18 +63,19 @@ class _MoneyPageState extends State<MoneyPage> {
               ),
             ),
           ),
-          Flexible(
-            child: Scrollbar(
-              child: FirestoreListView<model.Transaction>(
-                query: _firestore.transactionQuery,
-                itemBuilder: (context, snapshot) {
-                  model.Transaction transaction = snapshot.data();
-                  return TransactionCard(transaction: transaction);
-                },
-                pageSize: 5,
+          Consumer<EventController>(builder: (_, event, __) {
+            return Flexible(
+              child: Scrollbar(
+                child: ListView.builder(
+                  itemCount: event.transactions.length,
+                  itemBuilder: (context, index) {
+                    return TransactionCard(
+                        transaction: event.transactions[index]);
+                  },
+                ),
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );
