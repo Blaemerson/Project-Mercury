@@ -1,5 +1,6 @@
 import 'package:projectmercury/models/event.dart';
 
+// The 3rd digit of eventId is the session in which they will be deployed
 List<Event> events = [
   Event(
     eventId: 100,

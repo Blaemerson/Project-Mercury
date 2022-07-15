@@ -32,29 +32,37 @@ class EventController with ChangeNotifier {
 
   List<PurchasedItem> _purchasedItems = [];
   List<PurchasedItem> get purchasedItems => _purchasedItems;
-  List<Transaction> transactions = [];
-  List<Event> deployedEvents = [];
+
+  List<Transaction> _transactions = [];
+  List<Transaction> get transactions => _transactions;
+
+  List<Event> _deployedEvents = [];
+  List<Event> get deployedEvents => _deployedEvents;
 
   final List<bool> _showBadge = [false, false, false, false, false];
   List<bool> get showBadge => _showBadge;
 
   Future<void> update() async {
-    await _firestore.waitingTransactionAction()
-        ? _showBadge[1] = true
-        : _showBadge[1] = false;
-    await _firestore.waitingEventAction()
-        ? _showBadge[3] = true
-        : _showBadge[3] = false;
-    roomProgress[0] == roomProgress[1]
-        ? _showBadge[4] = true
-        : _showBadge[4] = false;
+    waitingTransactionAction() ? _showBadge[1] = true : _showBadge[1] = false;
+    waitingEventAction() ? _showBadge[3] = true : _showBadge[3] = false;
+    sessionProgress == 1 ? _showBadge[4] = true : _showBadge[4] = false;
     notifyListeners();
-    if (_showBadge[3] == false) {
+    if (!waitingEventAction()) {
       deployEvent();
     }
   }
 
-  List<Event> deployableEvents = events;
+  bool waitingTransactionAction() {
+    return _transactions
+        .where((element) => element.state == TransactionState.actionNeeded)
+        .isNotEmpty;
+  }
+
+  bool waitingEventAction() {
+    return _deployedEvents
+        .where((element) => element.state == EventState.actionNeeded)
+        .isNotEmpty;
+  }
 
   void onBalanceChanged(num balance) {
     _balance = balance;
@@ -72,25 +80,27 @@ class EventController with ChangeNotifier {
   }
 
   void onEventsChanged(List<Event> eventList) {
-    deployedEvents = eventList;
-    deployedEvents.sort((a, b) => b.timeSent!.compareTo(a.timeSent!));
+    _deployedEvents = eventList;
+    _deployedEvents.sort((a, b) => b.timeSent!.compareTo(a.timeSent!));
     calculateEventProgress();
+    update();
   }
 
   void onTransactionsChanged(List<Transaction> transactionList) {
-    transactions = transactionList;
-    transactions.sort((a, b) => b.timeStamp!.compareTo(a.timeStamp!));
+    _transactions = transactionList;
+    _transactions.sort((a, b) => b.timeStamp!.compareTo(a.timeStamp!));
+    update();
   }
 
   void onItemsChanged(List<PurchasedItem> itemList) {
     _purchasedItems = itemList;
-    // update room slots
     furnishRoom();
     calculateRoomProgress();
+    update();
   }
 
   Future<void> deployEvent() async {
-    List<Event> deployable = [...deployableEvents];
+    List<Event> deployable = [...events];
     for (Event event in deployedEvents) {
       deployable.removeWhere((data) => data.eventId == event.eventId);
     }

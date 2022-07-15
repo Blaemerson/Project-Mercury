@@ -1,11 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-import 'package:projectmercury/utils/global_variables.dart';
 import 'package:projectmercury/utils/utils.dart';
 
 class StoreItemCard extends StatelessWidget {
@@ -36,30 +34,13 @@ class StoreItemCard extends StatelessWidget {
           double: true,
         );
       } else {
-        if (randomOvercharge) {
-          int overAmount = 0;
-          double overcharge = Random().nextDouble();
-          if (overcharge < overchargeFrequency) {
-            overAmount = (Random().nextInt(maxOvercharge - minOvercharge) +
-                    minOvercharge) *
-                10;
-          }
-          _firestore.addTransaction(
-            Transaction(
-              description: 'Purchased ${storeItem.name}',
-              amount: -(storeItem.price + overAmount),
-              overcharge: overAmount,
-            ),
-          );
-        } else {
-          _firestore.addTransaction(
-            Transaction(
-              description: 'Purchased ${storeItem.name}',
-              amount: -(storeItem.price * (1 + overchargeRate)),
-              overcharge: storeItem.price * overchargeRate,
-            ),
-          );
-        }
+        _firestore.addTransaction(
+          Transaction(
+            description: 'Purchased ${storeItem.name}',
+            amount: -(storeItem.price * (1 + overchargeRate)),
+            overcharge: storeItem.price * overchargeRate,
+          ),
+        );
       }
       Navigator.pop(context);
     }
@@ -87,7 +68,9 @@ class StoreItemCard extends StatelessWidget {
               room != null
                   ? ElevatedButton(
                       onPressed: () async {
-                        if (await _firestore.waitingTransactionAction()) {
+                        if (locator
+                            .get<EventController>()
+                            .waitingTransactionAction()) {
                           showConfirmation(
                               context: context,
                               static: true,

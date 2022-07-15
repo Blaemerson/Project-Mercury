@@ -88,7 +88,6 @@ class FirestoreMethods {
         path: FirestorePath.transactions()))) {
       addTransaction(initialTransaction);
     }
-    locator.get<EventController>().update();
   }
 
 // reset data
@@ -142,7 +141,6 @@ class FirestoreMethods {
             'timeBought': DateTime.now(),
             'room': room,
           }));
-    locator.get<EventController>().update();
   }
 
   // stream of purchased_item
@@ -161,21 +159,10 @@ class FirestoreMethods {
             room != null ? query.where('room', isEqualTo: room) : query,
       );
 
-  Future<bool> waitingEventAction() async {
-    List<Event> events = await _firestoreService.collectionFuture(
-        path: FirestorePath.events(),
-        builder: (data) => Event.fromSnap(data),
-        queryBuilder: (query) =>
-            query.where('state', isEqualTo: 'actionNeeded').limit(1));
-    int data = events.length;
-    return data > 0;
-  }
-
   Future<void> addEvent(Event event) async {
     await _firestoreService.addDocument(
         path: FirestorePath.events(),
         data: event.toJson()..addAll({'timeSent': DateTime.now()}));
-    locator.get<EventController>().update();
   }
 
   Future<void> eventAction(Event event, bool approve) async {
@@ -194,7 +181,6 @@ class FirestoreMethods {
         //penalty?
       }
     }
-    locator.get<EventController>().update();
   }
 
   Future<void> updateEventState(String id, EventState state) async {
@@ -202,18 +188,6 @@ class FirestoreMethods {
       path: FirestorePath.event(id),
       data: {'state': state.name, 'timeActed': DateTime.now()},
     );
-  }
-
-  Future<bool> waitingTransactionAction() async {
-    List<model.Transaction> transactions =
-        await _firestoreService.collectionFuture(
-      path: FirestorePath.transactions(),
-      builder: (data) => model.Transaction.fromSnap(data),
-      queryBuilder: (query) =>
-          query.where('state', isEqualTo: 'actionNeeded').limit(1),
-    );
-    int data = transactions.length;
-    return data > 0;
   }
 
   Future<void> transactionAction(
@@ -267,7 +241,6 @@ class FirestoreMethods {
         }
       }
     }
-    locator.get<EventController>().update();
   }
 
 // add new transaction data

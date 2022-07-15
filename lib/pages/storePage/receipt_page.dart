@@ -6,7 +6,6 @@ import 'package:projectmercury/pages/storePage/receipt_card.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/utils.dart';
-import 'package:provider/provider.dart';
 
 class ReceiptPage extends StatelessWidget {
   const ReceiptPage({

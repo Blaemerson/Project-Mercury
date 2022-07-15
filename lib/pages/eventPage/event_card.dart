@@ -87,7 +87,7 @@ class EventCard extends StatelessWidget {
   }
 }
 
-class _EventDialog extends StatefulWidget {
+class _EventDialog extends StatelessWidget {
   final Event event;
 
   const _EventDialog({
@@ -95,11 +95,6 @@ class _EventDialog extends StatefulWidget {
     required this.event,
   }) : super(key: key);
 
-  @override
-  State<_EventDialog> createState() => _EventDialogState();
-}
-
-class _EventDialogState extends State<_EventDialog> {
   @override
   Widget build(BuildContext context) {
     FirestoreMethods _firestore = locator.get<FirestoreMethods>();
@@ -115,11 +110,11 @@ class _EventDialogState extends State<_EventDialog> {
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    child: widget.event.type == EventType.text
-                        ? _TextEvent(event: widget.event)
-                        : widget.event.type == EventType.email
-                            ? _EmailEvent(event: widget.event)
-                            : _CallEvent(event: widget.event),
+                    child: event.type == EventType.text
+                        ? _TextEvent(event: event)
+                        : event.type == EventType.email
+                            ? _EmailEvent(event: event)
+                            : _CallEvent(event: event),
                   ),
                 ),
                 Column(
@@ -128,33 +123,29 @@ class _EventDialogState extends State<_EventDialog> {
                       indent: 0,
                     ),
                     Text(
-                      widget.event.question,
+                      event.question,
                       style: const TextStyle(fontSize: 20),
                     ),
-                    if (widget.event.state == EventState.actionNeeded) ...[
+                    if (event.state == EventState.actionNeeded) ...[
                       yesOrNo(
                         context,
                         yesLabel: 'Approve',
                         noLabel: 'Reject',
                         confirmationTitle: 'Are you sure?',
                         yesConfirmationMessage:
-                            '${widget.event.question}\nYou selected: Approve',
+                            '${event.question}\nYou selected: Approve',
                         noConfirmationMessage:
-                            '${widget.event.question}\nYou selected: Reject',
+                            '${event.question}\nYou selected: Reject',
                         onYes: () {
-                          setState(() {
-                            widget.event.state = EventState.approved;
-                          });
-                          _firestore.eventAction(widget.event, true);
+                          _firestore.eventAction(event, true);
+                          Navigator.of(context).pop();
                         },
                         onNo: () {
-                          setState(() {
-                            widget.event.state = EventState.rejected;
-                          });
-                          _firestore.eventAction(widget.event, false);
+                          _firestore.eventAction(event, false);
+                          Navigator.of(context).pop();
                         },
                       )
-                    ] else if (widget.event.state == EventState.approved) ...[
+                    ] else if (event.state == EventState.approved) ...[
                       const Text(
                         'Approved',
                         style: TextStyle(
@@ -268,9 +259,7 @@ class _CallEventState extends State<_CallEvent> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     setAudio();
     audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {
@@ -300,7 +289,6 @@ class _CallEventState extends State<_CallEvent> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     audioPlayer.dispose();
     super.dispose();
   }
