@@ -33,9 +33,9 @@ class _InfoPageState extends State<InfoPage> {
           child: Consumer<EventController>(builder: (_, event, __) {
             int session = event.session;
             Room? sessionRoom = event.sessionRoom;
-            List<int> roomProgress = event.sessionProgress;
-            double progress =
-                roomProgress[1] != 0 ? roomProgress[0] / roomProgress[1] : 1;
+            List<int> roomProgress = event.roomProgress;
+            List<int> eventProgress = event.eventProgress;
+            double progress = event.sessionProgress;
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -109,6 +109,17 @@ class _InfoPageState extends State<InfoPage> {
                               : const Icon(Icons.check_box_outline_blank),
                           Text(
                               'Fully furnish ${sessionRoom.name}: ${roomProgress.join('/')}'),
+                        ],
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (sessionRoom != null) ...[
+                          eventProgress[0] == eventProgress[1]
+                              ? const Icon(Icons.check_box_outlined)
+                              : const Icon(Icons.check_box_outline_blank),
+                          Text('Complete Events: ${eventProgress.join('/')}'),
                         ],
                       ],
                     ),

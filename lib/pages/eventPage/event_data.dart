@@ -2,7 +2,7 @@ import 'package:projectmercury/models/event.dart';
 
 List<Event> events = [
   Event(
-    eventId: '100',
+    eventId: 100,
     title: 'Sample Text Event',
     type: EventType.text,
     dialog: [
@@ -12,7 +12,7 @@ List<Event> events = [
     question: 'Give social security number?',
   ),
   Event(
-    eventId: '101',
+    eventId: 101,
     title: 'Sample Call Event',
     type: EventType.call,
     sender: 'Friend',
@@ -24,7 +24,7 @@ List<Event> events = [
     audioPath: 'sampleCall.mp3',
   ),
   Event(
-      eventId: '102',
+      eventId: 102,
       title: "Sample Email Event",
       type: EventType.email,
       sender: 'neighbor',

@@ -13,7 +13,7 @@ class ReceiptCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Image.asset(
                 'assets/furniture/${purchasedItem.item}.png',
@@ -22,7 +22,6 @@ class ReceiptCard extends StatelessWidget {
               ),
               Flexible(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(purchasedItem.name,
                         style: const TextStyle(fontSize: 25)),

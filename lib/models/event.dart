@@ -6,7 +6,7 @@ enum EventState { actionNeeded, rejected, approved }
 
 class Event {
   String id;
-  final String eventId;
+  final int eventId;
   String sender;
   final String title;
   final EventType type;

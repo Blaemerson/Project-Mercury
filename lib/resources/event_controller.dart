@@ -21,8 +21,14 @@ class EventController with ChangeNotifier {
   Room? _sessionRoom;
   Room? get sessionRoom => _sessionRoom;
 
-  List<int> _sessionProgress = [0, 1];
-  List<int> get sessionProgress => _sessionProgress;
+  double _sessionProgress = 0;
+  double get sessionProgress => _sessionProgress;
+
+  List<int> _roomProgress = [0, 0];
+  List<int> get roomProgress => _roomProgress;
+
+  List<int> _eventProgress = [0, 0];
+  List<int> get eventProgress => _eventProgress;
 
   List<PurchasedItem> _purchasedItems = [];
   List<PurchasedItem> get purchasedItems => _purchasedItems;
@@ -39,7 +45,7 @@ class EventController with ChangeNotifier {
     await _firestore.waitingEventAction()
         ? _showBadge[3] = true
         : _showBadge[3] = false;
-    sessionProgress[0] == sessionProgress[1]
+    roomProgress[0] == roomProgress[1]
         ? _showBadge[4] = true
         : _showBadge[4] = false;
     notifyListeners();
@@ -68,6 +74,7 @@ class EventController with ChangeNotifier {
   void onEventsChanged(List<Event> eventList) {
     deployedEvents = eventList;
     deployedEvents.sort((a, b) => b.timeSent!.compareTo(a.timeSent!));
+    calculateEventProgress();
   }
 
   void onTransactionsChanged(List<Transaction> transactionList) {
@@ -99,13 +106,38 @@ class EventController with ChangeNotifier {
   }
 
   void calculateRoomProgress() {
-    _sessionProgress = [0, 1];
+    _roomProgress = [0, 0];
     if (sessionRoom != null) {
       int slotsTotal = sessionRoom!.slots.length;
       int slotsFilled =
           sessionRoom!.slots.where((element) => element.item != null).length;
-      _sessionProgress = [slotsFilled, slotsTotal];
+      _roomProgress = [slotsFilled, slotsTotal];
+      calculateEventProgress();
     }
+  }
+
+  void calculateEventProgress() {
+    _eventProgress = [0, 0];
+    List<Event> sessionEvents = events
+        .where((element) =>
+            element.eventId >= _session * 100 &&
+            element.eventId < (_session + 1) * 100)
+        .toList();
+    int eventsTotal = sessionEvents.length;
+    int slotsFilled = deployedEvents
+        .where((element) =>
+            element.eventId >= _session * 100 &&
+            element.eventId < (_session + 1) * 100)
+        .where((element) => element.state != EventState.actionNeeded)
+        .length;
+    _eventProgress = [slotsFilled, eventsTotal];
+    calculateSessionProgress();
+  }
+
+  void calculateSessionProgress() {
+    int denom = _roomProgress[1] + _eventProgress[1];
+    _sessionProgress =
+        (_roomProgress[0] + _eventProgress[0]) / (denom != 0 ? denom : 1);
   }
 
   void furnishRoom() {
