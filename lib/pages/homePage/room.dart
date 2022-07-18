@@ -1,3 +1,7 @@
+/// This widget builds a room in true isometric perspective/
+/// On building, occupied and unoccupied furniture slots are additionally loaded in.
+/// Heavily relies on Flutter's stack widget to overlay/position room components/items.
+
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/furniture.dart';
 import 'package:projectmercury/models/slot.dart';
@@ -11,18 +15,17 @@ import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 
 class Room extends StatefulWidget {
-  final String name;
-  final int unlockOrder;
-  final List<Furniture> items;
-  final List<Slot> slots;
-  // TODO: make wall/flooring changable
-  final String floorTexture;
-  final String wallTexture;
-  final double width;
-  final double length;
-  final double height;
+  final String name; // Name of this room ("bedroom", "livingroom", ...)
+  final int unlockOrder; // Session number on which users unlock this room.
+  final List<Furniture> items; // List of furniture to be loaded into room initially.
+  final List<Slot> slots; // Slots that appear empty and must have their item purchased to appear.
+  final String floorTexture; // Path to asset used for wall texture.
+  final String wallTexture; // Path to asset used for floor texture.
+  final double width; // Width of room; visually, distance from back-left wall to front-right wall
+  final double length; // Length of room; visually, distance from back-right wall to front-left wall
+  final double height; // Height of walls
 
-  // For now, 300 is the max width/length for a room
+  // 300 is the max width/length for a room, to avoid wall displacement and other deformaties
   const Room({
     Key? key,
     required this.items,
@@ -49,7 +52,6 @@ class _RoomState extends State<Room> {
   Widget build(BuildContext context) {
     return IsometricView(
       child: SizedBox(
-        /* color: Colors.blue, */
         width: widget.width + _extraSpace,
         height: widget.length + _extraSpace,
         child: StreamBuilder<List<PurchasedItem>>(
@@ -105,6 +107,7 @@ class _RoomState extends State<Room> {
                     ),
                   ),
                 ),
+
                 /* Right wall */
                 PositionedDirectional(
                   bottom: _extraSpace,
