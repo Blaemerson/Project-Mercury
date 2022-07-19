@@ -54,42 +54,51 @@ class ReceiptPage extends StatelessWidget {
                   child: ListView(
                     controller: scrollController,
                     children: [
-                      for (Room room in rooms) ...[
-                        if (items
-                            .where((element) => element.room == room.name)
-                            .isNotEmpty) ...[
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  color: Colors.grey[700],
-                                  indent: 10,
-                                  endIndent: 10,
-                                  thickness: 3,
+                      if (items.isNotEmpty) ...[
+                        for (Room room in rooms) ...[
+                          if (items
+                              .where((element) => element.room == room.name)
+                              .isNotEmpty) ...[
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.grey[700],
+                                    indent: 10,
+                                    endIndent: 10,
+                                    thickness: 3,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                capitalize(room.name),
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                                Text(
+                                  capitalize(room.name),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Divider(
-                                  color: Colors.grey[700],
-                                  indent: 10,
-                                  endIndent: 10,
-                                  thickness: 3,
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.grey[700],
+                                    indent: 10,
+                                    endIndent: 10,
+                                    thickness: 3,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          for (PurchasedItem item in items.where(
-                              (element) => element.room == room.name)) ...[
-                            ReceiptCard(purchasedItem: item),
-                          ]
+                              ],
+                            ),
+                            for (PurchasedItem item in items.where(
+                                (element) => element.room == room.name)) ...[
+                              ReceiptCard(purchasedItem: item),
+                            ]
+                          ],
                         ],
+                      ] else ...[
+                        const Center(
+                            child: Text(
+                          'You have not made any purchases yet.',
+                          style: TextStyle(fontSize: 24),
+                          textAlign: TextAlign.center,
+                        )),
                       ],
                     ],
                   ),

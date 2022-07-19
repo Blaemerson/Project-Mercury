@@ -68,12 +68,15 @@ class FirestoreService {
   Future<void> deleteCollection({
     required String path,
   }) async {
-    final ref = FirebaseFirestore.instance.collection(path);
+    final instance = FirebaseFirestore.instance;
+    final batch = instance.batch();
+    final ref = instance.collection(path);
     await ref.get().then((value) {
       for (var doc in value.docs) {
-        doc.reference.delete();
+        batch.delete(doc.reference);
       }
     });
+    await batch.commit();
   }
 
 // emit a future of a document for one-time read from Firestore

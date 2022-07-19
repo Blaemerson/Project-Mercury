@@ -68,6 +68,20 @@ class FirestoreMethods {
     });
   }
 
+  Future<void> pauseSubscriptions() async {
+    _userSubscription.pause();
+    _itemsSubscription.pause();
+    _eventsSubscription.pause();
+    _transactionsSubscription.pause();
+  }
+
+  Future<void> resumeSubscriptions() async {
+    _userSubscription.resume();
+    _itemsSubscription.resume();
+    _eventsSubscription.resume();
+    _transactionsSubscription.resume();
+  }
+
   Future<void> cancelSubscriptions() async {
     _userSubscription.cancel();
     _itemsSubscription.cancel();
@@ -92,6 +106,7 @@ class FirestoreMethods {
 
 // reset data
   Future<void> resetData() async {
+    pauseSubscriptions();
     _firestoreService.updateDocument(path: FirestorePath.user(), data: {
       'score': 0,
       'balance': 0,
@@ -99,8 +114,8 @@ class FirestoreMethods {
     });
     _firestoreService.deleteCollection(path: FirestorePath.items());
     _firestoreService.deleteCollection(path: FirestorePath.transactions());
-    _firestoreService.deleteCollection(path: FirestorePath.messages());
     await _firestoreService.deleteCollection(path: FirestorePath.events());
+    resumeSubscriptions();
     initializeData(locator.get<AuthMethods>().currentUser);
   }
 
@@ -179,6 +194,12 @@ class FirestoreMethods {
       } else {
         //penalty?
       }
+    }
+    List<model.Transaction> pending =
+        locator.get<EventController>().pendingTransactions;
+    for (model.Transaction transaction in pending) {
+      updateTransactionState(
+          transaction.id, model.TransactionState.actionNeeded);
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/resources/event_controller.dart';
@@ -8,15 +9,11 @@ import 'package:projectmercury/utils/utils.dart';
 
 class StoreItemCard extends StatelessWidget {
   final StoreItem storeItem;
-  final String? room;
-  final num overchargeRate;
-  final bool doubleCharge;
+  final Slot slot;
   const StoreItemCard({
     Key? key,
     required this.storeItem,
-    this.room,
-    this.overchargeRate = 0,
-    this.doubleCharge = false,
+    required this.slot,
   }) : super(key: key);
 
   @override
@@ -24,12 +21,15 @@ class StoreItemCard extends StatelessWidget {
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
     buyItem() async {
-      _firestore.addItem(storeItem, room!);
-      if (doubleCharge) {
+      _firestore.addItem(storeItem, slot.room);
+      if (slot.doubleCharge) {
         _firestore.addTransaction(
           Transaction(
             description: 'Purchased ${storeItem.name}',
             amount: -(storeItem.price),
+            state: slot.delay
+                ? TransactionState.pending
+                : TransactionState.actionNeeded,
           ),
           double: true,
         );
@@ -37,11 +37,15 @@ class StoreItemCard extends StatelessWidget {
         _firestore.addTransaction(
           Transaction(
             description: 'Purchased ${storeItem.name}',
-            amount: -(storeItem.price * (1 + overchargeRate)),
-            overcharge: storeItem.price * overchargeRate,
+            amount: -(storeItem.price * (1 + slot.overchargeRate)),
+            overcharge: storeItem.price * slot.overchargeRate,
+            state: slot.delay
+                ? TransactionState.pending
+                : TransactionState.actionNeeded,
           ),
         );
       }
+      locator.get<EventController>().deployEvent();
       Navigator.pop(context);
     }
 
@@ -65,43 +69,41 @@ class StoreItemCard extends StatelessWidget {
                 height: 50,
               ),
               Text(formatCurrency.format(storeItem.price)),
-              room != null
-                  ? ElevatedButton(
-                      onPressed: () async {
-                        if (locator
-                            .get<EventController>()
-                            .waitingTransactionAction()) {
-                          showConfirmation(
-                              context: context,
-                              static: true,
-                              title: 'Purchase Failed',
-                              text:
-                                  'Make sure all transactions are resolved to make a new purchase.');
-                        } else {
-                          bool result = await showConfirmation(
-                                context: context,
-                                title: 'Confirmation',
-                                text: 'Purchase this item?',
-                              ) ??
-                              false;
-                          if (result == true) {
-                            buyItem();
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                      child: Text(
-                        'Buy Item',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                    )
-                  : Container(),
+              ElevatedButton(
+                onPressed: () async {
+                  if (locator
+                      .get<EventController>()
+                      .waitingTransactionAction()) {
+                    showConfirmation(
+                        context: context,
+                        static: true,
+                        title: 'Purchase Failed',
+                        text:
+                            'Make sure all transactions are resolved to make a new purchase.');
+                  } else {
+                    bool result = await showConfirmation(
+                          context: context,
+                          title: 'Confirmation',
+                          text: 'Purchase this item?',
+                        ) ??
+                        false;
+                    if (result == true) {
+                      buyItem();
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+                child: Text(
+                  'Buy Item',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
+              )
             ],
           ),
         ),

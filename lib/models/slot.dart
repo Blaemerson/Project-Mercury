@@ -10,6 +10,7 @@ class Slot {
   final double xPosition;
   final num overchargeRate; // hardcode transaction overcharge
   final bool doubleCharge; // item charged twice (overrides overchargeRate)
+  final bool delay;
   String? item;
   final List<Furniture> items;
 
@@ -22,6 +23,7 @@ class Slot {
     required this.xPosition,
     this.overchargeRate = 0,
     this.doubleCharge = false,
+    this.delay = false,
     required this.items,
   });
 
@@ -29,4 +31,3 @@ class Slot {
     this.item = item;
   }
 }
-

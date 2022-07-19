@@ -65,9 +65,7 @@ class StorePage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return StoreItemCard(
                           storeItem: slotItems[index],
-                          room: slot!.room,
-                          overchargeRate: slot!.overchargeRate,
-                          doubleCharge: slot!.doubleCharge,
+                          slot: slot!,
                         );
                       },
                       itemCount: slotItems.length,

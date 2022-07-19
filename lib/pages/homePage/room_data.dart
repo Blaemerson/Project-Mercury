@@ -34,6 +34,8 @@ Room bedroom = Room(
       yPosition: 150,
       xPosition: 50,
       overchargeRate: 0.5,
+      doubleCharge: true,
+      delay: true,
       items: const [
         Furniture(
           name: 'bed1',

@@ -46,28 +46,34 @@ class EventController with ChangeNotifier {
   List<int> _eventProgress = [0, 0];
   List<int> get eventProgress => _eventProgress;
 
-  List<PurchasedItem> _purchasedItems = [];
-  List<PurchasedItem> get purchasedItems => _purchasedItems;
+  List<PurchasedItem>? _purchasedItems;
+  List<PurchasedItem> get purchasedItems => _purchasedItems ?? [];
 
-  List<Transaction> _transactions = [];
-  List<Transaction> get transactions => _transactions;
+  List<Transaction>? _transactions;
+  List<Transaction> get transactions => _transactions ?? [];
 
-  List<Event> _deployedEvents = [];
-  List<Event> get deployedEvents => _deployedEvents;
+  List<Event>? _deployedEvents;
+  List<Event> get deployedEvents => _deployedEvents ?? [];
 
   final List<bool> _showBadge = [false, false, false, false, false];
   List<bool> get showBadge => _showBadge;
 
   bool waitingTransactionAction() {
-    return _transactions
+    return transactions
         .where((element) => element.state == TransactionState.actionNeeded)
         .isNotEmpty;
   }
 
   bool waitingEventAction() {
-    return _deployedEvents
+    return deployedEvents
         .where((element) => element.state == EventState.actionNeeded)
         .isNotEmpty;
+  }
+
+  List<Transaction> get pendingTransactions {
+    return transactions
+        .where((element) => element.state == TransactionState.pending)
+        .toList();
   }
 
   void onBalanceChanged(num balance) {
@@ -85,18 +91,15 @@ class EventController with ChangeNotifier {
 
   void onEventsChanged(List<Event> eventList) {
     _deployedEvents = eventList;
-    _deployedEvents.sort((a, b) => b.timeSent!.compareTo(a.timeSent!));
+    deployedEvents.sort((a, b) => b.timeSent!.compareTo(a.timeSent!));
     waitingEventAction() ? _showBadge[3] = true : _showBadge[3] = false;
     calculateEventProgress();
-    if (!waitingEventAction()) {
-      deployEvent();
-    }
     notifyListeners();
   }
 
   void onTransactionsChanged(List<Transaction> transactionList) {
     _transactions = transactionList;
-    _transactions.sort((a, b) => b.timeStamp!.compareTo(a.timeStamp!));
+    transactions.sort((a, b) => b.timeStamp!.compareTo(a.timeStamp!));
     waitingTransactionAction() ? _showBadge[1] = true : _showBadge[1] = false;
     notifyListeners();
   }
@@ -114,11 +117,11 @@ class EventController with ChangeNotifier {
       deployable.removeWhere((data) => data.eventId == event.eventId);
     }
     deployable.isNotEmpty
-        ? Future.delayed(
+        ? await Future.delayed(
             const Duration(
                 seconds: /*Random().nextInt(eventMaxDelay - eventMinDelay) +
                     eventMinDelay*/
-                    1),
+                    0),
             (() => _firestore.addEvent(deployable.first)),
           )
         : null;
@@ -169,9 +172,8 @@ class EventController with ChangeNotifier {
         }
       }
       // fill in slots
-      List<PurchasedItem> roomItems = _purchasedItems
-          .where((element) => element.room == room.name)
-          .toList();
+      List<PurchasedItem> roomItems =
+          purchasedItems.where((element) => element.room == room.name).toList();
       if (roomItems.isNotEmpty) {
         for (PurchasedItem purchase in roomItems) {
           List<Slot> matchingSlot = room.slots

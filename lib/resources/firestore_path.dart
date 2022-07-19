@@ -10,11 +10,6 @@ class FirestorePath {
   static String transaction(String transactionId) =>
       'users/${locator.get<AuthMethods>().uid}/transactions/$transactionId';
 
-  static String messages() =>
-      'users/${locator.get<AuthMethods>().uid}/messages';
-  static String message(String messageId) =>
-      'users/${locator.get<AuthMethods>().uid}/messages/$messageId';
-
   static String events() => 'users/${locator.get<AuthMethods>().uid}/events';
   static String event(String eventId) =>
       'users/${locator.get<AuthMethods>().uid}/events/$eventId';

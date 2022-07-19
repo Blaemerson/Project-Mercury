@@ -44,8 +44,10 @@ class TransactionCard extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    (transaction.amount > 0 ? '+' : '') +
-                        formatCurrency.format(transaction.amount),
+                    transaction.state == TransactionState.pending
+                        ? '\$0.00'
+                        : (transaction.amount > 0 ? '+' : '') +
+                            formatCurrency.format(transaction.amount),
                     style: const TextStyle(
                       fontSize: 24,
                     ),
@@ -72,12 +74,19 @@ class TransactionCard extends StatelessWidget {
                   color: Colors.green,
                 ),
               )
-            ] else ...[
+            ] else if (transaction.state == TransactionState.disputed) ...[
               const Text(
                 'Disputed',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.red,
+                ),
+              ),
+            ] else ...[
+              const Text(
+                'Pending ...',
+                style: TextStyle(
+                  fontSize: 18,
                 ),
               ),
             ]
