@@ -16,7 +16,7 @@ class ReceiptCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Image.asset(
-                'assets/furniture/${purchasedItem.item}.png',
+                'assets/furniture/${purchasedItem.item}_NE.png',
                 width: 75,
                 height: 75,
               ),

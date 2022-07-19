@@ -18,7 +18,7 @@ class FurnitureCard extends StatelessWidget {
       bottom: furniture.xPosition,
       child: Actor(
         child: Image.asset(
-          'assets/furniture/${furniture.name}.png',
+          'assets/furniture/${furniture.name}' + (furniture.direction != '' ? '_' + furniture.direction : '') + '.png',
           width: furniture.width,
           height: furniture.height,
         ),
