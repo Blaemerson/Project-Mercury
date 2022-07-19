@@ -32,7 +32,6 @@ class _HomePageState extends State<HomePage> {
           child: FittedBox(
             child: _currentRoom ?? _homeLayout,
           ),
-          /* child: R(height: 100, width: 150, length: 150), */
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(
