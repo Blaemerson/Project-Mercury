@@ -85,8 +85,8 @@ class EventController with ChangeNotifier {
     _session = session;
     _sessionRoom =
         rooms.where((element) => element.unlockOrder == session).first;
-    calculateBadge(0);
     calculateRoomProgress();
+    calculateBadge(0);
     notifyListeners();
   }
 

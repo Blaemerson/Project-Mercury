@@ -80,6 +80,15 @@ class StoreItemCard extends StatelessWidget {
                         title: 'Purchase Failed',
                         text:
                             'Make sure all transactions are resolved to make a new purchase.');
+                  } else if (locator
+                      .get<EventController>()
+                      .waitingEventAction()) {
+                    showConfirmation(
+                        context: context,
+                        static: true,
+                        title: 'Purchase Failed',
+                        text:
+                            'Make sure all events are completed to make a new purchase.');
                   } else {
                     bool result = await showConfirmation(
                           context: context,
