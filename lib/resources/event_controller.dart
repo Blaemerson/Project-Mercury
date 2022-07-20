@@ -85,6 +85,7 @@ class EventController with ChangeNotifier {
     _session = session;
     _sessionRoom =
         rooms.where((element) => element.unlockOrder == session).first;
+    calculateBadge(0);
     calculateRoomProgress();
     notifyListeners();
   }
@@ -92,7 +93,8 @@ class EventController with ChangeNotifier {
   void onEventsChanged(List<Event> eventList) {
     _deployedEvents = eventList;
     deployedEvents.sort((a, b) => b.timeSent!.compareTo(a.timeSent!));
-    waitingEventAction() ? _showBadge[3] = true : _showBadge[3] = false;
+    calculateBadge(3);
+    calculateBadge(0);
     calculateEventProgress();
     notifyListeners();
   }
@@ -100,7 +102,8 @@ class EventController with ChangeNotifier {
   void onTransactionsChanged(List<Transaction> transactionList) {
     _transactions = transactionList;
     transactions.sort((a, b) => b.timeStamp!.compareTo(a.timeStamp!));
-    waitingTransactionAction() ? _showBadge[1] = true : _showBadge[1] = false;
+    calculateBadge(1);
+    calculateBadge(0);
     notifyListeners();
   }
 
@@ -111,20 +114,29 @@ class EventController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deployEvent() async {
-    List<Event> deployable = [...events];
-    for (Event event in deployedEvents) {
-      deployable.removeWhere((data) => data.eventId == event.eventId);
+  void calculateBadge(int page) {
+    switch (page) {
+      case 0:
+        (roomProgress[0] != roomProgress[1] &&
+                showBadge[1] == false &&
+                showBadge[3] == false)
+            ? showBadge[0] = true
+            : showBadge[0] = false;
+        break;
+      case 1:
+        waitingTransactionAction()
+            ? _showBadge[1] = true
+            : _showBadge[1] = false;
+        break;
+      case 2:
+        break;
+      case 3:
+        waitingEventAction() ? _showBadge[3] = true : _showBadge[3] = false;
+        break;
+      case 4:
+        break;
+      default:
     }
-    deployable.isNotEmpty
-        ? await Future.delayed(
-            const Duration(
-                seconds: /*Random().nextInt(eventMaxDelay - eventMinDelay) +
-                    eventMinDelay*/
-                    0),
-            (() => _firestore.addEvent(deployable.first)),
-          )
-        : null;
   }
 
   void calculateRoomProgress() {
@@ -140,19 +152,21 @@ class EventController with ChangeNotifier {
 
   void calculateEventProgress() {
     _eventProgress = [0, 0];
-    List<Event> sessionEvents = events
+    int eventsTotal = events
         .where((element) =>
             element.eventId >= _session * 100 &&
             element.eventId < (_session + 1) * 100)
-        .toList();
-    int eventsTotal = sessionEvents.length;
-    int slotsFilled = deployedEvents
+        .length;
+    int eventsDone = deployedEvents
         .where((element) =>
             element.eventId >= _session * 100 &&
             element.eventId < (_session + 1) * 100)
         .where((element) => element.state != EventState.actionNeeded)
         .length;
-    _eventProgress = [slotsFilled, eventsTotal];
+    if (eventsTotal > roomProgress[1]) {
+      eventsTotal = roomProgress[1];
+    }
+    _eventProgress = [eventsDone, eventsTotal];
     calculateSessionProgress();
   }
 
@@ -160,6 +174,7 @@ class EventController with ChangeNotifier {
     int denom = _roomProgress[1] + _eventProgress[1];
     _sessionProgress =
         (_roomProgress[0] + _eventProgress[0]) / (denom != 0 ? denom : 1);
+    // _sessionProgress = 1;
     sessionProgress == 1 ? _showBadge[4] = true : _showBadge[4] = false;
   }
 
@@ -188,5 +203,21 @@ class EventController with ChangeNotifier {
         }
       }
     }
+  }
+
+  Future<void> deployEvent() async {
+    List<Event> deployable = [...events];
+    for (Event event in deployedEvents) {
+      deployable.removeWhere((data) => data.eventId == event.eventId);
+    }
+    deployable.isNotEmpty
+        ? await Future.delayed(
+            const Duration(
+                seconds: /*Random().nextInt(eventMaxDelay - eventMinDelay) +
+                    eventMinDelay*/
+                    0),
+            (() => _firestore.addEvent(deployable.first)),
+          )
+        : null;
   }
 }

@@ -200,6 +200,10 @@ class FirestoreMethods {
     for (model.Transaction transaction in pending) {
       updateTransactionState(
           transaction.id, model.TransactionState.actionNeeded);
+      _firestoreService.updateDocument(
+          path: FirestorePath.transaction(transaction.id),
+          data: {'hidden': false});
+      updateBalance(transaction.amount);
     }
   }
 
@@ -220,10 +224,11 @@ class FirestoreMethods {
           updateScore(1);
         }
       } else {
-        model.Transaction clone = await _firestoreService.documentFuture(
-          path: FirestorePath.transaction(transaction.cloneId!),
-          builder: (data) => model.Transaction.fromSnap(data),
-        );
+        model.Transaction clone = locator
+            .get<EventController>()
+            .transactions
+            .where((element) => element.id == transaction.cloneId)
+            .first;
         if (clone.state == model.TransactionState.disputed) {
           updateScore(1);
         }
@@ -237,8 +242,9 @@ class FirestoreMethods {
             model.Transaction(
               description: 'Overcharge Refund',
               amount: transaction.overcharge,
-              state: model.TransactionState.approved,
+              state: model.TransactionState.pending,
             ),
+            approveWithDelay: true,
           );
           updateScore(1);
         }
@@ -252,8 +258,9 @@ class FirestoreMethods {
             model.Transaction(
               description: 'Double Charge Refund',
               amount: -transaction.amount,
-              state: model.TransactionState.approved,
+              state: model.TransactionState.pending,
             ),
+            approveWithDelay: true,
           );
           clone.state == model.TransactionState.approved
               ? updateScore(1)
@@ -267,13 +274,22 @@ class FirestoreMethods {
   Future<void> addTransaction(
     model.Transaction transaction, {
     bool double = false,
+    bool approveWithDelay = false, // use for refunds/deposits
   }) async {
     String first;
     String second;
     first = await _firestoreService.addDocument(
         path: FirestorePath.transactions(),
         data: transaction.toJson()..addAll({'timeStamp': DateTime.now()}));
-    updateBalance(transaction.amount);
+    transaction.state != model.TransactionState.pending
+        ? updateBalance(transaction.amount)
+        : null;
+    approveWithDelay
+        ? Future.delayed(const Duration(seconds: 1), () {
+            updateBalance(transaction.amount);
+            updateTransactionState(first, model.TransactionState.approved);
+          })
+        : null;
     if (double) {
       second = await _firestoreService.addDocument(
           path: FirestorePath.transactions(),
@@ -281,8 +297,13 @@ class FirestoreMethods {
             ..addAll({
               'timeStamp': DateTime.now(),
               'cloneId': first,
+              'hidden': transaction.state == model.TransactionState.pending
+                  ? true
+                  : false,
             }));
-      updateBalance(transaction.amount);
+      transaction.state != model.TransactionState.pending
+          ? updateBalance(transaction.amount)
+          : null;
       _firestoreService.updateDocument(
         path: FirestorePath.transaction(first),
         data: {'cloneId': second},

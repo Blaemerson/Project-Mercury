@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -64,13 +65,16 @@ class _MoneyPageState extends State<MoneyPage> {
             ),
           ),
           Consumer<EventController>(builder: (_, event, __) {
+            List<Transaction> visibleTransactions = event.transactions
+                .where((element) => element.hidden == false)
+                .toList();
             return Flexible(
               child: Scrollbar(
                 child: ListView.builder(
-                  itemCount: event.transactions.length,
+                  itemCount: visibleTransactions.length,
                   itemBuilder: (context, index) {
                     return TransactionCard(
-                        transaction: event.transactions[index]);
+                        transaction: visibleTransactions[index]);
                   },
                 ),
               ),

@@ -118,7 +118,6 @@ Room livingroom = Room(
       height: 25,
       yPosition: 120,
       xPosition: 170,
-      doubleCharge: true,
       items: const [
         Furniture(
           name: 'basic_rug',

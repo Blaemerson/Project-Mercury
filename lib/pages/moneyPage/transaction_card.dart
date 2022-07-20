@@ -43,15 +43,17 @@ class TransactionCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text(
-                    transaction.state == TransactionState.pending
-                        ? '\$0.00'
-                        : (transaction.amount > 0 ? '+' : '') +
-                            formatCurrency.format(transaction.amount),
-                    style: const TextStyle(
-                      fontSize: 24,
-                    ),
-                  ),
+                  transaction.state == TransactionState.pending
+                      ? const CircularProgressIndicator(
+                          color: Colors.grey,
+                        )
+                      : Text(
+                          (transaction.amount > 0 ? '+' : '') +
+                              formatCurrency.format(transaction.amount),
+                          style: const TextStyle(
+                            fontSize: 24,
+                          ),
+                        ),
                 ],
               ),
             ),
