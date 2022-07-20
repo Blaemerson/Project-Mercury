@@ -42,118 +42,134 @@ class _HomePageState extends State<HomePage> {
               //button on bottom-left: shows list of rooms for navigation.
               Consumer<EventController>(
                 builder: (_, event, __) {
-                  return SpeedDial(
-                    childPadding: const EdgeInsets.symmetric(vertical: 0),
-                    visible: event.session != 0 ? true : false,
-                    animatedIcon: AnimatedIcons.menu_close,
-                    switchLabelPosition: true,
-                    overlayOpacity: 0.3,
-                    childMargin: const EdgeInsets.symmetric(horizontal: 0),
-                    children: [
-                      SpeedDialChild(
-                        labelWidget: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.background,
-                            borderRadius: BorderRadius.circular(5),
-                            boxShadow: const [
-                              BoxShadow(
-                                blurRadius: 2,
-                                color: Colors.grey,
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 5),
-                            child: Row(
-                              children: [
-                                _currentRoom == null
-                                    ? const Icon(Icons.arrow_forward)
-                                    : Container(),
-                                const Text(
-                                  'Full View',
-                                  style: TextStyle(fontSize: 24),
+                  return Badge(
+                    showBadge: event.sessionRoom != null
+                        ? event.sessionRoom!.slots
+                                .where((item) => item.item == null)
+                                .isNotEmpty &&
+                            event.currentRoom == null
+                        : false,
+                    badgeContent: Icon(
+                      Icons.notification_important,
+                      size: 28,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    ignorePointer: true,
+                    child: SpeedDial(
+                      childPadding: const EdgeInsets.symmetric(vertical: 0),
+                      visible: event.session != 0 ? true : false,
+                      animatedIcon: AnimatedIcons.menu_close,
+                      switchLabelPosition: true,
+                      overlayOpacity: 0.3,
+                      childMargin: const EdgeInsets.symmetric(horizontal: 0),
+                      children: [
+                        SpeedDialChild(
+                          labelWidget: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.background,
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: const [
+                                BoxShadow(
+                                  blurRadius: 2,
+                                  color: Colors.grey,
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                        onTap: () {
-                          setState(
-                            () {
-                              locator.get<EventController>().setRoom(null);
-                            },
-                          );
-                        },
-                      ),
-                      for (Room room
-                          in locator.get<EventController>().rooms) ...[
-                        SpeedDialChild(
-                          labelWidget: room.unlockOrder > event.session
-                              ? Row(
-                                  children: [
-                                    const Icon(Icons.lock),
-                                    Column(
-                                      children: [
-                                        const Text('Unlock at'),
-                                        Text('Session ${room.unlockOrder}'),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              : Badge(
-                                  showBadge: room.slots
-                                      .where((item) => item.item == null)
-                                      .isNotEmpty,
-                                  badgeContent: Icon(
-                                    Icons.notification_important,
-                                    size: 20,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 5),
+                              child: Row(
+                                children: [
+                                  _currentRoom == null
+                                      ? const Icon(Icons.arrow_forward)
+                                      : Container(),
+                                  const Text(
+                                    'Full View',
+                                    style: TextStyle(fontSize: 24),
                                   ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
+                                ],
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            setState(
+                              () {
+                                locator.get<EventController>().setRoom(null);
+                              },
+                            );
+                          },
+                        ),
+                        for (Room room
+                            in locator.get<EventController>().rooms) ...[
+                          SpeedDialChild(
+                            labelWidget: room.unlockOrder > event.session
+                                ? Row(
+                                    children: [
+                                      const Icon(Icons.lock),
+                                      Column(
+                                        children: [
+                                          const Text('Unlock at'),
+                                          Text('Session ${room.unlockOrder}'),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : Badge(
+                                    showBadge: room.slots
+                                        .where((item) => item.item == null)
+                                        .isNotEmpty,
+                                    badgeContent: Icon(
+                                      Icons.notification_important,
+                                      size: 20,
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .background,
-                                      borderRadius: BorderRadius.circular(5),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          blurRadius: 2,
-                                          color: Colors.grey,
-                                        ),
-                                      ],
+                                          .onPrimary,
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 5),
-                                      child: Row(
-                                        children: [
-                                          room == _currentRoom
-                                              ? const Icon(Icons.arrow_forward)
-                                              : Container(),
-                                          Text(
-                                            capitalize(room.name),
-                                            style:
-                                                const TextStyle(fontSize: 24),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                        borderRadius: BorderRadius.circular(5),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            blurRadius: 2,
+                                            color: Colors.grey,
                                           ),
                                         ],
                                       ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0, vertical: 5),
+                                        child: Row(
+                                          children: [
+                                            room == _currentRoom
+                                                ? const Icon(
+                                                    Icons.arrow_forward)
+                                                : Container(),
+                                            Text(
+                                              capitalize(room.name),
+                                              style:
+                                                  const TextStyle(fontSize: 24),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                          onTap: room.unlockOrder <= event.session
-                              ? () {
-                                  setState(() {
-                                    locator
-                                        .get<EventController>()
-                                        .setRoom(room);
-                                  });
-                                }
-                              : null,
-                        ),
-                      ]
-                    ],
+                            onTap: room.unlockOrder <= event.session
+                                ? () {
+                                    setState(() {
+                                      locator
+                                          .get<EventController>()
+                                          .setRoom(room);
+                                    });
+                                  }
+                                : null,
+                          ),
+                        ]
+                      ],
+                    ),
                   );
                 },
               ),

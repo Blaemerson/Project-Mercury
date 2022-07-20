@@ -86,24 +86,24 @@ class EventController with ChangeNotifier {
     _sessionRoom =
         rooms.where((element) => element.unlockOrder == session).first;
     calculateRoomProgress();
-    calculateBadge(0);
+    updateBadge(0);
     notifyListeners();
   }
 
   void onEventsChanged(List<Event> eventList) {
     _deployedEvents = eventList;
     deployedEvents.sort((a, b) => b.timeSent!.compareTo(a.timeSent!));
-    calculateBadge(3);
-    calculateBadge(0);
     calculateEventProgress();
+    updateBadge(3);
+    updateBadge(0);
     notifyListeners();
   }
 
   void onTransactionsChanged(List<Transaction> transactionList) {
     _transactions = transactionList;
     transactions.sort((a, b) => b.timeStamp!.compareTo(a.timeStamp!));
-    calculateBadge(1);
-    calculateBadge(0);
+    updateBadge(1);
+    updateBadge(0);
     notifyListeners();
   }
 
@@ -114,14 +114,14 @@ class EventController with ChangeNotifier {
     notifyListeners();
   }
 
-  void calculateBadge(int page) {
+  void updateBadge(int page) {
     switch (page) {
       case 0:
         (roomProgress[0] != roomProgress[1] &&
                 showBadge[1] == false &&
                 showBadge[3] == false)
-            ? showBadge[0] = true
-            : showBadge[0] = false;
+            ? _showBadge[0] = true
+            : _showBadge[0] = false;
         break;
       case 1:
         waitingTransactionAction()
@@ -134,6 +134,7 @@ class EventController with ChangeNotifier {
         waitingEventAction() ? _showBadge[3] = true : _showBadge[3] = false;
         break;
       case 4:
+        sessionProgress == 1 ? _showBadge[4] = true : _showBadge[4] = false;
         break;
       default:
     }
@@ -170,12 +171,13 @@ class EventController with ChangeNotifier {
     calculateSessionProgress();
   }
 
+// TODO: calculate transaction progress
   void calculateSessionProgress() {
     int denom = _roomProgress[1] + _eventProgress[1];
     _sessionProgress =
         (_roomProgress[0] + _eventProgress[0]) / (denom != 0 ? denom : 1);
     // _sessionProgress = 1;
-    sessionProgress == 1 ? _showBadge[4] = true : _showBadge[4] = false;
+    updateBadge(4);
   }
 
   void furnishRoom() {
