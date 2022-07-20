@@ -2,13 +2,14 @@ import 'package:projectmercury/models/furniture.dart';
 import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
 
+// TODO: possibly store some of this in json
 Room bedroom = Room(
   name: 'bedroom',
   width: 200,
   length: 215,
   unlockOrder: 1,
-  floorTexture: "assets/textures/woodBoards.jpg",
-  wallTexture: "assets/textures/greyWall.jpg",
+  floorTexture: "assets/textures/darkPlanks.jpg",
+  wallTexture: "assets/textures/greenWall.jpg",
   items: const [
     Furniture(
       name: 'doorway',
@@ -48,6 +49,51 @@ Room bedroom = Room(
     ),
     Slot(
       room: 'bedroom',
+      width: 60,
+      height: 20,
+      length: 60,
+      yPosition: 160,
+      xPosition: 170,
+      items: const [
+        Furniture(
+          name: 'basic_rug',
+          direction: 'NE',
+          yPosition: 130,
+          xPosition: 145,
+          width: 150,
+          height: 150,
+        ),
+      ],
+    ),
+    Slot(
+      room: 'bedroom',
+      width: 30,
+      height: 30,
+      length: 60,
+      yPosition: 70,
+      xPosition: 160,
+      overchargeRate: 0.5,
+      items: const [
+        Furniture(
+          name: 'desk',
+          direction: 'NW',
+          yPosition: 40,
+          xPosition: 180,
+          width: 90,
+          height: 50,
+        ),
+        Furniture(
+          name: 'bookcase',
+          direction: 'NW',
+          width: 60,
+          height: 80,
+          yPosition: 30,
+          xPosition: 160,
+        ),
+      ],
+    ),
+    Slot(
+      room: 'bedroom',
       width: 45,
       height: 20,
       length: 50,
@@ -62,8 +108,8 @@ Room bedroom = Room(
           direction: 'NE',
           yPosition: 140,
           xPosition: 70,
-          width: 70,
-          height: 70,
+          width: 75,
+          height: 75,
         ),
         Furniture(
           name: 'plush_bed',
@@ -73,13 +119,6 @@ Room bedroom = Room(
           width: 75,
           height: 75,
         ),
-        /* Furniture( */
-        /*   name: 'bed3', */
-        /*   yPosition: 140, */
-        /*   xPosition: 70, */
-        /*   width: 70, */
-        /*   height: 60, */
-        /* ), */
       ],
     ),
   ],
@@ -406,7 +445,7 @@ Room kitchen = Room(
   length: 215,
   unlockOrder: 4,
   floorTexture: "assets/textures/woodBoards.jpg",
-  wallTexture: "assets/textures/floralWall.jpg",
+  wallTexture: "assets/textures/yellowWall.jpg",
   items: const [
     Furniture(
       name: 'doorway',
@@ -452,6 +491,32 @@ Room kitchen = Room(
         ),
       ],
     ),
+    Slot(
+      room: 'kitchen',
+      length: 30,
+      width: 30,
+      height: 30,
+      yPosition: 120,
+      xPosition: 65,
+      items: const [
+        Furniture(
+          name: 'stove',
+          direction: 'NE',
+          width: 45,
+          height: 45,
+          yPosition: 120,
+          xPosition: 60,
+        ),
+        Furniture(
+          name: 'electric_stove',
+          direction: 'NE',
+          width: 45,
+          height: 45,
+          yPosition: 120,
+          xPosition: 60,
+        ),
+      ],
+    ),
   ],
 );
 
@@ -460,8 +525,8 @@ Room diningroom = Room(
   width: 200,
   length: 225,
   unlockOrder: 5,
-  floorTexture: "assets/textures/woodBoards.jpg",
-  wallTexture: "assets/textures/greyWall.jpg",
+  floorTexture: "assets/textures/darkPlanks.jpg",
+  wallTexture: "assets/textures/floralWall.jpg",
   items: const [
     Furniture(
       name: 'doorway',

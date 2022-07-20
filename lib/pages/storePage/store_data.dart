@@ -87,6 +87,11 @@ const List<StoreItem> storeItems = [
     item: 'bookcase',
   ),
   StoreItem(
+    name: 'Desk',
+    price: 300,
+    item: 'desk',
+  ),
+  StoreItem(
     name: 'Plush Recliner',
     price: 250,
     item: 'plush_recliner',
@@ -150,5 +155,15 @@ const List<StoreItem> storeItems = [
     name: 'Window',
     price: 350,
     item: 'window',
+  ),
+  StoreItem(
+    name: 'Stove',
+    price: 450,
+    item: 'stove',
+  ),
+  StoreItem(
+    name: 'Electric Stove',
+    price: 550,
+    item: 'electric_stove',
   ),
 ];
