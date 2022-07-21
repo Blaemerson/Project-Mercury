@@ -28,11 +28,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text('Home'),
         ),
-        body: Center(
-          child: FittedBox(
-            child: _currentRoom ?? _homeLayout,
-          ),
-        ),
+        body: Center(child: _currentRoom),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -43,12 +39,13 @@ class _HomePageState extends State<HomePage> {
               Consumer<EventController>(
                 builder: (_, event, __) {
                   return Badge(
-                    showBadge: event.sessionRoom != null
-                        ? event.sessionRoom!.slots
-                                .where((item) => item.item == null)
-                                .isNotEmpty &&
-                            event.currentRoom == null
-                        : false,
+                    showBadge: false,
+                    /* event.sessionRoom != null */
+                    /*     ? event.sessionRoom!.slots */
+                    /*             .where((item) => item.item == null) */
+                    /*             .isNotEmpty && */
+                    /*         event.currentRoom == null */
+                    /*     : false, */
                     badgeContent: Icon(
                       Icons.notification_important,
                       size: 28,
@@ -115,9 +112,10 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   )
                                 : Badge(
-                                    showBadge: room.slots
-                                        .where((item) => item.item == null)
-                                        .isNotEmpty,
+                                    showBadge: true,
+                              /* room.slots */
+                              /*           .where((item) => item.item == null) */
+                              /*           .isNotEmpty, */
                                     badgeContent: Icon(
                                       Icons.notification_important,
                                       size: 20,

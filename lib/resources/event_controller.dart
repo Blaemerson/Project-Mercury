@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:projectmercury/models/event.dart';
-import 'package:projectmercury/models/slot.dart';
+/* import 'package:projectmercury/models/slot.dart'; */
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/pages/eventPage/event_data.dart';
@@ -194,9 +194,7 @@ class EventController with ChangeNotifier {
       if (roomItems.isNotEmpty) {
         for (PurchasedItem purchase in roomItems) {
           List<Slot> matchingSlot = room.slots
-              .where((slot) => slot.items
-                  .map((e) => e.name)
-                  .toList()
+              .where((slot) => slot.acceptables
                   .contains(purchase.item))
               .toList();
           matchingSlot.isNotEmpty

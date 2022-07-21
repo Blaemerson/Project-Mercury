@@ -20,7 +20,7 @@ class EventCard extends StatelessWidget {
               event.state != EventState.actionNeeded ? Colors.grey[350] : null,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -34,7 +34,7 @@ class EventCard extends StatelessWidget {
                             : event.type == EventType.call
                                 ? Icons.call_outlined
                                 : Icons.question_mark,
-                    size: 30,
+                    size: 20,
                   ),
                   const SizedBox(
                     width: 12,
@@ -49,7 +49,7 @@ class EventCard extends StatelessWidget {
                       Text.rich(
                         TextSpan(
                           text: 'Status: ',
-                          style: const TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 16),
                           children: [
                             event.state == EventState.actionNeeded
                                 ? const TextSpan(
@@ -102,7 +102,7 @@ class _EventDialog extends StatelessWidget {
     return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(10.0),
           child: SizedBox(
             height: MediaQuery.of(context).size.height * .5,
             child: Column(

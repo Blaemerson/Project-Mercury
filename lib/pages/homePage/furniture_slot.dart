@@ -22,22 +22,22 @@ class FurnitureSlot extends StatelessWidget {
         alignment: Alignment.center,
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
-          onTap: () => showModalBottomSheet(
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-            ),
-            context: context,
-            builder: (context) {
-              return StorePage(
-                room: slot.room,
-                slot: slot,
-              );
-            },
-          ),
+          /* onTap: () => showModalBottomSheet( */
+          /*   isScrollControlled: true, */
+          /*   backgroundColor: Colors.transparent, */
+          /*   shape: const RoundedRectangleBorder( */
+          /*     borderRadius: BorderRadius.vertical( */
+          /*       top: Radius.circular(16), */
+          /*     ), */
+          /*   ), */
+          /*   context: context, */
+          /*   builder: (context) { */
+          /*     return StorePage( */
+          /*       room: slot.room, */
+          /*       slot: slot, */
+          /*     ); */
+          /*   }, */
+          /* ), */
           child: Cube(
             width: slot.width,
             height: slot.length,

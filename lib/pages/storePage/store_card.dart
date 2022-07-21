@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:projectmercury/models/slot.dart';
+/* import 'package:projectmercury/models/slot.dart'; */
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
+import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
@@ -9,10 +10,12 @@ import 'package:projectmercury/utils/utils.dart';
 
 class StoreItemCard extends StatelessWidget {
   final StoreItem storeItem;
+  final String roomName;
   final Slot slot;
   const StoreItemCard({
     Key? key,
     required this.storeItem,
+    required this.roomName,
     required this.slot,
   }) : super(key: key);
 
@@ -21,7 +24,7 @@ class StoreItemCard extends StatelessWidget {
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
     buyItem() async {
-      _firestore.addItem(storeItem, slot.room);
+      _firestore.addItem(storeItem, roomName);
       if (slot.doubleCharge) {
         _firestore.addTransaction(
           Transaction(
