@@ -10,61 +10,56 @@ class FloorPlan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Room> _rooms = locator.get<EventController>().rooms;
-    return SizedBox(
-      width: 700,
-      height: 705,
-      child: Center(
-        child: IsometricView(
+    return Center(
+      child: IsometricView(
+        child: Container(
+          color: Colors.red,
+          width: _rooms[0].length + _rooms[1].length + _rooms[2].length + 100,
+          height: _rooms[0].width + _rooms[3].width + 100,
           child: Stack(
-            alignment: Alignment.topLeft,
             children: [
-              /*Washroom*/
+              /*Livingroom*/
               Positioned(
-                left: 90,
-                bottom: 0,
+                right:0,
+                bottom: 0 + _rooms[1].width,
                 child: Actor(
                   child: _rooms[5],
                 ),
               ),
-
-              /*Kitchen*/
               Positioned(
-                left: 90,
-                bottom: _rooms[5].length,
+                right: _rooms[5].length,
+                bottom: 0 + _rooms[1].width,
                 child: Actor(
                   child: _rooms[3],
                 ),
               ),
-
-              /*Diningroom*/
               Positioned(
-                left: 90,
-                bottom: _rooms[5].length + _rooms[3].length,
+                right: _rooms[3].length + _rooms[5].length,
+                bottom: 0 + _rooms[1].width,
                 child: Actor(
                   child: _rooms[4],
                 ),
               ),
-
               /*Bathroom*/
               Positioned(
-                left: _rooms[5].width + 90,
                 bottom: 0,
+                right: 0,
                 child: Actor(
                   child: _rooms[2],
                 ),
               ),
               /*Bedroom*/
               Positioned(
-                left: _rooms[3].width + 90,
-                bottom: _rooms[2].length,
+                bottom: 0,
+                right:_rooms[2].length,
                 child: Actor(
                   child: _rooms[0],
                 ),
               ),
               /*Livingroom*/
               Positioned(
-                left: _rooms[4].width + 90,
-                bottom: _rooms[0].length + _rooms[2].length,
+                bottom: 0,
+                right:_rooms[2].length + _rooms[0].length,
                 child: Actor(
                   child: _rooms[1],
                 ),

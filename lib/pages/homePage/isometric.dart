@@ -15,9 +15,8 @@ class IsometricView extends StatelessWidget {
     return Transform(
       alignment: Alignment.center,
       transform: Matrix4.identity()
-        ..rotateX(35.264 * math.pi / 180)
-        ..rotateY(45 * math.pi / 180)
-        ..rotateX(math.pi / 2),
+        ..rotateX((90 - 35.264) * math.pi / 180)
+        ..rotateZ(-math.pi / 4),
       child: child,
     );
   }
@@ -36,7 +35,7 @@ class Actor extends StatelessWidget {
       alignment: alignment,
       transform: Matrix4.identity()
         ..rotateZ(math.pi / 4)
-        ..rotateX(-35.264 * math.pi / 180),
+        ..rotateX(-(90 - 35.264) * math.pi / 180),
       /* ..rotateX(-math.pi / 2) */
       /* ..rotateY(-45 * math.pi / 180) */
       /* ..rotateX(-35.264 * math.pi / 180), */

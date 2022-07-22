@@ -28,7 +28,11 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text('Home'),
         ),
-        body: Center(child: _currentRoom),
+        body: Center(
+          child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: FittedBox(child: _currentRoom ?? _homeLayout)),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -113,9 +117,9 @@ class _HomePageState extends State<HomePage> {
                                   )
                                 : Badge(
                                     showBadge: true,
-                              /* room.slots */
-                              /*           .where((item) => item.item == null) */
-                              /*           .isNotEmpty, */
+                                    /* room.slots */
+                                    /*           .where((item) => item.item == null) */
+                                    /*           .isNotEmpty, */
                                     badgeContent: Icon(
                                       Icons.notification_important,
                                       size: 20,
