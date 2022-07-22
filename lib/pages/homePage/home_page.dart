@@ -22,186 +22,178 @@ class _HomePageState extends State<HomePage> {
     Room? _currentRoom = locator.get<EventController>().currentRoom;
     const _homeLayout = FloorPlan();
 
-    return ChangeNotifierProvider.value(
-      value: locator.get<EventController>(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
+    return Scaffold(
+      body: Center(
+        child: FittedBox(
+          child: _currentRoom ?? _homeLayout,
         ),
-        body: Center(
-          child: FittedBox(
-            child: _currentRoom ?? _homeLayout,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              //button on bottom-left: shows list of rooms for navigation.
-              Consumer<EventController>(
-                builder: (_, event, __) {
-                  return Badge(
-                    showBadge: event.sessionRoom != null
-                        ? event.sessionRoom!.slots
-                                .where((item) => item.item == null)
-                                .isNotEmpty &&
-                            event.currentRoom == null
-                        : false,
-                    badgeContent: Icon(
-                      Icons.notification_important,
-                      size: 28,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    ignorePointer: true,
-                    child: SpeedDial(
-                      childPadding: const EdgeInsets.symmetric(vertical: 0),
-                      visible: event.session != 0 ? true : false,
-                      animatedIcon: AnimatedIcons.menu_close,
-                      switchLabelPosition: true,
-                      overlayOpacity: 0.3,
-                      childMargin: const EdgeInsets.symmetric(horizontal: 0),
-                      children: [
-                        SpeedDialChild(
-                          labelWidget: Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.background,
-                              borderRadius: BorderRadius.circular(5),
-                              boxShadow: const [
-                                BoxShadow(
-                                  blurRadius: 2,
-                                  color: Colors.grey,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            //button on bottom-left: shows list of rooms for navigation.
+            Consumer<EventController>(
+              builder: (_, event, __) {
+                return Badge(
+                  showBadge: event.sessionRoom != null
+                      ? event.sessionRoom!.slots
+                              .where((item) => item.item == null)
+                              .isNotEmpty &&
+                          event.currentRoom == null
+                      : false,
+                  badgeContent: Icon(
+                    Icons.notification_important,
+                    size: 28,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  ignorePointer: true,
+                  child: SpeedDial(
+                    childPadding: const EdgeInsets.symmetric(vertical: 0),
+                    visible: event.session != 0 ? true : false,
+                    animatedIcon: AnimatedIcons.menu_close,
+                    switchLabelPosition: true,
+                    overlayOpacity: 0.3,
+                    childMargin: const EdgeInsets.symmetric(horizontal: 0),
+                    children: [
+                      SpeedDialChild(
+                        labelWidget: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background,
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: const [
+                              BoxShadow(
+                                blurRadius: 2,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 5),
+                            child: Row(
+                              children: [
+                                _currentRoom == null
+                                    ? const Icon(Icons.arrow_forward)
+                                    : Container(),
+                                const Text(
+                                  'Full View',
+                                  style: TextStyle(fontSize: 24),
                                 ),
                               ],
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0, vertical: 5),
-                              child: Row(
-                                children: [
-                                  _currentRoom == null
-                                      ? const Icon(Icons.arrow_forward)
-                                      : Container(),
-                                  const Text(
-                                    'Full View',
-                                    style: TextStyle(fontSize: 24),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ),
-                          onTap: () {
-                            setState(
-                              () {
-                                locator.get<EventController>().setRoom(null);
-                              },
-                            );
-                          },
                         ),
-                        for (Room room
-                            in locator.get<EventController>().rooms) ...[
-                          SpeedDialChild(
-                            labelWidget: room.unlockOrder > event.session
-                                ? Row(
-                                    children: [
-                                      const Icon(Icons.lock),
-                                      Column(
-                                        children: [
-                                          const Text('Unlock at'),
-                                          Text('Session ${room.unlockOrder}'),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                : Badge(
-                                    showBadge: room.slots
-                                        .where((item) => item.item == null)
-                                        .isNotEmpty,
-                                    badgeContent: Icon(
-                                      Icons.notification_important,
-                                      size: 20,
+                        onTap: () {
+                          setState(
+                            () {
+                              locator.get<EventController>().setRoom(null);
+                            },
+                          );
+                        },
+                      ),
+                      for (Room room
+                          in locator.get<EventController>().rooms) ...[
+                        SpeedDialChild(
+                          labelWidget: room.unlockOrder > event.session
+                              ? Row(
+                                  children: [
+                                    const Icon(Icons.lock),
+                                    Column(
+                                      children: [
+                                        const Text('Unlock at'),
+                                        Text('Session ${room.unlockOrder}'),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : Badge(
+                                  showBadge: room.slots
+                                      .where((item) => item.item == null)
+                                      .isNotEmpty,
+                                  badgeContent: Icon(
+                                    Icons.notification_important,
+                                    size: 20,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .onPrimary,
+                                          .background,
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          blurRadius: 2,
+                                          color: Colors.grey,
+                                        ),
+                                      ],
                                     ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                        borderRadius: BorderRadius.circular(5),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            blurRadius: 2,
-                                            color: Colors.grey,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 5),
+                                      child: Row(
+                                        children: [
+                                          room == _currentRoom
+                                              ? const Icon(Icons.arrow_forward)
+                                              : Container(),
+                                          Text(
+                                            capitalize(room.name),
+                                            style:
+                                                const TextStyle(fontSize: 24),
                                           ),
                                         ],
                                       ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0, vertical: 5),
-                                        child: Row(
-                                          children: [
-                                            room == _currentRoom
-                                                ? const Icon(
-                                                    Icons.arrow_forward)
-                                                : Container(),
-                                            Text(
-                                              capitalize(room.name),
-                                              style:
-                                                  const TextStyle(fontSize: 24),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
                                     ),
                                   ),
-                            onTap: room.unlockOrder <= event.session
-                                ? () {
-                                    setState(() {
-                                      locator
-                                          .get<EventController>()
-                                          .setRoom(room);
-                                    });
-                                  }
-                                : null,
-                          ),
-                        ]
-                      ],
+                                ),
+                          onTap: room.unlockOrder <= event.session
+                              ? () {
+                                  setState(() {
+                                    locator
+                                        .get<EventController>()
+                                        .setRoom(room);
+                                  });
+                                }
+                              : null,
+                        ),
+                      ]
+                    ],
+                  ),
+                );
+              },
+            ),
+            // Text showing current room name.
+            Text(
+              _currentRoom != null
+                  ? capitalize(_currentRoom.name)
+                  : 'Full View',
+              style: const TextStyle(fontSize: 30),
+            ),
+            // button on bottom-right: opens store page.
+            FloatingActionButton(
+              heroTag: null,
+              child: const Icon(Icons.storefront, size: 42),
+              onPressed: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(16),
                     ),
-                  );
-                },
-              ),
-              // Text showing current room name.
-              Text(
-                _currentRoom != null
-                    ? capitalize(_currentRoom.name)
-                    : 'Full View',
-                style: const TextStyle(fontSize: 30),
-              ),
-              // button on bottom-right: opens store page.
-              FloatingActionButton(
-                heroTag: null,
-                child: const Icon(Icons.storefront, size: 42),
-                onPressed: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16),
-                      ),
-                    ),
-                    context: context,
-                    builder: (context) {
-                      return const ReceiptPage();
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
+                  ),
+                  context: context,
+                  builder: (context) {
+                    return const ReceiptPage();
+                  },
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

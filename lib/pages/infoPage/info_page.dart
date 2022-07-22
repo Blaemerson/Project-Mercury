@@ -24,9 +24,6 @@ class _InfoPageState extends State<InfoPage> {
     return ChangeNotifierProvider.value(
       value: _timer,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Info'),
-        ),
         body: SizedBox(
           width: double.infinity,
           child: Consumer<EventController>(builder: (_, event, __) {

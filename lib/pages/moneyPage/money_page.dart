@@ -16,9 +16,6 @@ class _MoneyPageState extends State<MoneyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Money'),
-      ),
       body: Column(
         children: [
           Container(
