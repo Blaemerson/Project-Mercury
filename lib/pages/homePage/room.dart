@@ -1,61 +1,14 @@
-/// This widget builds a room in true isometric perspective/
-/// On building, occupied and unoccupied items slots are additionally loaded in.
-/// Heavily relies on Flutter's stack widget to overlay/position room components/items.
-
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/slot.dart';
 import 'dart:math' as math;
 
 import 'package:projectmercury/models/store_item.dart';
-import 'package:projectmercury/pages/homePage/isometric.dart';
-import 'package:projectmercury/pages/storePage/store_page.dart';
+import 'package:projectmercury/pages/homePage/furniture_card.dart';
+import 'package:projectmercury/pages/homePage/furniture_slot.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
-
-class Slot {
-  final int id;
-  final Size size;
-  final Offset position;
-  final double zPosition;
-  final List<String> acceptables;
-  final String? outline;
-  final double overchargeRate;
-  final bool delay;
-  final bool doubleCharge;
-  String? item;
-
-  Slot({
-    required this.id,
-    required this.size,
-    required this.acceptables,
-    required this.position,
-    this.item,
-    this.overchargeRate = 0,
-    this.delay = false,
-    this.doubleCharge = false,
-    this.zPosition = 0,
-    this.outline,
-  });
-  set(String? item) => this.item = item;
-}
-
-class Furniture {
-  final String name;
-  final Size size;
-  final Offset position;
-  final double zPosition;
-  final String? direction;
-  final int slotID;
-
-  const Furniture({
-    required this.name,
-    required this.position,
-    required this.size,
-    this.zPosition = 0,
-    this.direction,
-    this.slotID = -1,
-  });
-}
 
 class Room extends StatefulWidget {
   final String name;
@@ -82,6 +35,21 @@ class Room extends StatefulWidget {
 
   @override
   State<Room> createState() => _RoomState();
+
+  // Fill all items matching a given ID with a given item
+  setSlotItems(int? slotID, String? item) {
+    slots
+        .where((element) => slotID == null ? true : element.id == slotID)
+        .forEach((element) {
+      element.set(item);
+    });
+  }
+
+  List<Slot> getSlots(int slotID) =>
+      slots.where((s) => s.id == slotID).toList();
+  getFilledSlots() => slots.where((s) => s.item != null).toList();
+  getFurniture(int slotID) =>
+      furniture.where((f) => f.slotID == slotID).toList();
 }
 
 class _RoomState extends State<Room> {
@@ -118,7 +86,7 @@ class _RoomState extends State<Room> {
                             image: AssetImage('assets/textures/darkPlanks.jpg'),
                             fit: BoxFit.none,
                             repeat: ImageRepeat.repeatY,
-                          alignment: Alignment.topLeft,
+                            alignment: Alignment.topLeft,
                           ),
                         ),
                       ),
@@ -183,65 +151,24 @@ class _RoomState extends State<Room> {
                     ),
                     for (Furniture f in widget.furniture)
                       // Find the slot corresponding to this items id
-                      if (f.slotID == -1 ||
-                          (widget.slots
-                                  .firstWhere(
-                                      (element) => f.slotID == element.id)
-                                  .item ==
-                              f.name))
-                        Positioned(
-                          top: f.position.dx,
-                          right: f.position.dy,
-                          width: f.size.width,
-                          height: f.size.height,
-                          child: Transform(
-                            transform:
-                                Matrix4.translationValues(0, 0, f.zPosition),
-                            child: Actor(
-                              alignment: Alignment.center,
-                              child: Image.asset(
-                                  'assets/furniture/${f.name}_${f.direction}.png'),
-                            ),
-                          ),
-                        ),
-                    for (Slot s in widget.slots)
-                      if (s.item == null)
-                        Positioned(
-                          top: s.position.dx,
-                          right: s.position.dy,
-                          width: s.size.width,
-                          height: s.size.height,
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: () {
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(16),
-                                  ),
-                                ),
-                                context: context,
-                                builder: (context) {
-                                  return StorePage(
-                                    roomName: widget.name,
-                                    slot: s,
-                                  );
-                                },
-                              );
-                            },
-                            child: Transform(
-                              transform:
-                                  Matrix4.translationValues(0, 0, s.zPosition),
-                              child: Actor(
-                                alignment: Alignment.center,
-                                child: Image.asset(
-                                    'assets/furniture/${s.outline}.png'),
-                              ),
-                            ),
-                          ),
-                        )
+                      if (f.slotID != null)
+                        for (Slot s in widget.getSlots(f.slotID!))
+                          /* Container(height: s.size.height), */
+                          if (s.item == f.name)
+                            FurnitureCard(furniture: f, slot: s),
+                    for (Furniture f in widget.furniture)
+                      if (f.slotID == null) FurnitureCard(furniture: f),
+                    // Hide slots when in full view
+                    if (_currentRoom != null)
+                      for (Slot s in widget.slots)
+                        // if the slot is not filled...
+                        if (s.item == null)
+                          // if slot has no unfinished prerequisites...
+                          if (s.prereq == null ||
+                              widget
+                                  .getFilledSlots()
+                                  .contains(widget.getSlots(s.prereq!)))
+                            SlotCard(slot: s, roomName: widget.name)
                   ],
                 );
               }),

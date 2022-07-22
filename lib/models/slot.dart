@@ -1,33 +1,31 @@
-import 'package:projectmercury/models/furniture.dart';
+import 'package:flutter/material.dart';
 
-// Holds data relating to furniture slot
 class Slot {
-  final String room;
-  final double width;
-  final double length;
-  final double height;
-  final double yPosition;
-  final double xPosition;
-  final num overchargeRate; // hardcode transaction overcharge
-  final bool doubleCharge; // item charged twice (overrides overchargeRate)
+  final int id;
+  final int? prereq;
+  final Size size;
+  final Offset position;
+  final double zPosition;
+  final List<String> acceptables;
+  final String? visual;
+  final double overchargeRate;
   final bool delay;
+  final bool doubleCharge;
   String? item;
-  final List<Furniture> items;
 
   Slot({
-    required this.room,
-    required this.width,
-    required this.length,
-    required this.height,
-    required this.yPosition,
-    required this.xPosition,
+    required this.id,
+    required this.size,
+    required this.acceptables,
+    required this.position,
+    this.prereq,
+    this.item,
     this.overchargeRate = 0,
-    this.doubleCharge = false,
     this.delay = false,
-    required this.items,
+    this.doubleCharge = false,
+    this.zPosition = 0,
+    this.visual,
   });
-
-  set(String? item) {
-    this.item = item;
-  }
+  set(String? item) => this.item = item;
 }
+// Holds data relating to furniture slot

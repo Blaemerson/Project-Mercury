@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-/* import 'package:projectmercury/models/furniture.dart'; */
-/* import 'package:projectmercury/models/slot.dart'; */
+import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
 
-// TODO: possibly store some of this in json
+// TODO: add back in missing furniture & decorate according to floor plan
 
 // slotID links a Furniture to a Slot
 Room bedroom = Room(
@@ -53,14 +53,14 @@ Room bedroom = Room(
       slotID: 3,
       name: 'square_lamp',
       direction: 'NE',
-      position: Offset(50, 70),
-      size: Size(30, 70),
+      /* position: Offset(50, 70), */
+      size: Size(30, 60),
     ),
     Furniture(
       slotID: 3,
       name: 'potted_plant',
       direction: 'NE',
-      position: Offset(60, 70),
+      /* position: Offset(60, 70), */
       size: Size(30, 50),
     ),
   ],
@@ -68,30 +68,41 @@ Room bedroom = Room(
     Slot(
       id: 0,
       size: const Size(90, 85),
-      outline: 'bed_outline_NW',
-      acceptables: ['basic_bed', 'plush_bed'],
+      visual: 'bed_outline_NW',
+      overchargeRate: 0.5,
+      doubleCharge: true,
+      delay: true,
+      acceptables: ['basic_bed'],
       position: const Offset(90, 150),
     ),
     Slot(
       id: 1,
       size: const Size(70, 50),
-      outline: 'desk_outline_NE',
+      visual: 'desk_outline_NE',
       acceptables: ['desk'],
       position: const Offset(160, 70),
     ),
     Slot(
       id: 2,
+      prereq: 1,
       size: const Size(70, 70),
-      outline: 'tv_outline_SE',
+      visual: 'tv_outline_SE',
       acceptables: ['modern_tv'],
-      position: const Offset(220, 145),
+      position: const Offset(200, 145),
     ),
     Slot(
       id: 3,
-      size: const Size(30, 70),
-      outline: 'outline_tall',
+      size: const Size(40, 40),
+      visual: 'outline',
       acceptables: ['potted_plant', 'square_lamp'],
-      position: const Offset(50, 70),
+      position: const Offset(80, 120),
+    ),
+    Slot(
+      id: 3,
+      size: const Size(40, 40),
+      visual: 'outline',
+      acceptables: ['potted_plant', 'square_lamp'],
+      position: const Offset(80, 220),
     ),
   ],
 );
@@ -106,45 +117,61 @@ Room livingroom = Room(
   unlockOrder: 2,
   furniture: const [
     Furniture(
+      name: 'doorway',
+      direction: 'NE',
+      position: Offset(200, 40),
+      size: Size(70, 60),
+    ),
+    Furniture(
+      name: 'doorway',
+      direction: 'NW',
+      position: Offset(45, 220),
+      size: Size(70, 60),
+    ),
+    Furniture(
       slotID: 0,
       name: 'basic_sofa',
       direction: 'NW',
       position: Offset(80, 160),
-      size: Size(70, 60),
+      size: Size(65, 55),
     ),
     Furniture(
       slotID: 0,
       name: 'modern_sofa',
       direction: 'NW',
       position: Offset(80, 160),
-      size: Size(70, 60),
+      size: Size(65, 55),
     ),
     Furniture(
       slotID: 0,
       name: 'leather_sofa',
       direction: 'NW',
       position: Offset(80, 160),
-      size: Size(70, 60),
+      size: Size(65, 55),
     ),
     Furniture(
       slotID: 0,
       name: 'plush_sofa',
       direction: 'NW',
       position: Offset(80, 160),
-      size: Size(70, 60),
+      size: Size(65, 55),
     ),
   ],
   slots: [
     Slot(
       id: 0,
-      size: const Size(70, 60),
-      outline: 'sofa_outline_NW',
-      acceptables: ['plush_sofa', 'leather_sofa', 'modern_sofa', 'basic_sofa', ],
+      size: const Size(65, 55),
+      visual: 'sofa_outline_NW',
+      acceptables: [
+        'plush_sofa',
+        'leather_sofa',
+        'modern_sofa',
+        'basic_sofa',
+      ],
       position: const Offset(80, 180),
     )
   ],
 );
-
 
 Room bathroom = const Room(
   name: 'bathroom',
@@ -163,7 +190,14 @@ Room kitchen = const Room(
   length: 190,
   height: 100,
   unlockOrder: 4,
-  furniture: [],
+  furniture: [
+    Furniture(
+      name: 'doorway',
+      direction: 'NE',
+      position: Offset(160, 40),
+      size: Size(70, 60),
+    ),
+  ],
 );
 
 Room diningroom = const Room(
@@ -173,7 +207,14 @@ Room diningroom = const Room(
   length: 190,
   height: 100,
   unlockOrder: 5,
-  furniture: [],
+  furniture: [
+    Furniture(
+      name: 'doorway',
+      direction: 'NE',
+      position: Offset(130, 40),
+      size: Size(70, 60),
+    ),
+  ],
 );
 
 Room washroom = const Room(

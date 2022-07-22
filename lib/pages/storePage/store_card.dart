@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/models/slot.dart';
 /* import 'package:projectmercury/models/slot.dart'; */
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
-import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
