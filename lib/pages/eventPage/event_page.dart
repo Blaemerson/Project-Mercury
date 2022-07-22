@@ -9,21 +9,22 @@ class EventPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Events'),
-      ),
       body: Column(
         children: [
           Consumer<EventController>(
             builder: (_, event, __) {
-              return Flexible(
-                child: ListView.builder(
-                  itemCount: event.deployedEvents.length,
-                  itemBuilder: (context, index) {
-                    return EventCard(event: event.deployedEvents[index]);
-                  },
-                ),
-              );
+              if (event.deployedEvents.isNotEmpty) {
+                return Flexible(
+                  child: ListView.builder(
+                    itemCount: event.deployedEvents.length,
+                    itemBuilder: (context, index) {
+                      return EventCard(event: event.deployedEvents[index]);
+                    },
+                  ),
+                );
+              } else {
+                return const Text('No events yet.');
+              }
             },
           ),
         ],
