@@ -74,8 +74,8 @@ Room bedroom = Room(
     ),
     Slot(
       id: 1,
-      size: const Size(70, 65),
-      outline: 'bed_outline_NW',
+      size: const Size(70, 50),
+      outline: 'desk_outline_NE',
       acceptables: ['desk'],
       position: const Offset(160, 70),
     ),

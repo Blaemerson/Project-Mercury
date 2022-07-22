@@ -43,13 +43,12 @@ class _HomePageState extends State<HomePage> {
               Consumer<EventController>(
                 builder: (_, event, __) {
                   return Badge(
-                    showBadge: false,
-                    /* event.sessionRoom != null */
-                    /*     ? event.sessionRoom!.slots */
-                    /*             .where((item) => item.item == null) */
-                    /*             .isNotEmpty && */
-                    /*         event.currentRoom == null */
-                    /*     : false, */
+                    showBadge: event.sessionRoom != null
+                        ? event.sessionRoom!.slots
+                                .where((item) => item.item == null)
+                                .isNotEmpty &&
+                            event.currentRoom == null
+                        : false,
                     badgeContent: Icon(
                       Icons.notification_important,
                       size: 28,
@@ -116,10 +115,9 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   )
                                 : Badge(
-                                    showBadge: true,
-                                    /* room.slots */
-                                    /*           .where((item) => item.item == null) */
-                                    /*           .isNotEmpty, */
+                                    showBadge: room.slots
+                                        .where((item) => item.item == null)
+                                        .isNotEmpty,
                                     badgeContent: Icon(
                                       Icons.notification_important,
                                       size: 20,

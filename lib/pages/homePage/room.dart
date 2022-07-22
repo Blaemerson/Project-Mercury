@@ -116,7 +116,9 @@ class _RoomState extends State<Room> {
                           border: Border.all(color: Colors.brown),
                           image: const DecorationImage(
                             image: AssetImage('assets/textures/darkPlanks.jpg'),
-                            repeat: ImageRepeat.repeat,
+                            fit: BoxFit.none,
+                            repeat: ImageRepeat.repeatY,
+                          alignment: Alignment.topLeft,
                           ),
                         ),
                       ),
@@ -183,8 +185,10 @@ class _RoomState extends State<Room> {
                       // Find the slot corresponding to this items id
                       if (f.slotID == -1 ||
                           (widget.slots
-                              .firstWhere((element) => f.slotID == element.id)
-                              .set(f.name)))
+                                  .firstWhere(
+                                      (element) => f.slotID == element.id)
+                                  .item ==
+                              f.name))
                         Positioned(
                           top: f.position.dx,
                           right: f.position.dy,
