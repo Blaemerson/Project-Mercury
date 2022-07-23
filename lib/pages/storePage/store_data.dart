@@ -7,7 +7,7 @@ const List<StoreItem> storeItems = [
     item: 'bear_rug',
   ),
   StoreItem(
-    name: 'Basic Rug',
+    name: 'Discount Rug',
     price: 150,
     item: 'basic_rug',
   ),
@@ -27,7 +27,7 @@ const List<StoreItem> storeItems = [
     item: 'leather_sofa',
   ),
   StoreItem(
-    name: 'Basic Sofa',
+    name: 'Discount Sofa',
     price: 150,
     item: 'basic_sofa',
   ),
@@ -60,6 +60,11 @@ const List<StoreItem> storeItems = [
     name: 'The Rooster',
     price: 150,
     item: 'rooster_painting',
+  ),
+  StoreItem(
+    name: 'Rob Boss Painting',
+    price: 150,
+    item: 'landscape_painting',
   ),
   StoreItem(
     name: 'Live, Laugh, Love',
@@ -107,7 +112,7 @@ const List<StoreItem> storeItems = [
     item: 'modern_lounge_chair',
   ),
   StoreItem(
-    name: 'Basic Bed',
+    name: 'Discount Bed',
     price: 400,
     item: 'basic_bed',
   ),
@@ -137,7 +142,7 @@ const List<StoreItem> storeItems = [
     item: 'mini_fridge',
   ),
   StoreItem(
-    name: 'Basic Fridge',
+    name: 'Discount Fridge',
     price: 400,
     item: 'fridge',
   ),
@@ -165,5 +170,30 @@ const List<StoreItem> storeItems = [
     name: 'Electric Stove',
     price: 550,
     item: 'electric_stove',
+  ),
+  StoreItem(
+    name: 'Red Rug',
+    price: 60,
+    item: 'bathroom_rug_red',
+  ),
+  StoreItem(
+    name: 'Brown Rug',
+    price: 70,
+    item: 'bathroom_rug_brown',
+  ),
+  StoreItem(
+    name: 'White Rug',
+    price: 80,
+    item: 'bathroom_rug_white',
+  ),
+  StoreItem(
+    name: 'Computer',
+    price: 600,
+    item: 'computer',
+  ),
+  StoreItem(
+    name: 'Office Chair',
+    price: 80,
+    item: 'desk_chair',
   ),
 ];

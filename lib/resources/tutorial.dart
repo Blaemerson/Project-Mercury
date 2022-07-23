@@ -12,8 +12,8 @@ class Tutorial {
   final navItemKey4 = GlobalKey();
   final navItemKey5 = GlobalKey();
   final homeViewKey = GlobalKey();
-  final hpKey1 = GlobalKey();
-  final hpKey2 = GlobalKey();
+  final buttonKey1 = GlobalKey();
+  final buttonKey2 = GlobalKey();
 
   Widget _tutorialDescription(String desc) {
     return Column(
@@ -84,7 +84,7 @@ class Tutorial {
             align: ContentAlign.top,
             builder: (context, controller) {
               return _tutorialDescription(
-                'This is the navigation bar. Tap on the tabs to navigate to each page.',
+                'This is the navigation bar. Tap on the icons to navigate to each page.',
               );
             },
           ),
@@ -131,7 +131,7 @@ class Tutorial {
     targets.add(
       TargetFocus(
         identify: "roomSelect",
-        keyTarget: hpKey1,
+        keyTarget: buttonKey1,
         alignSkip: Alignment.topRight,
         enableOverlayTab: true,
         contents: [
@@ -149,7 +149,7 @@ class Tutorial {
     targets.add(
       TargetFocus(
         identify: "purchaseHistory",
-        keyTarget: hpKey2,
+        keyTarget: buttonKey2,
         alignSkip: Alignment.topRight,
         enableOverlayTab: true,
         contents: [

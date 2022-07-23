@@ -15,9 +15,8 @@ class IsometricView extends StatelessWidget {
     return Transform(
       alignment: Alignment.center,
       transform: Matrix4.identity()
-        ..rotateX(35.264 * math.pi / 180)
-        ..rotateY(45 * math.pi / 180)
-        ..rotateX(math.pi / 2),
+        ..rotateX((90 - 35.264) * math.pi / 180)
+        ..rotateZ(-math.pi / 4),
       child: child,
     );
   }
@@ -26,18 +25,17 @@ class IsometricView extends StatelessWidget {
 /// Creates an actor for viewing within an IsometricView widget.
 class Actor extends StatelessWidget {
   final Widget child;
+  final Alignment alignment;
 
-  const Actor({Key? key, required this.child})
-      : super(key: key);
+  const Actor({Key? key, required this.child, this.alignment = Alignment.center}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Transform(
-      alignment: Alignment.center,
+      alignment: alignment,
       transform: Matrix4.identity()
-        ..rotateX(-math.pi / 2)
-        ..rotateY(-45 * math.pi / 180)
-        ..rotateX(-35.264 * math.pi / 180),
+        ..rotateZ(math.pi / 4)
+        ..rotateX(-(90 - 35.264) * math.pi / 180),
       child: child,
     );
   }

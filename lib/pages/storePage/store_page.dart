@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/slot.dart';
+/* import 'package:projectmercury/models/slot.dart'; */
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/storePage/store_card.dart';
 import 'package:projectmercury/pages/storePage/store_data.dart';
 
 class StorePage extends StatelessWidget {
-  final String room;
-  final Slot? slot;
+  final String roomName;
+  final Slot slot;
   const StorePage({
-    required this.room,
-    this.slot,
+    required this.roomName,
+    required this.slot,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<StoreItem> slotItems = storeItems
-        .where((item) =>
-            slot!.items.map((e) => e.name).toList().contains(item.item))
-        .toList();
+    List<StoreItem> sellables = storeItems.where((item) => slot.get(item.item).isNotEmpty).toList();
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -52,7 +50,7 @@ class StorePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (slot!.items.isNotEmpty) ...[
+                if (slot.acceptables.isNotEmpty) ...[
                   const Center(
                     child: Text(
                       'Item Selection',
@@ -64,11 +62,12 @@ class StorePage extends StatelessWidget {
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         return StoreItemCard(
-                          storeItem: slotItems[index],
-                          slot: slot!,
+                          roomName: roomName,
+                          slot: slot,
+                          storeItem: sellables[index],
                         );
                       },
-                      itemCount: slotItems.length,
+                      itemCount: sellables.length,
                       scrollDirection: Axis.horizontal,
                     ),
                   ),

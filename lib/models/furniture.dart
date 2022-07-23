@@ -1,19 +1,20 @@
-// Holds data relating to furniture
+import 'package:flutter/material.dart';
+
 class Furniture {
   final String name;
-  final String direction;
-  final double xPosition;
-  final double yPosition;
-  final double width;
-  final double height;
+  final double? height;
+  final Offset? position;
+  final double? zPosition;
+  final String? direction;
+  final int? slotID;
 
-  // Note: direction refers to whichever direction the "back" side of the furniture is facing
   const Furniture({
     required this.name,
-    this.direction = "",
-    required this.xPosition,
-    required this.yPosition,
-    required this.width,
-    required this.height,
+    this.position,
+    this.height,
+    this.zPosition,
+    this.direction,
+    this.slotID,
   });
 }
+// Holds data relating to furniture

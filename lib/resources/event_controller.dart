@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:projectmercury/models/event.dart';
+import 'package:projectmercury/models/furniture.dart';
 import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
@@ -187,25 +188,27 @@ class EventController with ChangeNotifier {
   void furnishRoom() {
     for (Room room in rooms) {
       // reset room
-      for (Slot slot in room.slots) {
-        if (slot.item != null) {
-          slot.set(null);
-        }
-      }
+      room.setSlotItems(null, null);
+      /* for (Slot slot in room.slots) { */
+      /*   if (slot.item != null) { */
+      /*     slot.set(null); */
+      /*   } */
+      /* } */
       // fill in slots
       List<PurchasedItem> roomItems =
           purchasedItems.where((element) => element.room == room.name).toList();
+
       if (roomItems.isNotEmpty) {
         for (PurchasedItem purchase in roomItems) {
+          // Fill all slots that take a given item
           List<Slot> matchingSlot = room.slots
-              .where((slot) => slot.items
-                  .map((e) => e.name)
-                  .toList()
-                  .contains(purchase.item))
+              .where((slot) => slot.get(purchase.item).toList().isNotEmpty)
               .toList();
-          matchingSlot.isNotEmpty
-              ? matchingSlot.first.set(purchase.item)
-              : null;
+          if (matchingSlot.isNotEmpty) {
+            matchingSlot.forEach(((element) => element.set(purchase.item)));
+          }
+          /*     ? matchingSlot.first.set(purchase.item) */
+          /*     : null; */
         }
       }
     }

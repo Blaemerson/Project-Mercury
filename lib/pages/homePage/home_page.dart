@@ -26,10 +26,12 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       body: Center(
-        child: FittedBox(
-          key: _tutorial.homeViewKey,
-          child: _currentRoom ?? _homeLayout,
-        ),
+        child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: FittedBox(
+              key: _tutorial.homeViewKey,
+              child: _currentRoom ?? _homeLayout,
+            )),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
@@ -54,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   ignorePointer: true,
                   child: SpeedDial(
-                    key: _tutorial.hpKey1,
+                    key: _tutorial.buttonKey1,
                     childPadding: const EdgeInsets.symmetric(vertical: 0),
                     visible: event.session != 0 ? true : false,
                     animatedIcon: AnimatedIcons.menu_close,
@@ -179,7 +181,7 @@ class _HomePageState extends State<HomePage> {
             ),
             // button on bottom-right: opens store page.
             FloatingActionButton(
-              key: _tutorial.hpKey2,
+              key: _tutorial.buttonKey2,
               heroTag: null,
               child: const Icon(Icons.storefront, size: 42),
               onPressed: () {
