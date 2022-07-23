@@ -24,9 +24,9 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       body: Center(
-        child: FittedBox(
-          child: _currentRoom ?? _homeLayout,
-        ),
+        child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: FittedBox(child: _currentRoom ?? _homeLayout)),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
