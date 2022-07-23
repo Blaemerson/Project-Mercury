@@ -4,6 +4,7 @@ import 'package:projectmercury/resources/auth_methods.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/time_controller.dart';
+import 'package:projectmercury/resources/tutorial.dart';
 
 final locator = GetIt.instance;
 
@@ -18,4 +19,6 @@ void setupLocator() {
   locator.registerLazySingleton<TimerController>(() => TimerController());
   //methods associated with badges
   locator.registerLazySingleton<EventController>(() => EventController());
+  //methods associated with tutorial
+  locator.registerLazySingleton<Tutorial>(() => Tutorial());
 }

@@ -6,6 +6,7 @@ import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/pages/storePage/receipt_page.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
+import 'package:projectmercury/resources/tutorial.dart';
 import 'package:projectmercury/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -20,11 +21,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Room? _currentRoom = locator.get<EventController>().currentRoom;
+    Tutorial _tutorial = locator.get<Tutorial>();
     const _homeLayout = FloorPlan();
 
     return Scaffold(
       body: Center(
         child: FittedBox(
+          key: _tutorial.homeViewKey,
           child: _currentRoom ?? _homeLayout,
         ),
       ),
@@ -51,6 +54,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   ignorePointer: true,
                   child: SpeedDial(
+                    key: _tutorial.hpKey1,
                     childPadding: const EdgeInsets.symmetric(vertical: 0),
                     visible: event.session != 0 ? true : false,
                     animatedIcon: AnimatedIcons.menu_close,
@@ -175,6 +179,7 @@ class _HomePageState extends State<HomePage> {
             ),
             // button on bottom-right: opens store page.
             FloatingActionButton(
+              key: _tutorial.hpKey2,
               heroTag: null,
               child: const Icon(Icons.storefront, size: 42),
               onPressed: () {

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import '../models/transaction.dart';
 
 //Event setting
@@ -11,3 +13,5 @@ Transaction initialTransaction = Transaction(
   timeStamp: DateTime.now(),
   state: TransactionState.approved,
 );
+
+final homeKey = GlobalKey();

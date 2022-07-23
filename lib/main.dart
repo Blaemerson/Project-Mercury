@@ -10,7 +10,6 @@ import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/screens/welcome_screen.dart';
 import 'package:projectmercury/screens/navigation_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,11 +67,7 @@ class MyApp extends StatelessWidget {
               _analytics.setCurrentScreen('/home');
               return ChangeNotifierProvider.value(
                 value: locator.get<EventController>(),
-                child: ShowCaseWidget(
-                  builder: Builder(
-                    builder: (context) => const NavigationScreen(),
-                  ),
-                ),
+                child: const NavigationScreen(),
               );
             } else if (snapshot.hasError) {
               return Center(

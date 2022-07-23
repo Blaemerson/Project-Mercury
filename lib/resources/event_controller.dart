@@ -12,6 +12,10 @@ import 'locator.dart';
 class EventController with ChangeNotifier {
   final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
+  int _currentPage = 0;
+  int get currentPage => _currentPage;
+  set currentPage(int page) => _currentPage = page;
+
   Room? _currentRoom;
   Room? get currentRoom => _currentRoom;
   setRoom(Room? room) {
