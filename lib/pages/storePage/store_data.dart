@@ -7,7 +7,7 @@ const List<StoreItem> storeItems = [
     item: 'bear_rug',
   ),
   StoreItem(
-    name: 'Basic Rug',
+    name: 'Discount Rug',
     price: 150,
     item: 'basic_rug',
   ),
@@ -27,7 +27,7 @@ const List<StoreItem> storeItems = [
     item: 'leather_sofa',
   ),
   StoreItem(
-    name: 'Basic Sofa',
+    name: 'Discount Sofa',
     price: 150,
     item: 'basic_sofa',
   ),
@@ -112,7 +112,7 @@ const List<StoreItem> storeItems = [
     item: 'modern_lounge_chair',
   ),
   StoreItem(
-    name: 'Basic Bed',
+    name: 'Discount Bed',
     price: 400,
     item: 'basic_bed',
   ),
@@ -142,7 +142,7 @@ const List<StoreItem> storeItems = [
     item: 'mini_fridge',
   ),
   StoreItem(
-    name: 'Basic Fridge',
+    name: 'Discount Fridge',
     price: 400,
     item: 'fridge',
   ),
