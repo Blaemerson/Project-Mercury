@@ -17,6 +17,7 @@ class Transaction {
   DateTime? timeStamp;
   DateTime? timeActed;
   TransactionState state;
+  String? linkedItemId;
 
   Transaction({
     this.id = '',
@@ -28,6 +29,7 @@ class Transaction {
     this.timeStamp,
     this.timeActed,
     this.state = TransactionState.actionNeeded,
+    this.linkedItemId,
   });
 
   Map<String, dynamic> toJson() {
@@ -41,6 +43,7 @@ class Transaction {
       'timeStamp': timeStamp,
       'timeActed': timeActed,
       'state': state.name,
+      'linkedItemId': linkedItemId,
     });
   }
 
@@ -59,6 +62,7 @@ class Transaction {
           ? (snap['timeActed'] as Timestamp).toDate()
           : null,
       state: TransactionState.values.byName(snap['state']),
+      linkedItemId: snap['linkedItemId'],
     );
   }
 }

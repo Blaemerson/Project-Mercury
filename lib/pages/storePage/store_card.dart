@@ -26,7 +26,7 @@ class StoreItemCard extends StatelessWidget {
     final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
     buyItem() async {
-      _firestore.addItem(storeItem, roomName);
+      String itemId = await _firestore.addItem(storeItem, roomName);
       if (slot.doubleCharge) {
         _firestore.addTransaction(
           Transaction(
@@ -35,6 +35,7 @@ class StoreItemCard extends StatelessWidget {
             state: slot.delay
                 ? TransactionState.pending
                 : TransactionState.actionNeeded,
+            linkedItemId: itemId,
           ),
           double: true,
         );
@@ -47,6 +48,7 @@ class StoreItemCard extends StatelessWidget {
             state: slot.delay
                 ? TransactionState.pending
                 : TransactionState.actionNeeded,
+            linkedItemId: itemId,
           ),
         );
       }

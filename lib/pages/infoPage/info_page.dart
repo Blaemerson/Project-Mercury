@@ -123,17 +123,27 @@ class _InfoPageState extends State<InfoPage> {
                 ),
                 Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: progress == 1
-                          ? () async {
-                              if (locator.get<EventController>().session <
-                                  locator.get<EventController>().rooms.length) {
+                    if (locator.get<EventController>().session <
+                        locator.get<EventController>().rooms.length) ...[
+                      ElevatedButton(
+                        onPressed: progress == 1
+                            ? () async {
                                 await _firestore.updateSession();
                               }
-                            }
-                          : null,
-                      child: const Text('Complete Session'),
-                    ),
+                            : null,
+                        child: const Text('Complete Session'),
+                      ),
+                    ] else ...[
+                      const Text(
+                        'Congratulations!',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      const Text(
+                        'You have finished the game.',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                    const SizedBox(height: 8),
                     Container(
                       color: Theme.of(context).colorScheme.primaryContainer,
                       child: TextButton(

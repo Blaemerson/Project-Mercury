@@ -144,17 +144,19 @@ class FirestoreMethods {
       path: FirestorePath.user(), builder: (data) => model.User.fromSnap(data));
 
 // add new perchased_item data
-  Future<void> addItem(
+  Future<String> addItem(
     StoreItem storeItem,
     String room,
   ) async {
-    await _firestoreService.addDocument(
+    String id = await _firestoreService.addDocument(
         path: FirestorePath.items(),
         data: storeItem.toJson()
           ..addAll({
             'timeBought': DateTime.now(),
             'room': room,
+            'delivered': false,
           }));
+    return id;
   }
 
   // stream of purchased_item
@@ -216,19 +218,34 @@ class FirestoreMethods {
 
   Future<void> transactionAction(
       model.Transaction transaction, bool approve) async {
+    // get clone of double transaction
+    model.Transaction? clone =
+        locator.get<EventController>().getTransaction(transaction.cloneId);
+    // deliver linked item
+    if (transaction.linkedItemId != null) {
+      if (clone == null) {
+        _firestoreService.updateDocument(
+          path: FirestorePath.item(transaction.linkedItemId!),
+          data: {'delivered': true},
+        );
+      } else {
+        if (clone.state != model.TransactionState.actionNeeded) {
+          _firestoreService.updateDocument(
+            path: FirestorePath.item(transaction.linkedItemId!),
+            data: {'delivered': true},
+          );
+        }
+      }
+    }
+    // update transaction state
     if (approve == true) {
       await updateTransactionState(
           transaction.id, model.TransactionState.approved);
-      if (transaction.cloneId == null) {
+      if (clone == null) {
         if (transaction.overcharge == 0) {
           updateScore(1);
         }
       } else {
-        model.Transaction clone = locator
-            .get<EventController>()
-            .transactions
-            .where((element) => element.id == transaction.cloneId)
-            .first;
         if (clone.state == model.TransactionState.disputed) {
           updateScore(1);
         }
@@ -236,7 +253,7 @@ class FirestoreMethods {
     } else {
       await updateTransactionState(
           transaction.id, model.TransactionState.disputed);
-      if (transaction.cloneId == null) {
+      if (clone == null) {
         if (transaction.overcharge != 0) {
           addTransaction(
             model.Transaction(
@@ -249,10 +266,6 @@ class FirestoreMethods {
           updateScore(1);
         }
       } else {
-        model.Transaction clone = await _firestoreService.documentFuture(
-          path: FirestorePath.transaction(transaction.cloneId!),
-          builder: (data) => model.Transaction.fromSnap(data),
-        );
         if (clone.state != model.TransactionState.disputed) {
           addTransaction(
             model.Transaction(

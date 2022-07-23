@@ -121,7 +121,7 @@ class Tutorial {
           TargetContent(
             builder: (context, controller) {
               return _tutorialDescription(
-                'This is your home. Your goal is to furnish it.',
+                'This is your home. Your goal is to furnish each room to your liking.',
               );
             },
           ),
@@ -170,6 +170,7 @@ class Tutorial {
         keyTarget: navItemKey2,
         alignSkip: Alignment.topRight,
         enableOverlayTab: true,
+        paddingFocus: 24,
         contents: [
           TargetContent(
             align: ContentAlign.top,
@@ -188,6 +189,7 @@ class Tutorial {
         keyTarget: navItemKey3,
         alignSkip: Alignment.topRight,
         enableOverlayTab: true,
+        paddingFocus: 24,
         contents: [
           TargetContent(
             align: ContentAlign.top,
@@ -206,6 +208,7 @@ class Tutorial {
         keyTarget: navItemKey4,
         alignSkip: Alignment.topRight,
         enableOverlayTab: true,
+        paddingFocus: 24,
         contents: [
           TargetContent(
             align: ContentAlign.top,
@@ -224,6 +227,7 @@ class Tutorial {
         keyTarget: navItemKey5,
         alignSkip: Alignment.topRight,
         enableOverlayTab: true,
+        paddingFocus: 24,
         contents: [
           TargetContent(
             align: ContentAlign.top,

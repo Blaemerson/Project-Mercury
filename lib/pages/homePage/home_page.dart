@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                       ? event.sessionRoom!.slots
                               .where((item) => item.item == null)
                               .isNotEmpty &&
-                          event.currentRoom == null
+                          event.currentRoom != event.sessionRoom
                       : false,
                   badgeContent: Icon(
                     Icons.notification_important,

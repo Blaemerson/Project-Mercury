@@ -31,12 +31,14 @@ class StoreItem {
 class PurchasedItem extends StoreItem {
   String? room;
   DateTime? timeBought;
+  final bool delivered;
   PurchasedItem({
     name = '',
     price = 0,
     item = '',
     this.room = '',
     this.timeBought,
+    this.delivered = true,
   }) : super(
           name: name,
           price: price,
@@ -51,6 +53,7 @@ class PurchasedItem extends StoreItem {
       'item': item,
       'room': room,
       'timeBought': timeBought,
+      'delivered': delivered,
     });
   }
 
@@ -63,6 +66,7 @@ class PurchasedItem extends StoreItem {
       timeBought: snap['timeBought'] != null
           ? (snap['timeBought'] as Timestamp).toDate()
           : null,
+      delivered: snap['delivered'] ?? true,
     );
   }
 }

@@ -56,6 +56,11 @@ class EventController with ChangeNotifier {
 
   List<Transaction>? _transactions;
   List<Transaction> get transactions => _transactions ?? [];
+  Transaction? getTransaction(String? id) {
+    Iterable<Transaction> match =
+        transactions.where((element) => element.id == id);
+    return match.isNotEmpty ? match.first : null;
+  }
 
   List<Event>? _deployedEvents;
   List<Event> get deployedEvents => _deployedEvents ?? [];
@@ -180,7 +185,7 @@ class EventController with ChangeNotifier {
   void calculateSessionProgress() {
     int denom = _roomProgress[1] + _eventProgress[1];
     _sessionProgress =
-        (_roomProgress[0] + _eventProgress[0]) / (denom != 0 ? denom : 1);
+        denom != 0 ? ((_roomProgress[0] + _eventProgress[0]) / denom) : 1;
     // _sessionProgress = 1;
     updateBadge(4);
   }
@@ -189,26 +194,20 @@ class EventController with ChangeNotifier {
     for (Room room in rooms) {
       // reset room
       room.setSlotItems(null, null);
-      /* for (Slot slot in room.slots) { */
-      /*   if (slot.item != null) { */
-      /*     slot.set(null); */
-      /*   } */
-      /* } */
       // fill in slots
       List<PurchasedItem> roomItems =
           purchasedItems.where((element) => element.room == room.name).toList();
-
       if (roomItems.isNotEmpty) {
         for (PurchasedItem purchase in roomItems) {
-          // Fill all slots that take a given item
-          List<Slot> matchingSlot = room.slots
-              .where((slot) => slot.get(purchase.item).toList().isNotEmpty)
-              .toList();
-          if (matchingSlot.isNotEmpty) {
-            matchingSlot.forEach(((element) => element.set(purchase.item)));
+          if (purchase.delivered) {
+            // Fill all slots that take a given item
+            List<Slot> matchingSlot = room.slots
+                .where((slot) => slot.get(purchase.item).toList().isNotEmpty)
+                .toList();
+            if (matchingSlot.isNotEmpty) {
+              matchingSlot.forEach(((element) => element.set(purchase.item)));
+            }
           }
-          /*     ? matchingSlot.first.set(purchase.item) */
-          /*     : null; */
         }
       }
     }
