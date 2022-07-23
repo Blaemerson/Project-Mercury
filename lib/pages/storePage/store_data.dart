@@ -62,6 +62,11 @@ const List<StoreItem> storeItems = [
     item: 'rooster_painting',
   ),
   StoreItem(
+    name: 'Rob Boss Painting',
+    price: 150,
+    item: 'landscape_painting',
+  ),
+  StoreItem(
     name: 'Live, Laugh, Love',
     price: 100,
     item: 'live_laugh_love_painting',
@@ -165,5 +170,30 @@ const List<StoreItem> storeItems = [
     name: 'Electric Stove',
     price: 550,
     item: 'electric_stove',
+  ),
+  StoreItem(
+    name: 'Red Rug',
+    price: 60,
+    item: 'bathroom_rug_red',
+  ),
+  StoreItem(
+    name: 'Brown Rug',
+    price: 70,
+    item: 'bathroom_rug_brown',
+  ),
+  StoreItem(
+    name: 'White Rug',
+    price: 80,
+    item: 'bathroom_rug_white',
+  ),
+  StoreItem(
+    name: 'Computer',
+    price: 600,
+    item: 'computer',
+  ),
+  StoreItem(
+    name: 'Office Chair',
+    price: 80,
+    item: 'desk_chair',
   ),
 ];

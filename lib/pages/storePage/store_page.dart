@@ -16,8 +16,7 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<StoreItem> sellables =
-        storeItems.where((item) => slot.acceptables.contains(item.item)).toList();
+    List<StoreItem> sellables = storeItems.where((item) => slot.get(item.item).isNotEmpty).toList();
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

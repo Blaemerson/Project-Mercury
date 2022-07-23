@@ -36,9 +36,6 @@ class Actor extends StatelessWidget {
       transform: Matrix4.identity()
         ..rotateZ(math.pi / 4)
         ..rotateX(-(90 - 35.264) * math.pi / 180),
-      /* ..rotateX(-math.pi / 2) */
-      /* ..rotateY(-45 * math.pi / 180) */
-      /* ..rotateX(-35.264 * math.pi / 180), */
       child: child,
     );
   }

@@ -30,8 +30,9 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Center(
           child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: FittedBox(child: _currentRoom ?? _homeLayout)),
+            width: MediaQuery.of(context).size.width,
+            child: FittedBox(child: _currentRoom ?? _homeLayout),
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(

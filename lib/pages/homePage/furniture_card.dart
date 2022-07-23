@@ -22,16 +22,20 @@ class FurnitureCard extends StatelessWidget {
       right: furniture.position != null
           ? furniture.position!.dy
           : slot!.position.dy,
-      width: furniture.size != null ? furniture.size!.width : slot!.size.width,
-      height:
-          furniture.size != null ? furniture.size!.height : slot!.size.height,
       child: Transform(
         transform: Matrix4.translationValues(
-            0, 0, furniture.zPosition ?? slot!.zPosition),
+            0, 0, furniture.zPosition ?? (slot == null ? 0 : slot!.zPosition)),
         child: Actor(
           alignment: Alignment.center,
-          child: Image.asset(
-              'assets/furniture/${furniture.name}_${furniture.direction}.png'),
+          child: furniture.direction != null
+              ? Image.asset(
+                  'assets/furniture/${furniture.name}_${furniture.direction}.png',
+                  height: furniture.height ?? slot!.height,
+                )
+              : Image.asset(
+                  'assets/furniture/${furniture.name}.png',
+                  height: furniture.height ?? slot!.height,
+                ),
         ),
       ),
     );

@@ -197,15 +197,11 @@ class EventController with ChangeNotifier {
       if (roomItems.isNotEmpty) {
         for (PurchasedItem purchase in roomItems) {
           // Fill all slots that take a given item
-          for (Furniture furniture in room.furniture) {
-            List<Slot> matchingSlot = room.slots
-                .where((slot) =>
-                    purchase.item.contains(furniture.name) &&
-                    slot.id == furniture.slotID)
-                .toList();
-            if (matchingSlot.isNotEmpty) {
-              matchingSlot.forEach(((element) => element.set(purchase.item)));
-            }
+          List<Slot> matchingSlot = room.slots
+              .where((slot) => slot.get(purchase.item).toList().isNotEmpty)
+              .toList();
+          if (matchingSlot.isNotEmpty) {
+            matchingSlot.forEach(((element) => element.set(purchase.item)));
           }
           /*     ? matchingSlot.first.set(purchase.item) */
           /*     : null; */
