@@ -73,12 +73,14 @@ class _RoomState extends State<Room> {
               for (Object? o in widget.items) {
                 if (o is Slot) {
                   if (o.item != null) {
-                    placeables.add(FurnitureCard(
-                      furniture: o.acceptables.firstWhere(
-                        (element) => element.name == o.item,
-                      ),
-                      slot: o,
-                    ));
+                    if (roomItems.data!.map((e) => e.item).contains(o.item)) {
+                      placeables.add(FurnitureCard(
+                        furniture: o.acceptables.firstWhere(
+                          (element) => element.name == o.item,
+                        ),
+                        slot: o,
+                      ));
+                    }
                   } else if (_currentRoom != null &&
                       o.item == null &&
                       o.owned == false) {

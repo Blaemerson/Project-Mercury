@@ -24,12 +24,13 @@ class StoreItemCard extends StatelessWidget {
 
     buyItem() async {
       String itemId = await _firestore.addItem(storeItem, roomName);
-      if (slot.doubleCharge) {
+      if (slot.scam.doubleCharge) {
         _firestore.addTransaction(
           Transaction(
-            description: 'Purchased ${storeItem.name}',
+            description:
+                'Purchased ${storeItem.name} from ${storeItem.seller.real}',
             amount: -(storeItem.price),
-            state: slot.delay
+            state: slot.scam.delay
                 ? TransactionState.pending
                 : TransactionState.actionNeeded,
             linkedItemId: itemId,
@@ -39,10 +40,11 @@ class StoreItemCard extends StatelessWidget {
       } else {
         _firestore.addTransaction(
           Transaction(
-            description: 'Purchased ${storeItem.name}',
-            amount: -(storeItem.price * (1 + slot.overchargeRate)),
-            overcharge: storeItem.price * slot.overchargeRate,
-            state: slot.delay
+            description:
+                'Purchased ${storeItem.name} from ${storeItem.seller.real}',
+            amount: -(storeItem.price * (1 + slot.scam.overchargeRate)),
+            overcharge: storeItem.price * slot.scam.overchargeRate,
+            state: slot.scam.delay
                 ? TransactionState.pending
                 : TransactionState.actionNeeded,
             linkedItemId: itemId,
@@ -59,6 +61,7 @@ class StoreItemCard extends StatelessWidget {
         fit: BoxFit.fitHeight,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          width: 125,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.brown),
@@ -67,7 +70,15 @@ class StoreItemCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(storeItem.name),
+              Text(
+                storeItem.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Sold by: ${storeItem.seller.real}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12),
+              ),
               Image.asset(
                 'assets/furniture/${storeItem.item}.png',
                 errorBuilder: (context, _, stacktrace) {
@@ -89,7 +100,7 @@ class StoreItemCard extends StatelessWidget {
                         static: true,
                         title: 'Purchase Failed',
                         text:
-                            'Make sure all transactions are resolved to make a new purchase.');
+                            'Complete all transactions to make a new purchase.');
                   } else if (locator
                       .get<EventController>()
                       .waitingEventAction()) {
@@ -97,8 +108,7 @@ class StoreItemCard extends StatelessWidget {
                         context: context,
                         static: true,
                         title: 'Purchase Failed',
-                        text:
-                            'Make sure all events are completed to make a new purchase.');
+                        text: 'Complete all events to make a new purchase.');
                   } else {
                     bool result = await showConfirmation(
                           context: context,

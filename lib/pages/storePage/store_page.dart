@@ -16,7 +16,8 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<StoreItem> sellables = storeItems.where((item) => slot.get(item.item).isNotEmpty).toList();
+    List<StoreItem> sellables =
+        storeItems.where((item) => slot.get(item.item).isNotEmpty).toList();
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -58,7 +59,7 @@ class StorePage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 200,
+                    height: 240,
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         return StoreItemCard(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/scam.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 
@@ -11,10 +12,7 @@ class Slot {
   final double zPosition;
   final List<Furniture> acceptables;
   final String? visual;
-  final double overchargeRate;
-  final bool delay;
-  final bool doubleCharge;
-  /* bool owned; */
+  final Scam scam;
   String? item;
 
   Slot({
@@ -25,10 +23,8 @@ class Slot {
     /* this.owned = false, */
     this.prereq,
     this.item,
-    this.overchargeRate = 0,
-    this.delay = false,
-    this.doubleCharge = false,
     this.zPosition = 0,
+    this.scam = const Scam(),
     this.visual,
   });
   set(String? item) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/scam.dart';
 import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
 
@@ -48,9 +49,11 @@ Room bedroom = Room(
       id: 0,
       height: 70,
       visual: 'bed_outline_NW',
-      overchargeRate: 0.5,
-      doubleCharge: true,
-      delay: true,
+      scam: const Scam(
+        overchargeRate: 0.5,
+        doubleCharge: true,
+        delay: true,
+      ),
       acceptables: const [
         Furniture(
           name: 'basic_bed',
@@ -95,7 +98,7 @@ Room bedroom = Room(
           name: 'desk_chair',
         ),
       ],
-      position: const Offset(150, 85),
+      position: const Offset(150, 90),
     ),
     const Furniture(
       name: 'modern_tv',
