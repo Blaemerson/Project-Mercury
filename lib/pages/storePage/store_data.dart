@@ -196,4 +196,9 @@ const List<StoreItem> storeItems = [
     price: 80,
     item: 'desk_chair',
   ),
+  StoreItem(
+    name: 'Bedside Tables (2)',
+    price: 160,
+    item: 'bedside_table',
+  ),
 ];

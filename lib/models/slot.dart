@@ -14,6 +14,7 @@ class Slot {
   final double overchargeRate;
   final bool delay;
   final bool doubleCharge;
+  /* bool owned; */
   String? item;
 
   Slot({
@@ -21,6 +22,7 @@ class Slot {
     required this.height,
     required this.acceptables,
     required this.position,
+    /* this.owned = false, */
     this.prereq,
     this.item,
     this.overchargeRate = 0,
@@ -29,7 +31,12 @@ class Slot {
     this.zPosition = 0,
     this.visual,
   });
-  set(String? item) => this.item = item;
+  set(String? item) {
+    /* if (item == null) { */
+    /*   owned = false; */
+    /* } */
+    return this.item = item;
+  }
   get(String itemName) =>
       acceptables.where((element) => element.name == itemName);
   get owned => locator

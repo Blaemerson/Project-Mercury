@@ -19,37 +19,39 @@ class Room extends StatefulWidget {
   final double height;
   final bool roomBehind;
   final bool roomBeside;
-  final List<Furniture> furniture;
-  final List<Slot> slots;
-  const Room({
-    Key? key,
-    required this.unlockOrder,
-    required this.width,
-    required this.length,
-    required this.height,
-    this.name = '',
-    this.roomBehind = false,
-    this.roomBeside = false,
-    this.furniture = const [],
-    this.slots = const [],
-  }) : super(key: key);
+  final List<Object?> items;
+  /* final List<Furniture> furniture; */
+  /* final List<Slot> slots; */
+  const Room(
+      {Key? key,
+      required this.unlockOrder,
+      required this.width,
+      required this.length,
+      required this.height,
+      this.name = '',
+      this.roomBehind = false,
+      this.roomBeside = false,
+      this.items = const []
+      /* this.furniture = const [], */
+      /* this.slots = const [], */
+      })
+      : super(key: key);
 
   @override
   State<Room> createState() => _RoomState();
 
+  Iterable<Slot> get slots => items.whereType<Slot>();
   // Fill all items matching a given ID with a given item
-  setSlotItems(int? slotID, String? item) {
+  Iterable<Slot> slotsByID(int slotID) => slots.where((s) => s.id == slotID);
+  fillSlots(int? slotID, String? item) {
     slots
-        .where((element) => slotID == null ? true : element.id == slotID)
-        .forEach((element) {
-      element.set(item);
-    });
+        .where((s) => slotID == null ? true : s.id == slotID)
+        .forEach((s) => s.set(item));
   }
 
-  Iterable<Slot> getSlots(int slotID) => slots.where((s) => s.id == slotID);
-  Iterable<Slot> getFilledSlots() => slots.where((s) => s.item != null);
-  getFurniture(int slotID) =>
-      furniture.where((f) => f.slotID == slotID).toList();
+  Iterable<Slot> get filledSlots =>
+      items.whereType<Slot>().where((s) => s.item != null);
+  get furniture => items.whereType<Furniture>();
 }
 
 class _RoomState extends State<Room> {
@@ -66,6 +68,32 @@ class _RoomState extends State<Room> {
             stream:
                 locator.get<FirestoreMethods>().itemsStream(room: widget.name),
             builder: (context, roomItems) {
+              List<Widget> placeables = [];
+
+              for (Object? o in widget.items) {
+                if (o is Slot) {
+                  if (o.item != null) {
+                    placeables.add(FurnitureCard(
+                      furniture: o.acceptables.firstWhere(
+                        (element) => element.name == o.item,
+                      ),
+                      slot: o,
+                    ));
+                  } else if (_currentRoom != null &&
+                      o.item == null &&
+                      o.owned == false) {
+                    if (o.prereq == null ||
+                        widget.filledSlots
+                            .toSet()
+                            .intersection(widget.slotsByID(o.prereq!).toSet())
+                            .isNotEmpty) {
+                      placeables.add(SlotCard(slot: o, roomName: widget.name));
+                    }
+                  }
+                } else if (o is Furniture) {
+                  placeables.add(FurnitureCard(furniture: o));
+                }
+              }
               return Stack(
                 clipBehavior: Clip.none,
                 alignment: Alignment.bottomLeft,
@@ -139,28 +167,7 @@ class _RoomState extends State<Room> {
                       ),
                     ),
                   ),
-                  // Hide slots when in full view
-                  if (_currentRoom != null)
-                    for (Slot s in widget.slots
-                        .where((element) => element.item == null && element.owned == false))
-                      // if slot has no unfinished prerequisites...
-                      if (s.prereq == null ||
-                          widget
-                              .getFilledSlots()
-                              .toSet()
-                              .intersection(widget.getSlots(s.prereq!).toSet())
-                              .isNotEmpty)
-                        SlotCard(slot: s, roomName: widget.name),
-                  for (Slot s
-                      in widget.slots.where((element) => element.item != null))
-                    FurnitureCard(
-                      furniture: s.acceptables.firstWhere(
-                        (element) => element.name == s.item,
-                      ),
-                      slot: s,
-                    ),
-                  for (Furniture f in widget.furniture)
-                    FurnitureCard(furniture: f),
+                  for (Widget item in placeables) item,
                 ],
               );
             },

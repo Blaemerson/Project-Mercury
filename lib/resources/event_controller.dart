@@ -192,7 +192,7 @@ class EventController with ChangeNotifier {
   void furnishRoom() {
     for (Room room in rooms) {
       // reset room
-      room.setSlotItems(null, null);
+      room.fillSlots(null, null);
       // fill in slots
       List<PurchasedItem> roomItems =
           purchasedItems.where((element) => element.room == room.name).toList();
