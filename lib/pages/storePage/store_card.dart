@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:projectmercury/models/slot.dart';
-/* import 'package:projectmercury/models/slot.dart'; */
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/utils.dart';
-import 'dart:io';
 
 class StoreItemCard extends StatelessWidget {
   final StoreItem storeItem;

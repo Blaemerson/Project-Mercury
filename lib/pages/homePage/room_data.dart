@@ -3,8 +3,8 @@ import 'package:projectmercury/models/furniture.dart';
 import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
 
-// TODO: add back in missing furniture & decorate according to floor plan
 
+// TODO: add back in missing furniture & decorate according to floor plan
 // slotID links a Furniture to a Slot
 Room bedroom = Room(
   name: 'bedroom',
@@ -71,6 +71,20 @@ Room bedroom = Room(
         ),
       ],
       position: const Offset(150, 100),
+    ),
+    Slot(
+      id: 3,
+      height: 55,
+      visual: 'outline_tall',
+      acceptables: const [
+        Furniture(
+          name: 'square_lamp',
+        ),
+        Furniture(
+          name: 'potted_plant',
+        ),
+      ],
+      position: const Offset(40, 55),
     ),
   ],
 );

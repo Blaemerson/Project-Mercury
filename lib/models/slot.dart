@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/resources/event_controller.dart';
+import 'package:projectmercury/resources/locator.dart';
 
 class Slot {
   final int id;
@@ -28,6 +30,12 @@ class Slot {
     this.visual,
   });
   set(String? item) => this.item = item;
-  get(String itemName) => acceptables.where((element) => element.name == itemName);
+  get(String itemName) =>
+      acceptables.where((element) => element.name == itemName);
+  get owned => locator
+      .get<EventController>()
+      .purchasedItems
+      .where((element) => acceptables.map((e) => e.name).contains(element.item))
+      .isNotEmpty;
 }
 // Holds data relating to furniture slot
