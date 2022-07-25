@@ -26,22 +26,24 @@ class TransactionCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        formatDate.format(transaction.timeStamp!),
-                        style: const TextStyle(
-                          fontSize: 12,
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          formatDate.format(transaction.timeStamp!),
+                          style: const TextStyle(
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                      Text(
-                        transaction.description,
-                        style: const TextStyle(
-                          fontSize: 18,
+                        Text(
+                          transaction.description,
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   transaction.state == TransactionState.pending
                       ? const CircularProgressIndicator(

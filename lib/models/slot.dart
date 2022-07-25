@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/scam.dart';
 
 class Slot {
   final int id;
@@ -9,9 +10,7 @@ class Slot {
   final double zPosition;
   final List<Furniture> acceptables;
   final String? visual;
-  final double overchargeRate;
-  final bool delay;
-  final bool doubleCharge;
+  final Scam scam;
   String? item;
 
   Slot({
@@ -21,13 +20,12 @@ class Slot {
     required this.position,
     this.prereq,
     this.item,
-    this.overchargeRate = 0,
-    this.delay = false,
-    this.doubleCharge = false,
     this.zPosition = 0,
+    this.scam = const Scam(),
     this.visual,
   });
   set(String? item) => this.item = item;
-  get(String itemName) => acceptables.where((element) => element.name == itemName);
+  get(String itemName) =>
+      acceptables.where((element) => element.name == itemName);
 }
 // Holds data relating to furniture slot
