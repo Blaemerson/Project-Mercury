@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:projectmercury/models/event.dart';
-import 'package:projectmercury/models/furniture.dart';
 import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';

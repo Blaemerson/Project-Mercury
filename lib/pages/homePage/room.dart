@@ -5,7 +5,7 @@ import 'dart:math' as math;
 
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/pages/homePage/furniture_card.dart';
-import 'package:projectmercury/pages/homePage/furniture_slot.dart';
+import 'package:projectmercury/pages/homePage/slot_card.dart';
 import 'package:projectmercury/pages/homePage/isometric.dart';
 import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
@@ -142,7 +142,7 @@ class _RoomState extends State<Room> {
                   // Hide slots when in full view
                   if (_currentRoom != null)
                     for (Slot s in widget.slots
-                        .where((element) => element.item == null))
+                        .where((element) => element.item == null && element.owned == false))
                       // if slot has no unfinished prerequisites...
                       if (s.prereq == null ||
                           widget
