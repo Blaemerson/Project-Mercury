@@ -11,7 +11,7 @@ import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 
-class Room extends StatefulWidget {
+class Room extends StatelessWidget {
   final String name;
   final int unlockOrder;
   final double width;
@@ -37,24 +37,22 @@ class Room extends StatefulWidget {
       })
       : super(key: key);
 
-  @override
-  State<Room> createState() => _RoomState();
+  /* @override */
+  /* State<Room> createState() => _RoomState(); */
 
   Iterable<Slot> get slots => items.whereType<Slot>();
   // Fill all items matching a given ID with a given item
   Iterable<Slot> slotsByID(int slotID) => slots.where((s) => s.id == slotID);
   fillSlots(int? slotID, String? item) {
-    slots
-        .where((s) => slotID == null ? true : s.id == slotID)
-        .forEach((s) => s.set(item));
+    slots.where((s) => slotID == null ? true : s.id == slotID).forEach((s) {
+      s.set(item);
+    });
   }
 
   Iterable<Slot> get filledSlots =>
       items.whereType<Slot>().where((s) => s.item != null);
   get furniture => items.whereType<Furniture>();
-}
 
-class _RoomState extends State<Room> {
   @override
   Widget build(BuildContext context) {
     Room? _currentRoom = locator.get<EventController>().currentRoom;
@@ -62,34 +60,31 @@ class _RoomState extends State<Room> {
     return FittedBox(
       child: IsometricView(
         child: SizedBox(
-          width: widget.length + widget.height,
-          height: widget.width + widget.height,
+          width: length + height,
+          height: width + height,
           child: StreamBuilder<List<PurchasedItem>>(
-            stream:
-                locator.get<FirestoreMethods>().itemsStream(room: widget.name),
+            stream: locator.get<FirestoreMethods>().itemsStream(room: name),
             builder: (context, roomItems) {
               List<Widget> placeables = [];
 
-              for (Object? o in widget.items) {
+              for (Object? o in items) {
                 if (o is Slot) {
                   if (o.item != null) {
-                    if (roomItems.data!.map((e) => e.item).contains(o.item)) {
-                      placeables.add(FurnitureCard(
-                        furniture: o.acceptables.firstWhere(
-                          (element) => element.name == o.item,
-                        ),
-                        slot: o,
-                      ));
-                    }
+                    placeables.add(FurnitureCard(
+                      furniture: o.acceptables.firstWhere(
+                        (element) => element.name == o.item,
+                      ),
+                      slot: o,
+                    ));
                   } else if (_currentRoom != null &&
                       o.item == null &&
-                      o.owned == false) {
+                      !o.owned) {
                     if (o.prereq == null ||
-                        widget.filledSlots
+                        filledSlots
                             .toSet()
-                            .intersection(widget.slotsByID(o.prereq!).toSet())
+                            .intersection(slotsByID(o.prereq!).toSet())
                             .isNotEmpty) {
-                      placeables.add(SlotCard(slot: o, roomName: widget.name));
+                      placeables.add(SlotCard(slot: o, roomName: name));
                     }
                   }
                 } else if (o is Furniture) {
@@ -104,8 +99,8 @@ class _RoomState extends State<Room> {
                     bottom: 0,
                     left: 0,
                     child: Container(
-                      width: widget.length,
-                      height: widget.width,
+                      width: length,
+                      height: width,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.brown),
                         image: const DecorationImage(
@@ -121,8 +116,8 @@ class _RoomState extends State<Room> {
                     bottom: 0,
                     right: 0,
                     child: Container(
-                      width: widget.height,
-                      height: widget.width,
+                      width: height,
+                      height: width,
                       transform: Matrix4.identity()..rotateY(-math.pi / 2),
                       child: RotatedBox(
                         quarterTurns: 1,
@@ -132,9 +127,8 @@ class _RoomState extends State<Room> {
                             border: Border.all(color: Colors.brown),
                             image: DecorationImage(
                               alignment: Alignment.topLeft,
-                              opacity: widget.roomBehind && shouldFadeWalls
-                                  ? 0.3
-                                  : 1.0,
+                              opacity:
+                                  roomBehind && shouldFadeWalls ? 0.3 : 1.0,
                               image: const AssetImage(
                                   'assets/textures/greenWall.jpg'),
                               repeat: ImageRepeat.repeat,
@@ -148,8 +142,8 @@ class _RoomState extends State<Room> {
                     top: 0,
                     left: 0,
                     child: Container(
-                      width: widget.length,
-                      height: widget.height,
+                      width: length,
+                      height: height,
                       transform: Matrix4.identity()..rotateX(-math.pi / 2),
                       transformAlignment: Alignment.bottomCenter,
                       child: Container(
@@ -158,9 +152,7 @@ class _RoomState extends State<Room> {
                           border: Border.all(color: Colors.brown),
                           image: DecorationImage(
                             alignment: Alignment.topLeft,
-                            opacity: widget.roomBeside && shouldFadeWalls
-                                ? 0.3
-                                : 1.0,
+                            opacity: roomBeside && shouldFadeWalls ? 0.3 : 1.0,
                             image: const AssetImage(
                                 'assets/textures/greenWall.jpg'),
                             repeat: ImageRepeat.repeat,

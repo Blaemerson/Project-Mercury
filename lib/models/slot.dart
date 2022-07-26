@@ -13,6 +13,7 @@ class Slot {
   final List<Furniture> acceptables;
   final String? visual;
   final Scam scam;
+  bool owned;
   String? item;
 
   Slot({
@@ -21,6 +22,7 @@ class Slot {
     required this.acceptables,
     required this.position,
     /* this.owned = false, */
+    this.owned = false,
     this.prereq,
     this.item,
     this.zPosition = 0,
@@ -28,17 +30,12 @@ class Slot {
     this.visual,
   });
   set(String? item) {
-    /* if (item == null) { */
-    /*   owned = false; */
-    /* } */
-    return this.item = item;
+    if (item == null) {
+      owned = false;
+    }
+    this.item = item;
   }
   get(String itemName) =>
       acceptables.where((element) => element.name == itemName);
-  get owned => locator
-      .get<EventController>()
-      .purchasedItems
-      .where((element) => acceptables.map((e) => e.name).contains(element.item))
-      .isNotEmpty;
 }
 // Holds data relating to furniture slot

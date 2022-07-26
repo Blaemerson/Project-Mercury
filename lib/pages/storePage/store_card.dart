@@ -51,6 +51,7 @@ class StoreItemCard extends StatelessWidget {
           ),
         );
       }
+      slot.owned = true;
       locator.get<EventController>().deployEvent();
       Navigator.pop(context);
     }

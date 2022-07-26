@@ -153,8 +153,7 @@ class EventController with ChangeNotifier {
     _roomProgress = [0, 0];
     if (sessionRoom != null) {
       int slotsTotal = sessionRoom!.slots.length;
-      int slotsFilled =
-          sessionRoom!.slots.where((element) => element.item != null).length;
+      int slotsFilled = sessionRoom!.filledSlots.length;
       _roomProgress = [slotsFilled, slotsTotal];
       calculateEventProgress();
     }
@@ -198,13 +197,17 @@ class EventController with ChangeNotifier {
           purchasedItems.where((element) => element.room == room.name).toList();
       if (roomItems.isNotEmpty) {
         for (PurchasedItem purchase in roomItems) {
+          List<Slot> matchingSlot = room.slots
+              .where((slot) => slot.get(purchase.item).toList().isNotEmpty)
+              .toList();
           if (purchase.delivered) {
             // Fill all slots that take a given item
-            List<Slot> matchingSlot = room.slots
-                .where((slot) => slot.get(purchase.item).toList().isNotEmpty)
-                .toList();
             if (matchingSlot.isNotEmpty) {
               matchingSlot.forEach(((element) => element.set(purchase.item)));
+            }
+          } else {
+            if (matchingSlot.isNotEmpty) {
+              matchingSlot.forEach(((element) => element.owned = true));
             }
           }
         }
