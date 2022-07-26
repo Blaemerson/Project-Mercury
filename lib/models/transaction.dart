@@ -8,28 +8,32 @@ enum TransactionState {
 }
 
 class Transaction {
-  String id;
+  final String id;
   final String description;
   final num amount;
-  num overcharge;
-  bool hidden;
-  String? cloneId;
-  DateTime? timeStamp;
-  DateTime? timeActed;
-  TransactionState state;
-  String? linkedItemId;
+  final DateTime? timeStamp;
+  final DateTime? timeActed;
+  final TransactionState state;
+  final bool hidden;
+  final String? linkedItemId;
+  final String? cloneId;
+  final bool isScam;
+  final List<Transaction> deployOnDispute;
+  final List<Transaction> deployOnResolved;
 
   Transaction({
     this.id = '',
     required this.description,
     required this.amount,
-    this.overcharge = 0,
     this.hidden = false,
-    this.cloneId,
+    this.state = TransactionState.actionNeeded,
     this.timeStamp,
     this.timeActed,
-    this.state = TransactionState.actionNeeded,
+    this.cloneId,
     this.linkedItemId,
+    this.isScam = false,
+    this.deployOnDispute = const [],
+    this.deployOnResolved = const [],
   });
 
   Map<String, dynamic> toJson() {
@@ -37,22 +41,31 @@ class Transaction {
       'id': id,
       'description': description,
       'amount': amount,
-      'overcharge': overcharge,
       'hidden': hidden,
-      'cloneId': cloneId,
+      'state': state.name,
       'timeStamp': timeStamp,
       'timeActed': timeActed,
-      'state': state.name,
+      'isScam': isScam,
+      'cloneId': cloneId,
       'linkedItemId': linkedItemId,
+      'deployOnDispute': listToJson(deployOnDispute),
+      'deployOnResolved': listToJson(deployOnResolved),
     });
   }
 
   factory Transaction.fromSnap(Map<String, dynamic> snap) {
+    List<Transaction> deployOnDispute = [];
+    List<Transaction> deployOnResolved = [];
+    for (Map<String, dynamic> transaction in snap['deployOnDispute']) {
+      deployOnDispute.add(Transaction.fromSnap(transaction));
+    }
+    for (Map<String, dynamic> transaction in snap['deployOnResolved']) {
+      deployOnResolved.add(Transaction.fromSnap(transaction));
+    }
     return Transaction(
       id: snap['id'],
       description: snap['description'],
       amount: snap['amount'],
-      overcharge: snap['overcharge'] ?? 0,
       hidden: snap['hidden'] ?? false,
       cloneId: snap['cloneId'],
       timeStamp: snap['timeStamp'] != null
@@ -62,7 +75,18 @@ class Transaction {
           ? (snap['timeActed'] as Timestamp).toDate()
           : null,
       state: TransactionState.values.byName(snap['state']),
+      isScam: snap['isScam'] ?? false,
       linkedItemId: snap['linkedItemId'],
+      deployOnDispute: deployOnDispute,
+      deployOnResolved: deployOnResolved,
     );
+  }
+
+  List<Map<String, dynamic>> listToJson(List<Transaction> list) {
+    List<Map<String, dynamic>> json = [];
+    for (Transaction transaction in list) {
+      json.add(transaction.toJson());
+    }
+    return json;
   }
 }

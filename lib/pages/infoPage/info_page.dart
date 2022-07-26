@@ -139,7 +139,7 @@ class _InfoPageState extends State<InfoPage> {
                         style: TextStyle(fontSize: 20),
                       ),
                       const Text(
-                        'You have finished the game.',
+                        'Your home is fully furnished.',
                         style: TextStyle(fontSize: 16),
                       ),
                     ],

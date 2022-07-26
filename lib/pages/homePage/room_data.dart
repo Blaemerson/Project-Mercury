@@ -4,7 +4,6 @@ import 'package:projectmercury/models/scam.dart';
 import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
 
-
 // TODO: add back in missing furniture & decorate according to floor plan
 // slotID links a Furniture to a Slot
 Room bedroom = Room(
@@ -55,6 +54,7 @@ Room bedroom = Room(
       id: 1,
       height: 50,
       visual: 'desk_outline_NE',
+      scam: const Scam(overchargeRate: .5),
       acceptables: const [
         Furniture(
           name: 'desk',
@@ -68,6 +68,9 @@ Room bedroom = Room(
       height: 40,
       prereq: 1,
       visual: 'desk_chair_outline',
+      scam: const Scam(
+        wrongRandomItem: true,
+      ),
       acceptables: const [
         Furniture(
           name: 'desk_chair',

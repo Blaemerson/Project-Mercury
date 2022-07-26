@@ -30,6 +30,7 @@ class ReceiptCard extends StatelessWidget {
                   children: [
                     Text(purchasedItem.name,
                         style: const TextStyle(fontSize: 25)),
+                    Text(purchasedItem.seller.real),
                     Text(purchasedItem.timeBought.toString()),
                   ],
                 ),

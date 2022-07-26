@@ -1,11 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:projectmercury/models/event.dart';
+import 'package:projectmercury/models/furniture.dart';
+import 'package:projectmercury/models/scam.dart';
 import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/models/store_item.dart';
 import 'package:projectmercury/models/transaction.dart';
 import 'package:projectmercury/pages/eventPage/event_data.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
 import 'package:projectmercury/pages/homePage/room_data.dart';
+import 'package:projectmercury/pages/storePage/store_data.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'locator.dart';
 
@@ -93,7 +98,8 @@ class EventController with ChangeNotifier {
   void onSessionChanged(int session) {
     _session = session;
     _sessionRoom =
-        rooms.where((element) => element.unlockOrder == session).first;
+        rooms.firstWhere((element) => element.unlockOrder == session);
+    rooms.sort(((a, b) => a.unlockOrder.compareTo(b.unlockOrder)));
     calculateRoomProgress();
     updateBadge(0);
     notifyListeners();
@@ -226,5 +232,147 @@ class EventController with ChangeNotifier {
             (() => _firestore.addEvent(deployable.first)),
           )
         : null;
+  }
+
+  buyItem(StoreItem item, String room, Slot slot) async {
+    String itemId = await _firestore.addItem(item, room);
+    deployEvent();
+    if (slot.scam.doubleCharge) {
+      _firestore.addTransaction(
+        Transaction(
+          description: 'Purchased ${item.name} from ${item.seller.real}',
+          amount: -(item.price),
+          state: slot.scam.delay
+              ? TransactionState.pending
+              : TransactionState.actionNeeded,
+          linkedItemId: itemId,
+        ),
+        double: true,
+      );
+      return;
+    }
+    if (slot.scam.scamStore) {
+      _firestore.addTransaction(
+        Transaction(
+          description: 'Purchased ${item.name} from ${item.seller.fake}',
+          amount: -item.price,
+          state: slot.scam.delay
+              ? TransactionState.pending
+              : TransactionState.actionNeeded,
+          linkedItemId: itemId,
+          isScam: true,
+          deployOnDispute: [
+            Transaction(
+              description: 'Fake Item Refund:',
+              amount: item.price,
+              state: TransactionState.pending,
+            ),
+            Transaction(
+              description: 'Purchased ${item.name} from ${item.seller.real}',
+              amount: -item.price,
+              state: TransactionState.pending,
+            )
+          ],
+        ),
+      );
+      return;
+    }
+    if (slot.scam.wrongSlotItem) {
+      List<Furniture> otherOptions = slot.acceptables
+          .where((element) => element.name != item.name)
+          .toList();
+      String randomName =
+          otherOptions[Random().nextInt(otherOptions.length)].name;
+      StoreItem wrongItem =
+          storeItems.firstWhere((element) => element.name == randomName);
+      _firestore.addTransaction(
+        Transaction(
+          description:
+              'Purchased ${wrongItem.name} from ${wrongItem.seller.real}',
+          amount: -wrongItem.price,
+          state: slot.scam.delay
+              ? TransactionState.pending
+              : TransactionState.actionNeeded,
+          linkedItemId: itemId,
+          isScam: true,
+          deployOnDispute: [
+            Transaction(
+              description: 'Wrong Item Refund:',
+              amount: wrongItem.price,
+              state: TransactionState.pending,
+            ),
+            Transaction(
+              description:
+                  'Purchased ${wrongItem.name} from ${wrongItem.seller.real}',
+              amount: -item.price,
+              state: TransactionState.pending,
+            )
+          ],
+        ),
+      );
+      return;
+    }
+    if (slot.scam.wrongRandomItem) {
+      List<StoreItem> randomItems =
+          storeItems.where((element) => element.name != item.name).toList();
+      StoreItem wrongItem = randomItems[Random().nextInt(randomItems.length)];
+      _firestore.addTransaction(
+        Transaction(
+          description:
+              'Purchased ${wrongItem.name} from ${wrongItem.seller.real}',
+          amount: -wrongItem.price,
+          state: slot.scam.delay
+              ? TransactionState.pending
+              : TransactionState.actionNeeded,
+          linkedItemId: itemId,
+          isScam: true,
+          deployOnDispute: [
+            Transaction(
+              description: 'Wrong Item Refund:',
+              amount: wrongItem.price,
+              state: TransactionState.pending,
+            ),
+            Transaction(
+              description:
+                  'Purchased ${wrongItem.name} from ${wrongItem.seller.real}',
+              amount: -item.price,
+              state: TransactionState.pending,
+            )
+          ],
+        ),
+      );
+      return;
+    }
+    if (slot.scam.overchargeRate != 0) {
+      _firestore.addTransaction(
+        Transaction(
+          description: 'Purchased ${item.name} from ${item.seller.real}',
+          amount: -(item.price * (1 + slot.scam.overchargeRate)),
+          isScam: true,
+          state: slot.scam.delay
+              ? TransactionState.pending
+              : TransactionState.actionNeeded,
+          linkedItemId: itemId,
+          deployOnDispute: [
+            Transaction(
+              description: 'Overcharge Refund:',
+              amount: item.price * slot.scam.overchargeRate,
+              state: TransactionState.pending,
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+    _firestore.addTransaction(
+      Transaction(
+        description: 'Purchased ${item.name} from ${item.seller.real}',
+        amount: -item.price,
+        state: slot.scam.delay
+            ? TransactionState.pending
+            : TransactionState.actionNeeded,
+        linkedItemId: itemId,
+      ),
+    );
   }
 }

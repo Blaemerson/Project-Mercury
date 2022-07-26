@@ -242,7 +242,7 @@ class FirestoreMethods {
       await updateTransactionState(
           transaction.id, model.TransactionState.approved);
       if (clone == null) {
-        if (transaction.overcharge == 0) {
+        if (!transaction.isScam) {
           updateScore(1);
         }
       } else {
@@ -254,15 +254,7 @@ class FirestoreMethods {
       await updateTransactionState(
           transaction.id, model.TransactionState.disputed);
       if (clone == null) {
-        if (transaction.overcharge != 0) {
-          addTransaction(
-            model.Transaction(
-              description: 'Overcharge Refund',
-              amount: transaction.overcharge,
-              state: model.TransactionState.pending,
-            ),
-            approveWithDelay: true,
-          );
+        if (transaction.isScam) {
           updateScore(1);
         }
       } else {
@@ -279,6 +271,13 @@ class FirestoreMethods {
               ? updateScore(1)
               : null;
         }
+      }
+      for (model.Transaction sub in transaction.deployOnDispute) {
+        if (sub.state == model.TransactionState.pending) {
+          addTransaction(sub, approveWithDelay: true);
+          return;
+        }
+        addTransaction(sub);
       }
     }
   }

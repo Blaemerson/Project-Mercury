@@ -20,41 +20,6 @@ class StoreItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FirestoreMethods _firestore = locator.get<FirestoreMethods>();
-
-    buyItem() async {
-      String itemId = await _firestore.addItem(storeItem, roomName);
-      if (slot.scam.doubleCharge) {
-        _firestore.addTransaction(
-          Transaction(
-            description:
-                'Purchased ${storeItem.name} from ${storeItem.seller.real}',
-            amount: -(storeItem.price),
-            state: slot.scam.delay
-                ? TransactionState.pending
-                : TransactionState.actionNeeded,
-            linkedItemId: itemId,
-          ),
-          double: true,
-        );
-      } else {
-        _firestore.addTransaction(
-          Transaction(
-            description:
-                'Purchased ${storeItem.name} from ${storeItem.seller.real}',
-            amount: -(storeItem.price * (1 + slot.scam.overchargeRate)),
-            overcharge: storeItem.price * slot.scam.overchargeRate,
-            state: slot.scam.delay
-                ? TransactionState.pending
-                : TransactionState.actionNeeded,
-            linkedItemId: itemId,
-          ),
-        );
-      }
-      locator.get<EventController>().deployEvent();
-      Navigator.pop(context);
-    }
-
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: FittedBox(
@@ -72,6 +37,7 @@ class StoreItemCard extends StatelessWidget {
             children: [
               Text(
                 storeItem.name,
+                textAlign: TextAlign.center,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
@@ -117,7 +83,10 @@ class StoreItemCard extends StatelessWidget {
                         ) ??
                         false;
                     if (result == true) {
-                      buyItem();
+                      locator
+                          .get<EventController>()
+                          .buyItem(storeItem, roomName, slot);
+                      Navigator.pop(context);
                     }
                   }
                 },
