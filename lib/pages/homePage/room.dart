@@ -20,8 +20,6 @@ class Room extends StatelessWidget {
   final bool roomBehind;
   final bool roomBeside;
   final List<Object?> items;
-  /* final List<Furniture> furniture; */
-  /* final List<Slot> slots; */
   const Room(
       {Key? key,
       required this.unlockOrder,
@@ -32,13 +30,8 @@ class Room extends StatelessWidget {
       this.roomBehind = false,
       this.roomBeside = false,
       this.items = const []
-      /* this.furniture = const [], */
-      /* this.slots = const [], */
       })
       : super(key: key);
-
-  /* @override */
-  /* State<Room> createState() => _RoomState(); */
 
   Iterable<Slot> get slots => items.whereType<Slot>();
   // Fill all items matching a given ID with a given item
@@ -115,23 +108,26 @@ class Room extends StatelessWidget {
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: Container(
-                      width: height,
-                      height: width,
-                      transform: Matrix4.identity()..rotateY(-math.pi / 2),
-                      child: RotatedBox(
-                        quarterTurns: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            border: Border.all(color: Colors.brown),
-                            image: DecorationImage(
-                              alignment: Alignment.topLeft,
-                              opacity:
-                                  roomBehind && shouldFadeWalls ? 0.3 : 1.0,
-                              image: const AssetImage(
-                                  'assets/textures/greenWall.jpg'),
-                              repeat: ImageRepeat.repeat,
+                    child: IgnorePointer(
+                      ignoring: _currentRoom == null ? true : false,
+                      child: Container(
+                        width: height,
+                        height: width,
+                        transform: Matrix4.identity()..rotateY(-math.pi / 2),
+                        child: RotatedBox(
+                          quarterTurns: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(color: Colors.brown),
+                              image: DecorationImage(
+                                alignment: Alignment.topLeft,
+                                opacity:
+                                    roomBehind && shouldFadeWalls ? 0.3 : 1.0,
+                                image: const AssetImage(
+                                    'assets/textures/greenWall.jpg'),
+                                repeat: ImageRepeat.repeat,
+                              ),
                             ),
                           ),
                         ),
@@ -141,21 +137,25 @@ class Room extends StatelessWidget {
                   Positioned(
                     top: 0,
                     left: 0,
-                    child: Container(
-                      width: length,
-                      height: height,
-                      transform: Matrix4.identity()..rotateX(-math.pi / 2),
-                      transformAlignment: Alignment.bottomCenter,
+                    child: IgnorePointer(
+                      ignoring: _currentRoom == null ? true : false,
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          border: Border.all(color: Colors.brown),
-                          image: DecorationImage(
-                            alignment: Alignment.topLeft,
-                            opacity: roomBeside && shouldFadeWalls ? 0.3 : 1.0,
-                            image: const AssetImage(
-                                'assets/textures/greenWall.jpg'),
-                            repeat: ImageRepeat.repeat,
+                        width: length,
+                        height: height,
+                        transform: Matrix4.identity()..rotateX(-math.pi / 2),
+                        transformAlignment: Alignment.bottomCenter,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border.all(color: Colors.brown),
+                            image: DecorationImage(
+                              alignment: Alignment.topLeft,
+                              opacity:
+                                  roomBeside && shouldFadeWalls ? 0.3 : 1.0,
+                              image: const AssetImage(
+                                  'assets/textures/greenWall.jpg'),
+                              repeat: ImageRepeat.repeat,
+                            ),
                           ),
                         ),
                       ),

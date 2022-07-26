@@ -100,6 +100,19 @@ Room bedroom = Room(
       ],
       position: const Offset(150, 90),
     ),
+    Slot(
+      id: 6,
+      height: 30,
+      prereq: 4,
+      visual: 'outline',
+      acceptables: const [
+        Furniture(
+          name: 'computer',
+          direction: 'NE',
+        ),
+      ],
+      position: const Offset(130, 45),
+    ),
     const Furniture(
       name: 'modern_tv',
       direction: 'SE',
@@ -127,7 +140,7 @@ Room livingroom = Room(
     const Furniture(
       name: 'doorway',
       direction: 'NW',
-      position: Offset(25, 220),
+      position: Offset(25, 230),
       height: 60,
     ),
     Slot(
@@ -149,7 +162,7 @@ Room livingroom = Room(
     ),
     Slot(
       id: 7,
-      height: 55,
+      height: 65,
       visual: 'sofa_outline_NW',
       acceptables: const [
         Furniture(
@@ -157,19 +170,12 @@ Room livingroom = Room(
           direction: 'NW',
         ),
         Furniture(
-          name: 'modern_sofa',
-          direction: 'NW',
-        ),
-        Furniture(
-          name: 'leather_sofa',
-          direction: 'NW',
-        ),
-        Furniture(
           name: 'plush_sofa',
+          height: 65,
           direction: 'NW',
         ),
       ],
-      position: const Offset(60, 150),
+      position: const Offset(60, 145),
     ),
     Slot(
       id: 8,
@@ -179,16 +185,57 @@ Room livingroom = Room(
         Furniture(
           name: 'bear_rug',
           direction: 'NE',
-          position: Offset(140, 120),
+          height: 60,
+          position: Offset(140, 155),
         ),
         Furniture(
           name: 'basic_rug',
           height: 90,
-          position: Offset(140, 120),
+          position: Offset(140, 125),
+        ),
+        Furniture(
+          name: 'modern_coffee_table',
+          height: 50,
+          position: Offset(145, 170),
+        ),
+        Furniture(
+          name: 'classic_coffee_table',
+          height: 50,
+          position: Offset(145, 170),
         ),
       ],
-      position: const Offset(150, 150),
-    )
+      position: const Offset(150, 155),
+    ),
+    Slot(
+      id: 10,
+      height: 60,
+      visual: 'outline_wall_NE',
+      acceptables: const [
+        Furniture(
+          name: 'fireplace',
+          direction: 'NE',
+          height: 80,
+          position: Offset(100, 35),
+        ),
+      ],
+      position: const Offset(120, 45),
+    ),
+    Slot(
+      id: 9,
+      height: 50,
+      visual: 'loveseat_outline_NE',
+      acceptables: const [
+        Furniture(
+          name: 'basic_loveseat',
+          direction: 'NE',
+        ),
+        Furniture(
+          name: 'plush_loveseat',
+          direction: 'NE',
+        ),
+      ],
+      position: const Offset(145, 105),
+    ),
   ],
 );
 
@@ -255,7 +302,7 @@ Room kitchen = const Room(
       height: 40,
     ),
     Furniture(
-      name: 'counter_counter',
+      name: 'counter',
       direction: 'NE',
       position: Offset(84, 64),
       height: 40,
@@ -273,25 +320,25 @@ Room kitchen = const Room(
       height: 40,
     ),
     Furniture(
-      name: 'counter_counter',
+      name: 'counter',
       direction: 'NW',
       position: Offset(60, 87),
       height: 40,
     ),
     Furniture(
-      name: 'counter_counter',
+      name: 'counter',
       direction: 'NW',
       position: Offset(60, 111),
       height: 40,
     ),
     Furniture(
-      name: 'counter_counter',
+      name: 'counter',
       direction: 'NW',
       position: Offset(60, 135),
       height: 40,
     ),
     Furniture(
-      name: 'counter_counter',
+      name: 'counter',
       direction: 'NW',
       position: Offset(60, 159),
       height: 40,
@@ -303,7 +350,7 @@ Room kitchen = const Room(
       height: 75,
     ),
     Furniture(
-      name: 'counter_counter',
+      name: 'counter',
       direction: 'NW',
       position: Offset(60, 220),
       height: 40,
@@ -353,6 +400,33 @@ Room diningroom = Room(
         ),
       ],
       position: const Offset(130, 120),
+    ),
+    Slot(
+      id: 11,
+      height: 45,
+      visual: 'outline_wall_NE',
+      acceptables: const [
+        Furniture(
+          name: 'aquarium',
+          direction: 'NE',
+          height: 55,
+        ),
+      ],
+      position: const Offset(70, 55),
+    ),
+    Slot(
+      id: 12,
+      height: 35,
+      visual: 'outline',
+      acceptables: const [
+        Furniture(
+          name: 'dog_statue',
+          direction: 'SE',
+          height: 40,
+          position: Offset(200, 225),
+        ),
+      ],
+      position: const Offset(200, 230),
     ),
   ],
 );

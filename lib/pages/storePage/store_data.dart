@@ -14,9 +14,9 @@ const List<StoreItem> storeItems = [
     seller: Seller.secondhandFurniture,
   ),
   StoreItem(
-    name: 'Coffee Table',
+    name: 'Classic Coffee Table',
     price: 200,
-    item: 'coffee_table',
+    item: 'classic_coffee_table',
     seller: Seller.phillipesFurniture,
   ),
   StoreItem(
@@ -224,5 +224,28 @@ const List<StoreItem> storeItems = [
     name: 'Bedside Tables (2)',
     price: 160,
     item: 'bedside_table',
+  ),
+  StoreItem(
+    name: 'Discount Dog Statue',
+    price: 160,
+    item: 'dog_statue',
+    seller: Seller.furnitureYourWay,
+  ),
+  StoreItem(
+    name: 'Aquarium',
+    price: 160,
+    item: 'aquarium',
+    seller: Seller.amirsEclectics,
+  ),
+  StoreItem(
+    name: 'Discount Loveseat',
+    price: 160,
+    item: 'basic_loveseat',
+    seller: Seller.furnitureYourWay,
+  ),
+  StoreItem(
+    name: 'Plush Loveseat',
+    price: 160,
+    item: 'plush_loveseat',
   ),
 ];
