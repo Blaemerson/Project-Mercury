@@ -179,9 +179,6 @@ class EventController with ChangeNotifier {
             element.eventId < (_session + 1) * 100)
         .where((element) => element.state != EventState.actionNeeded)
         .length;
-    if (eventsTotal > roomProgress[1]) {
-      eventsTotal = roomProgress[1];
-    }
     _eventProgress = [eventsDone, eventsTotal];
     calculateSessionProgress();
   }
@@ -231,7 +228,7 @@ class EventController with ChangeNotifier {
         ? await Future.delayed(
             const Duration(
                 seconds: /*Random().nextInt(eventMaxDelay - eventMinDelay) +
-                    eventMinDelay*/
+                  eventMinDelay*/
                     0),
             (() => _firestore.addEvent(deployable.first)),
           )
@@ -316,7 +313,7 @@ class EventController with ChangeNotifier {
       String randomName =
           otherOptions[Random().nextInt(otherOptions.length)].name;
       StoreItem wrongItem =
-          storeItems.firstWhere((element) => element.name == randomName);
+          storeItems.firstWhere((element) => element.item == randomName);
       _firestore.addTransaction(
         Transaction(
             description:

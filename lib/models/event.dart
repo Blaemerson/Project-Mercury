@@ -12,7 +12,7 @@ class Event {
   final EventType type;
   final List dialog;
   String question;
-  bool? correctAnswer;
+  bool? isScam;
   EventState state;
   String? audioPath;
   DateTime? timeSent;
@@ -26,6 +26,7 @@ class Event {
     required this.type,
     required this.dialog,
     this.question = 'Give information?',
+    this.isScam = false,
     this.state = EventState.actionNeeded,
     this.audioPath,
     this.timeSent,

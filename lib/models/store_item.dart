@@ -17,7 +17,7 @@ class StoreItem {
       'name': name,
       'price': price,
       'item': item,
-      'seller': seller.name
+      'seller': seller.name,
     });
   }
 

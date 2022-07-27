@@ -184,14 +184,14 @@ class FirestoreMethods {
   Future<void> eventAction(Event event, bool approve) async {
     if (approve == true) {
       updateEventState(event.id, EventState.approved);
-      if (event.correctAnswer == true) {
+      if (!event.isScam!) {
         updateScore(1);
       } else {
         //penalty?
       }
     } else {
       updateEventState(event.id, EventState.rejected);
-      if (event.correctAnswer == false) {
+      if (event.isScam!) {
         updateScore(1);
       } else {
         //penalty?

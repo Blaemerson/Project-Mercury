@@ -35,6 +35,9 @@ Room bedroom = Room(
         ),
       ],
       position: const Offset(40, 55),
+      scam: const Scam(
+        wrongSlotItem: true,
+      ),
     ),
     Slot(
       id: 1,
@@ -79,7 +82,7 @@ Room bedroom = Room(
       ],
       position: const Offset(65, 205),
       scam: const Scam(
-        wrongSlotItem: true,
+        overchargeRate: .5,
       ),
     ),
     Slot(
