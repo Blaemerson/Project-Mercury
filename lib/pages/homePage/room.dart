@@ -59,7 +59,12 @@ class Room extends StatelessWidget {
             stream: locator.get<FirestoreMethods>().itemsStream(room: name),
             builder: (context, roomItems) {
               List<Widget> placeables = [];
-
+              bool _shouldShowSlots = false;
+              if (roomItems.data == null) {
+                _shouldShowSlots = true;
+              } else {
+                _shouldShowSlots = roomItems.data!.where((element) => element.delivered == false).isEmpty;
+              }
               for (Object? o in items) {
                 if (o is Slot) {
                   if (o.item != null) {
@@ -71,7 +76,7 @@ class Room extends StatelessWidget {
                     ));
                   } else if (_currentRoom != null &&
                       o.item == null &&
-                      !o.owned) {
+                      _shouldShowSlots) {
                     if (o.prereq == null ||
                         filledSlots
                             .toSet()

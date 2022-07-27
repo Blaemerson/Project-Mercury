@@ -6,6 +6,7 @@ import 'dart:math' as math;
 class SlotCard extends StatelessWidget {
   final Slot slot;
   final String roomName;
+
   const SlotCard({Key? key, required this.slot, required this.roomName})
       : super(key: key);
 
@@ -20,22 +21,24 @@ class SlotCard extends StatelessWidget {
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
-            showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(16),
+            if (!slot.owned) {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(16),
+                  ),
                 ),
-              ),
-              context: context,
-              builder: (context) {
-                return StorePage(
-                  roomName: roomName,
-                  slot: slot,
-                );
-              },
-            );
+                context: context,
+                builder: (context) {
+                  return StorePage(
+                    roomName: roomName,
+                    slot: slot,
+                  );
+                },
+              );
+            }
           },
           child: SizedBox(
             height: slot.height + 50,

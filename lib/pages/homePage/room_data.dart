@@ -24,6 +24,7 @@ Room bedroom = Room(
     Slot(
       id: 0,
       height: 55,
+      prereq: 1,
       visual: 'outline_tall',
       acceptables: const [
         Furniture(
@@ -84,6 +85,7 @@ Room bedroom = Room(
     Slot(
       id: 4,
       height: 50,
+      prereq: 2,
       visual: 'desk_outline_NE',
       acceptables: const [
         Furniture(
@@ -159,6 +161,7 @@ Room livingroom = Room(
     ),
     Slot(
       id: 6,
+      prereq: 11,
       height: 40,
       visual: 'outline_wall_NW',
       acceptables: const [
@@ -171,29 +174,32 @@ Room livingroom = Room(
           direction: 'NW',
           height: 50,
         ),
+        Furniture(
+          name: 'live_laugh_love_painting',
+          direction: 'NW',
+          height: 30,
+        ),
       ],
       position: const Offset(10, 130),
     ),
     Slot(
-      id: 7,
-      height: 65,
-      visual: 'sofa_outline_NW',
+      id: 12,
+      prereq: 11,
+      height: 35,
+      visual: 'outline',
       acceptables: const [
         Furniture(
-          name: 'basic_sofa',
-          direction: 'NW',
-        ),
-        Furniture(
-          name: 'plush_sofa',
-          height: 65,
-          direction: 'NW',
+          name: 'basic_pet_bed',
+          position: Offset(80, 75),
+          height: 30,
         ),
       ],
-      position: const Offset(60, 145),
+      position: const Offset(65, 70),
     ),
     Slot(
       id: 8,
       height: 50,
+      prereq: 7,
       visual: 'round_rug_outline',
       acceptables: const [
         Furniture(
@@ -205,7 +211,7 @@ Room livingroom = Room(
         Furniture(
           name: 'basic_rug',
           height: 90,
-          position: Offset(140, 125),
+          position: Offset(120, 125),
         ),
         Furniture(
           name: 'modern_coffee_table',
@@ -221,10 +227,75 @@ Room livingroom = Room(
       position: const Offset(150, 155),
     ),
     Slot(
+      id: 11,
+      prereq: 7,
+      height: 35,
+      visual: 'outline_wall_NE',
+      acceptables: const [
+        Furniture(
+          name: 'basic_end_table',
+          direction: 'NW',
+          height: 30,
+          position: Offset(80, 120),
+        ),
+      ],
+      position: const Offset(70, 120),
+    ),
+    Slot(
+      id: 7,
+      height: 65,
+      visual: 'sofa_outline_NW',
+      acceptables: const [
+        Furniture(
+          name: 'basic_sofa',
+          direction: 'NW',
+        ),
+        Furniture(
+          name: 'plush_sofa',
+          height: 65,
+          direction: 'NW',
+        ),
+        Furniture(
+          name: 'leather_sofa',
+          height: 65,
+          direction: 'NW',
+        ),
+      ],
+      position: const Offset(60, 145),
+    ),
+    Slot(
+      id: 11,
+      prereq: 7,
+      height: 35,
+      visual: 'outline_wall_NE',
+      acceptables: const [
+        Furniture(
+          name: 'basic_end_table',
+          direction: 'NW',
+          height: 30,
+          position: Offset(80, 230),
+        ),
+      ],
+      position: const Offset(70, 225),
+    ),
+    Slot(
       id: 10,
+      prereq: 9,
       height: 60,
       visual: 'outline_wall_NE',
       acceptables: const [
+        Furniture(
+          name: 'bookcase',
+          direction: 'NE',
+          height: 65,
+          position: Offset(110, 45),
+        ),
+        Furniture(
+          name: 'vintage_bookcase',
+          direction: 'NE',
+          height: 85,
+          position: Offset(100, 30),
+        ),
         Furniture(
           name: 'fireplace',
           direction: 'NE',
@@ -288,11 +359,28 @@ Room bathroom = Room(
       height: 60,
     ),
     const Furniture(
-      name: 'toilet',
-      direction: 'SW',
-      position: Offset(150, 130),
-      height: 45,
+      name: 'bathroom_sink',
+      direction: 'NE',
+      position: Offset(190, 60),
+      height: 40,
     ),
+    Slot(
+      id: 1,
+      prereq: 9,
+      visual: 'outline_toilet',
+      acceptables: [
+        const Furniture(
+          name: 'toilet',
+          direction: 'SW',
+        ),
+        const Furniture(
+          name: 'golden_toilet',
+          direction: 'SW',
+        ),
+      ],
+      position: const Offset(150, 130),
+      height: 40,
+    )
   ],
 );
 
@@ -413,7 +501,7 @@ Room diningroom = Room(
           position: Offset(120, 100),
         ),
       ],
-      position: const Offset(130, 120),
+      position: const Offset(130, 130),
     ),
     Slot(
       id: 11,
@@ -427,6 +515,19 @@ Room diningroom = Room(
         ),
       ],
       position: const Offset(70, 55),
+    ),
+    Slot(
+      id: 13,
+      prereq: 10,
+      height: 60,
+      visual: 'outline_table_NE',
+      acceptables: const [
+        Furniture(
+          name: 'dining_table',
+          direction: 'NE',
+        ),
+      ],
+      position: const Offset(120, 130),
     ),
     Slot(
       id: 12,
