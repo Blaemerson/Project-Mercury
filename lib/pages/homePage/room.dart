@@ -29,8 +29,7 @@ class Room extends StatelessWidget {
       this.name = '',
       this.roomBehind = false,
       this.roomBeside = false,
-      this.items = const []
-      })
+      this.items = const []})
       : super(key: key);
 
   Iterable<Slot> get slots => items.whereType<Slot>();
@@ -49,6 +48,7 @@ class Room extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Room? _currentRoom = locator.get<EventController>().currentRoom;
+    bool _isActiveRoom = locator.get<EventController>().sessionRoom == this;
     bool shouldFadeWalls = _currentRoom == null;
     return FittedBox(
       child: IsometricView(
@@ -63,7 +63,9 @@ class Room extends StatelessWidget {
               if (roomItems.data == null) {
                 _shouldShowSlots = true;
               } else {
-                _shouldShowSlots = roomItems.data!.where((element) => element.delivered == false).isEmpty;
+                _shouldShowSlots = roomItems.data!
+                    .where((element) => element.delivered == false)
+                    .isEmpty;
               }
               for (Object? o in items) {
                 if (o is Slot) {
@@ -100,7 +102,8 @@ class Room extends StatelessWidget {
                       width: length,
                       height: width,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.brown),
+                        border: Border.all(
+                            color: _isActiveRoom && _currentRoom == null ? Colors.red : Colors.brown),
                         image: const DecorationImage(
                           image: AssetImage('assets/textures/darkPlanks.jpg'),
                           fit: BoxFit.none,
@@ -124,7 +127,10 @@ class Room extends StatelessWidget {
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.transparent,
-                              border: Border.all(color: Colors.brown),
+                              border: Border.all(
+                                  color: _isActiveRoom && _currentRoom == null
+                                      ? Colors.red
+                                      : Colors.brown),
                               image: DecorationImage(
                                 alignment: Alignment.topLeft,
                                 opacity:
@@ -152,7 +158,10 @@ class Room extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.transparent,
-                            border: Border.all(color: Colors.brown),
+                            border: Border.all(
+                                color: _isActiveRoom && _currentRoom == null
+                                    ? Colors.red
+                                    : Colors.brown),
                             image: DecorationImage(
                               alignment: Alignment.topLeft,
                               opacity:

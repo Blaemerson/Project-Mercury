@@ -5,7 +5,7 @@ import 'package:projectmercury/models/slot.dart';
 import 'package:projectmercury/pages/homePage/room.dart';
 
 // TODO: add back in missing furniture & decorate according to floor plan
-// slotID links a Furniture to a Slot
+// slotID links a multiple Slots together.
 Room bedroom = Room(
   name: 'bedroom',
   width: 200,

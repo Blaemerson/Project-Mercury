@@ -18,11 +18,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  void callback(Room? room) {
+    setState(() {
+      locator.get<EventController>().setRoom(room);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Room? _currentRoom = locator.get<EventController>().currentRoom;
     Tutorial _tutorial = locator.get<Tutorial>();
-    const _homeLayout = FloorPlan();
+    FloorPlan _homeLayout = FloorPlan(callback);
 
     return Scaffold(
       body: Center(

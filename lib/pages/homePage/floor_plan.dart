@@ -5,7 +5,8 @@ import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/locator.dart';
 
 class FloorPlan extends StatefulWidget {
-  const FloorPlan({Key? key}) : super(key: key);
+  Function callback;
+  FloorPlan(this.callback, {Key? key}) : super(key: key);
 
   @override
   State<FloorPlan> createState() => _FloorPlanState();
@@ -23,7 +24,7 @@ class _FloorPlanState extends State<FloorPlan> {
           height: _rooms[0].width + _rooms[3].width + _rooms[0].height,
           child: Stack(
             children: [
-              /*Livingroom*/
+              /*Garage*/
               Positioned(
                 right: 0,
                 bottom: 0 + _rooms[1].width,
@@ -31,6 +32,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => setState(
                     () {
+                      bool _isActiveRoom = locator.get<EventController>().session == _rooms[5].unlockOrder;
+                      _isActiveRoom ? widget.callback.call(_rooms[5]) : null;
                       debugPrint(_rooms[5].name);
                     },
                   ),
@@ -39,6 +42,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   ),
                 ),
               ),
+
+              /*Kitchen*/
               Positioned(
                 right: _rooms[5].length,
                 bottom: 0 + _rooms[1].width,
@@ -46,6 +51,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => setState(
                     () {
+                      bool _isActiveRoom = locator.get<EventController>().session == _rooms[3].unlockOrder;
+                      _isActiveRoom ? widget.callback.call(_rooms[3]) : null;
                       debugPrint(_rooms[3].name);
                     },
                   ),
@@ -54,6 +61,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   ),
                 ),
               ),
+
+              /*Diningroom*/
               Positioned(
                 right: _rooms[3].length + _rooms[5].length,
                 bottom: 0 + _rooms[1].width,
@@ -61,6 +70,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => setState(
                     () {
+                      bool _isActiveRoom = locator.get<EventController>().session == _rooms[4].unlockOrder;
+                      _isActiveRoom ? widget.callback.call(_rooms[4]) : null;
                       debugPrint(_rooms[4].name);
                     },
                   ),
@@ -69,6 +80,7 @@ class _FloorPlanState extends State<FloorPlan> {
                   ),
                 ),
               ),
+
               /*Bathroom*/
               Positioned(
                 bottom: 0,
@@ -77,6 +89,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => setState(
                     () {
+                      bool _isActiveRoom = locator.get<EventController>().session == _rooms[2].unlockOrder;
+                      _isActiveRoom ? widget.callback.call(_rooms[2]) : null;
                       debugPrint(_rooms[2].name);
                     },
                   ),
@@ -85,6 +99,7 @@ class _FloorPlanState extends State<FloorPlan> {
                   ),
                 ),
               ),
+
               /*Bedroom*/
               Positioned(
                 bottom: 0,
@@ -93,6 +108,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => setState(
                     () {
+                      bool _isActiveRoom = locator.get<EventController>().session == _rooms[0].unlockOrder;
+                      _isActiveRoom ? widget.callback.call(_rooms[0]) : null;
                       debugPrint(_rooms[0].name);
                     },
                   ),
@@ -101,6 +118,7 @@ class _FloorPlanState extends State<FloorPlan> {
                   ),
                 ),
               ),
+
               /*Livingroom*/
               Positioned(
                 bottom: 0,
@@ -109,6 +127,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => setState(
                     () {
+                      bool _isActiveRoom = locator.get<EventController>().session == _rooms[1].unlockOrder;
+                      _isActiveRoom ? widget.callback.call(_rooms[1]) : null;
                       debugPrint(_rooms[1].name);
                     },
                   ),
