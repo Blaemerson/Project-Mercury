@@ -37,7 +37,11 @@ class TransactionCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          transaction.description,
+                          transaction.state == TransactionState.pending
+                              ? transaction.amount > 0
+                                  ? 'Pending Deposit'
+                                  : 'Pending Charge'
+                              : transaction.description,
                           style: const TextStyle(
                             fontSize: 18,
                           ),
@@ -84,13 +88,6 @@ class TransactionCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.red,
-                ),
-              ),
-            ] else ...[
-              const Text(
-                'Pending ...',
-                style: TextStyle(
-                  fontSize: 18,
                 ),
               ),
             ]

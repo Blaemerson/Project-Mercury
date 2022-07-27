@@ -35,7 +35,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     'Home',
     'Money',
     'Contacts',
-    'Events',
+    'Mail',
     'Info',
   ];
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:projectmercury/models/event.dart';
+import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 import 'package:projectmercury/utils/utils.dart';
@@ -16,8 +17,13 @@ class EventCard extends StatelessWidget {
       child: Container(
         decoration: elevatedCardDecor(
           context,
-          color:
-              event.state != EventState.actionNeeded ? Colors.grey[350] : null,
+          color: event.state == EventState.static
+              ? event.wasOpened
+                  ? Colors.grey[350]
+                  : null
+              : event.state != EventState.actionNeeded
+                  ? Colors.grey[350]
+                  : null,
         ),
         child: Padding(
           padding: const EdgeInsets.all(8),
@@ -26,15 +32,25 @@ class EventCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    event.type == EventType.email
-                        ? Icons.email_outlined
-                        : event.type == EventType.text
-                            ? Icons.textsms_outlined
-                            : event.type == EventType.call
-                                ? Icons.call_outlined
-                                : Icons.question_mark,
-                    size: 20,
+                  Column(
+                    children: [
+                      Icon(
+                        event.type == EventType.email
+                            ? Icons.email_outlined
+                            : event.type == EventType.text
+                                ? Icons.textsms_outlined
+                                : event.type == EventType.call
+                                    ? Icons.call_outlined
+                                    : Icons.question_mark,
+                        size: 24,
+                      ),
+                      Text(
+                        capitalize(event.type.name),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     width: 12,
@@ -42,26 +58,28 @@ class EventCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          '${event.type.name} from ${event.sender} (${timeAgo(event.timeSent!)})',
+                      Text('${timeAgo(event.timeSent!)} from ${event.sender}',
                           style: const TextStyle(fontSize: 12)),
                       Text(event.title, style: const TextStyle(fontSize: 18)),
-                      Text.rich(
-                        TextSpan(
-                          text: 'Status: ',
-                          style: const TextStyle(fontSize: 16),
-                          children: [
-                            event.state == EventState.actionNeeded
-                                ? const TextSpan(
-                                    text: 'Action Needed',
-                                    style: TextStyle(color: Colors.red),
-                                  )
-                                : TextSpan(
-                                    text: 'Completed',
-                                    style: TextStyle(color: Colors.green[800]))
-                          ],
-                        ),
-                      ),
+                      event.state == EventState.static
+                          ? const Text('Notice', style: TextStyle(fontSize: 16))
+                          : Text.rich(
+                              TextSpan(
+                                text: 'Status: ',
+                                style: const TextStyle(fontSize: 16),
+                                children: [
+                                  event.state == EventState.actionNeeded
+                                      ? const TextSpan(
+                                          text: 'Action Needed',
+                                          style: TextStyle(color: Colors.red),
+                                        )
+                                      : TextSpan(
+                                          text: 'Completed',
+                                          style: TextStyle(
+                                              color: Colors.green[800]))
+                                ],
+                              ),
+                            ),
                     ],
                   ),
                 ],
@@ -69,11 +87,16 @@ class EventCard extends StatelessWidget {
               ElevatedButton(
                 child: const Text('Open'),
                 style: ElevatedButton.styleFrom(
-                  primary: event.state == EventState.actionNeeded
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.grey[700],
+                  primary: event.state == EventState.static
+                      ? event.wasOpened
+                          ? Colors.grey[700]
+                          : Theme.of(context).colorScheme.primary
+                      : event.state == EventState.actionNeeded
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.grey[700],
                 ),
                 onPressed: () {
+                  locator.get<EventController>().markRead(event.id);
                   showDialog(
                       context: context,
                       builder: (context) => _EventDialog(event: event));
@@ -100,74 +123,100 @@ class _EventDialog extends StatelessWidget {
     FirestoreMethods _firestore = locator.get<FirestoreMethods>();
 
     return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * .5,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 100),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SizedBox(
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black,
+                      ),
+                      BoxShadow(
+                        color: Colors.white,
+                        blurRadius: 12.0,
+                      ),
+                    ],
+                  ),
                   child: SingleChildScrollView(
-                    child: event.type == EventType.text
-                        ? _TextEvent(event: event)
-                        : event.type == EventType.email
-                            ? _EmailEvent(event: event)
-                            : _CallEvent(event: event),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: event.type == EventType.text
+                          ? _TextEvent(event: event)
+                          : event.type == EventType.email
+                              ? _EmailEvent(event: event)
+                              : _CallEvent(event: event),
+                    ),
                   ),
                 ),
-                Column(
-                  children: [
-                    const Divider(
-                      indent: 0,
-                    ),
+              ),
+              Column(
+                children: [
+                  const SizedBox(height: 12),
+                  if (event.state != EventState.static) ...[
                     Text(
                       event.question,
                       style: const TextStyle(fontSize: 20),
                     ),
-                    if (event.state == EventState.actionNeeded) ...[
-                      yesOrNo(
-                        context,
-                        yesLabel: 'Approve',
-                        noLabel: 'Reject',
-                        confirmationTitle: 'Are you sure?',
-                        yesConfirmationMessage:
-                            '${event.question}\nYou selected: Approve',
-                        noConfirmationMessage:
-                            '${event.question}\nYou selected: Reject',
-                        onYes: () {
-                          _firestore.eventAction(event, true);
-                          Navigator.of(context).pop();
-                        },
-                        onNo: () {
-                          _firestore.eventAction(event, false);
-                          Navigator.of(context).pop();
-                        },
-                      )
-                    ] else if (event.state == EventState.approved) ...[
-                      const Text(
-                        'Approved',
-                        style: TextStyle(
-                          fontSize: 32,
-                          color: Colors.green,
-                        ),
-                      )
-                    ] else ...[
-                      const Text(
-                        'Rejected',
-                        style: TextStyle(
-                          fontSize: 32,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
                   ],
-                ),
-              ],
-            ),
+                  if (event.state == EventState.actionNeeded) ...[
+                    yesOrNo(
+                      context,
+                      yesLabel: 'Approve',
+                      noLabel: 'Reject',
+                      confirmationTitle: 'Are you sure?',
+                      yesConfirmationMessage:
+                          '${event.question}\nYou selected: Approve',
+                      noConfirmationMessage:
+                          '${event.question}\nYou selected: Reject',
+                      onYes: () {
+                        _firestore.eventAction(event, true);
+                        Navigator.of(context).pop();
+                      },
+                      onNo: () {
+                        _firestore.eventAction(event, false);
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ] else if (event.state == EventState.approved) ...[
+                    const Text(
+                      'Approved',
+                      style: TextStyle(
+                        fontSize: 32,
+                        color: Colors.green,
+                      ),
+                    )
+                  ] else if (event.state == EventState.rejected) ...[
+                    const Text(
+                      'Rejected',
+                      style: TextStyle(
+                        fontSize: 32,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text(
+                      'close',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -233,10 +282,21 @@ class _EmailEvent extends StatelessWidget {
         Text('From: ${event.sender}'),
         const Divider(),
         for (String dialog in event.dialog) ...[
-          Text(
-            dialog,
-            style: const TextStyle(fontSize: 24),
-          ),
+          isItemName(dialog)
+              ? Image.asset(
+                  'assets/furniture/$dialog.png',
+                  errorBuilder: (context, _, stacktrace) {
+                    return Image.asset(
+                      'assets/furniture/${dialog}_NE.png',
+                      height: 100,
+                    );
+                  },
+                  height: 100,
+                )
+              : Text(
+                  dialog,
+                  style: const TextStyle(fontSize: 24),
+                ),
         ],
       ],
     );

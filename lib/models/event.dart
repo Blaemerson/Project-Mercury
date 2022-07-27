@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum EventType { text, email, call }
 
-enum EventState { actionNeeded, rejected, approved }
+enum EventState { actionNeeded, rejected, approved, static }
 
 class Event {
   String id;
@@ -13,6 +13,7 @@ class Event {
   final List dialog;
   String question;
   bool? isScam;
+  bool wasOpened;
   EventState state;
   String? audioPath;
   DateTime? timeSent;
@@ -27,6 +28,7 @@ class Event {
     required this.dialog,
     this.question = 'Give information?',
     this.isScam = false,
+    this.wasOpened = false,
     this.state = EventState.actionNeeded,
     this.audioPath,
     this.timeSent,
@@ -42,6 +44,7 @@ class Event {
       'type': type.name,
       'dialog': dialog,
       'question': question,
+      'wasOpened': wasOpened,
       'state': state.name,
       'audioPath': audioPath,
       'timeSent': timeSent,
@@ -58,6 +61,7 @@ class Event {
       type: EventType.values.byName(snap['type']),
       dialog: snap['dialog'],
       question: snap['question'],
+      wasOpened: snap['wasOpened'] ?? false,
       state: EventState.values.byName(snap['state']),
       audioPath: snap['audioPath'],
       timeSent: snap['timeSent'] != null

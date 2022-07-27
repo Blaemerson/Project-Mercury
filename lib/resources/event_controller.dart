@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:projectmercury/models/event.dart';
 import 'package:projectmercury/models/furniture.dart';
 import 'package:projectmercury/models/scam.dart';
@@ -235,9 +236,27 @@ class EventController with ChangeNotifier {
         : null;
   }
 
+  Future<void> markRead(String eventId) async {
+    _firestore.markEventAsOpened(eventId);
+  }
+
 //TODO: implement utility bill deployment
   buyItem(StoreItem item, String room, Slot slot) async {
     String itemId = await _firestore.addItem(item, room);
+    _firestore.addEvent(
+      Event(
+        eventId: 0,
+        sender: item.seller.real,
+        title: 'Recipt for ${item.name}',
+        type: EventType.email,
+        dialog: [
+          item.item,
+          'Thank you for shopping at ${item.seller.real}.',
+          'This is a recipt to confirm that you have purchased ${item.name} for \$${item.price} on ${DateFormat.yMd().add_jm().format(DateTime.now())}.'
+        ],
+        state: EventState.static,
+      ),
+    );
     deployEvent();
     slot.owned = true;
     if (slot.scam.doubleCharge) {

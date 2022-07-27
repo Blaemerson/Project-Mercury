@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:projectmercury/pages/storePage/store_data.dart';
 
 var formatCurrency = NumberFormat.simpleCurrency();
 var formatDate = DateFormat('yMMMMd');
@@ -33,6 +34,10 @@ String formatTime(Duration duration) {
   String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
   String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
   return "${twoDigits(duration.inHours) != '00' ? '${twoDigits(duration.inHours)}:' : ''}$twoDigitMinutes:$twoDigitSeconds";
+}
+
+bool isItemName(String string) {
+  return storeItems.where((element) => element.item == string).isNotEmpty;
 }
 
 // shows pop-up with yes/no options. Returns true if 'yes' selected; else false.

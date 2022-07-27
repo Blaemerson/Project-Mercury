@@ -216,6 +216,13 @@ class FirestoreMethods {
     );
   }
 
+  Future<void> markEventAsOpened(String id) async {
+    await _firestoreService.updateDocument(
+      path: FirestorePath.event(id),
+      data: {'wasOpened': true},
+    );
+  }
+
   Future<void> transactionAction(
       model.Transaction transaction, bool approve) async {
     // get clone of double transaction
