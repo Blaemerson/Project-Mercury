@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projectmercury/resources/event_controller.dart';
+import 'package:projectmercury/resources/locator.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class Tutorial {
@@ -54,6 +56,9 @@ class Tutorial {
         debugPrint("finish");
       },
       onClickTarget: (target) {
+        if (target.keyTarget == navItemKey1) {
+          locator.get<EventController>().currentPage = 0;
+        }
         debugPrint('onClickTarget: $target');
       },
       onClickTargetWithTapPosition: (target, tapDetails) {

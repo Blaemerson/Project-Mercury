@@ -275,8 +275,15 @@ class FirestoreMethods {
       for (model.Transaction sub in transaction.deployOnDispute) {
         if (sub.state == model.TransactionState.pending) {
           addTransaction(sub, approveWithDelay: true);
-          return;
+        } else {
+          addTransaction(sub);
         }
+      }
+    }
+    for (model.Transaction sub in transaction.deployOnResolved) {
+      if (sub.state == model.TransactionState.pending) {
+        addTransaction(sub, approveWithDelay: true);
+      } else {
         addTransaction(sub);
       }
     }

@@ -126,6 +126,7 @@ class EventController with ChangeNotifier {
     _purchasedItems = itemList;
     furnishRoom();
     calculateRoomProgress();
+    updateBadge(0);
     notifyListeners();
   }
 
@@ -159,8 +160,7 @@ class EventController with ChangeNotifier {
     _roomProgress = [0, 0];
     if (sessionRoom != null) {
       int slotsTotal = sessionRoom!.slots.length;
-      int slotsFilled =
-          sessionRoom!.slots.where((element) => element.item != null).length;
+      int slotsFilled = sessionRoom!.filledSlots.length;
       _roomProgress = [slotsFilled, slotsTotal];
       calculateEventProgress();
     }
@@ -198,19 +198,23 @@ class EventController with ChangeNotifier {
   void furnishRoom() {
     for (Room room in rooms) {
       // reset room
-      room.setSlotItems(null, null);
+      room.fillSlots(null, null);
       // fill in slots
       List<PurchasedItem> roomItems =
           purchasedItems.where((element) => element.room == room.name).toList();
       if (roomItems.isNotEmpty) {
         for (PurchasedItem purchase in roomItems) {
+          List<Slot> matchingSlot = room.slots
+              .where((slot) => slot.get(purchase.item).toList().isNotEmpty)
+              .toList();
           if (purchase.delivered) {
             // Fill all slots that take a given item
-            List<Slot> matchingSlot = room.slots
-                .where((slot) => slot.get(purchase.item).toList().isNotEmpty)
-                .toList();
             if (matchingSlot.isNotEmpty) {
               matchingSlot.forEach(((element) => element.set(purchase.item)));
+            }
+          } else {
+            if (matchingSlot.isNotEmpty) {
+              matchingSlot.forEach(((element) => element.owned = true));
             }
           }
         }
@@ -237,6 +241,7 @@ class EventController with ChangeNotifier {
   buyItem(StoreItem item, String room, Slot slot) async {
     String itemId = await _firestore.addItem(item, room);
     deployEvent();
+    slot.owned = true;
     if (slot.scam.doubleCharge) {
       _firestore.addTransaction(
         Transaction(
@@ -254,26 +259,53 @@ class EventController with ChangeNotifier {
     if (slot.scam.scamStore) {
       _firestore.addTransaction(
         Transaction(
-          description: 'Purchased ${item.name} from ${item.seller.fake}',
-          amount: -item.price,
-          state: slot.scam.delay
-              ? TransactionState.pending
-              : TransactionState.actionNeeded,
-          linkedItemId: itemId,
-          isScam: true,
-          deployOnDispute: [
-            Transaction(
-              description: 'Fake Item Refund:',
-              amount: item.price,
-              state: TransactionState.pending,
-            ),
-            Transaction(
-              description: 'Purchased ${item.name} from ${item.seller.real}',
-              amount: -item.price,
-              state: TransactionState.pending,
-            )
-          ],
-        ),
+            description: 'Purchased ${item.name} from ${item.seller.fake}',
+            amount: -item.price,
+            state: slot.scam.delay
+                ? TransactionState.pending
+                : TransactionState.actionNeeded,
+            linkedItemId: itemId,
+            isScam: true,
+            deployOnDispute: [
+              Transaction(
+                description: 'Fake Item Refund:',
+                amount: item.price,
+                state: TransactionState.pending,
+              ),
+            ],
+            deployOnResolved: [
+              Transaction(
+                description: 'Purchased ${item.name} from ${item.seller.real}',
+                amount: -item.price,
+                state: TransactionState.pending,
+              ),
+            ]),
+      );
+      return;
+    }
+    if (slot.scam.scamStoreDuplicate) {
+      _firestore.addTransaction(
+        Transaction(
+            description: 'Purchased ${item.name} from ${item.seller.real}',
+            amount: -item.price,
+            state: slot.scam.delay
+                ? TransactionState.pending
+                : TransactionState.actionNeeded,
+            linkedItemId: itemId,
+            deployOnResolved: [
+              Transaction(
+                  description:
+                      'Purchased ${item.name} from ${item.seller.fake}',
+                  amount: -item.price,
+                  isScam: true,
+                  deployOnDispute: [
+                    Transaction(
+                      description: 'Fake Item Refund:',
+                      amount: item.price,
+                      state: TransactionState.pending,
+                    ),
+                  ]),
+            ]),
       );
       return;
     }
@@ -287,28 +319,28 @@ class EventController with ChangeNotifier {
           storeItems.firstWhere((element) => element.name == randomName);
       _firestore.addTransaction(
         Transaction(
-          description:
-              'Purchased ${wrongItem.name} from ${wrongItem.seller.real}',
-          amount: -wrongItem.price,
-          state: slot.scam.delay
-              ? TransactionState.pending
-              : TransactionState.actionNeeded,
-          linkedItemId: itemId,
-          isScam: true,
-          deployOnDispute: [
-            Transaction(
-              description: 'Wrong Item Refund:',
-              amount: wrongItem.price,
-              state: TransactionState.pending,
-            ),
-            Transaction(
-              description:
-                  'Purchased ${wrongItem.name} from ${wrongItem.seller.real}',
-              amount: -item.price,
-              state: TransactionState.pending,
-            )
-          ],
-        ),
+            description:
+                'Purchased ${wrongItem.name} from ${wrongItem.seller.real}',
+            amount: -wrongItem.price,
+            state: slot.scam.delay
+                ? TransactionState.pending
+                : TransactionState.actionNeeded,
+            linkedItemId: itemId,
+            isScam: true,
+            deployOnDispute: [
+              Transaction(
+                description: 'Wrong Item Refund:',
+                amount: wrongItem.price,
+                state: TransactionState.pending,
+              ),
+            ],
+            deployOnResolved: [
+              Transaction(
+                description: 'Purchased ${item.name} from ${item.seller.real}',
+                amount: -item.price,
+                state: TransactionState.pending,
+              ),
+            ]),
       );
       return;
     }
@@ -332,12 +364,13 @@ class EventController with ChangeNotifier {
               amount: wrongItem.price,
               state: TransactionState.pending,
             ),
+          ],
+          deployOnResolved: [
             Transaction(
-              description:
-                  'Purchased ${wrongItem.name} from ${wrongItem.seller.real}',
+              description: 'Purchased ${item.name} from ${item.seller.real}',
               amount: -item.price,
               state: TransactionState.pending,
-            )
+            ),
           ],
         ),
       );

@@ -11,7 +11,7 @@ import 'package:projectmercury/resources/event_controller.dart';
 import 'package:projectmercury/resources/firestore_methods.dart';
 import 'package:projectmercury/resources/locator.dart';
 
-class Room extends StatefulWidget {
+class Room extends StatelessWidget {
   final String name;
   final int unlockOrder;
   final double width;
@@ -19,40 +19,33 @@ class Room extends StatefulWidget {
   final double height;
   final bool roomBehind;
   final bool roomBeside;
-  final List<Furniture> furniture;
-  final List<Slot> slots;
-  const Room({
-    Key? key,
-    required this.unlockOrder,
-    required this.width,
-    required this.length,
-    required this.height,
-    this.name = '',
-    this.roomBehind = false,
-    this.roomBeside = false,
-    this.furniture = const [],
-    this.slots = const [],
-  }) : super(key: key);
+  final List<Object?> items;
+  const Room(
+      {Key? key,
+      required this.unlockOrder,
+      required this.width,
+      required this.length,
+      required this.height,
+      this.name = '',
+      this.roomBehind = false,
+      this.roomBeside = false,
+      this.items = const []
+      })
+      : super(key: key);
 
-  @override
-  State<Room> createState() => _RoomState();
-
+  Iterable<Slot> get slots => items.whereType<Slot>();
   // Fill all items matching a given ID with a given item
-  setSlotItems(int? slotID, String? item) {
-    slots
-        .where((element) => slotID == null ? true : element.id == slotID)
-        .forEach((element) {
-      element.set(item);
+  Iterable<Slot> slotsByID(int slotID) => slots.where((s) => s.id == slotID);
+  fillSlots(int? slotID, String? item) {
+    slots.where((s) => slotID == null ? true : s.id == slotID).forEach((s) {
+      s.set(item);
     });
   }
 
-  Iterable<Slot> getSlots(int slotID) => slots.where((s) => s.id == slotID);
-  Iterable<Slot> getFilledSlots() => slots.where((s) => s.item != null);
-  getFurniture(int slotID) =>
-      furniture.where((f) => f.slotID == slotID).toList();
-}
+  Iterable<Slot> get filledSlots =>
+      items.whereType<Slot>().where((s) => s.item != null);
+  get furniture => items.whereType<Furniture>();
 
-class _RoomState extends State<Room> {
   @override
   Widget build(BuildContext context) {
     Room? _currentRoom = locator.get<EventController>().currentRoom;
@@ -60,12 +53,37 @@ class _RoomState extends State<Room> {
     return FittedBox(
       child: IsometricView(
         child: SizedBox(
-          width: widget.length + widget.height,
-          height: widget.width + widget.height,
+          width: length + height,
+          height: width + height,
           child: StreamBuilder<List<PurchasedItem>>(
-            stream:
-                locator.get<FirestoreMethods>().itemsStream(room: widget.name),
+            stream: locator.get<FirestoreMethods>().itemsStream(room: name),
             builder: (context, roomItems) {
+              List<Widget> placeables = [];
+
+              for (Object? o in items) {
+                if (o is Slot) {
+                  if (o.item != null) {
+                    placeables.add(FurnitureCard(
+                      furniture: o.acceptables.firstWhere(
+                        (element) => element.name == o.item,
+                      ),
+                      slot: o,
+                    ));
+                  } else if (_currentRoom != null &&
+                      o.item == null &&
+                      !o.owned) {
+                    if (o.prereq == null ||
+                        filledSlots
+                            .toSet()
+                            .intersection(slotsByID(o.prereq!).toSet())
+                            .isNotEmpty) {
+                      placeables.add(SlotCard(slot: o, roomName: name));
+                    }
+                  }
+                } else if (o is Furniture) {
+                  placeables.add(FurnitureCard(furniture: o));
+                }
+              }
               return Stack(
                 clipBehavior: Clip.none,
                 alignment: Alignment.bottomLeft,
@@ -74,8 +92,8 @@ class _RoomState extends State<Room> {
                     bottom: 0,
                     left: 0,
                     child: Container(
-                      width: widget.length,
-                      height: widget.width,
+                      width: length,
+                      height: width,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.brown),
                         image: const DecorationImage(
@@ -90,24 +108,26 @@ class _RoomState extends State<Room> {
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: Container(
-                      width: widget.height,
-                      height: widget.width,
-                      transform: Matrix4.identity()..rotateY(-math.pi / 2),
-                      child: RotatedBox(
-                        quarterTurns: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            border: Border.all(color: Colors.brown),
-                            image: DecorationImage(
-                              alignment: Alignment.topLeft,
-                              opacity: widget.roomBehind && shouldFadeWalls
-                                  ? 0.3
-                                  : 1.0,
-                              image: const AssetImage(
-                                  'assets/textures/greenWall.jpg'),
-                              repeat: ImageRepeat.repeat,
+                    child: IgnorePointer(
+                      ignoring: _currentRoom == null ? true : false,
+                      child: Container(
+                        width: height,
+                        height: width,
+                        transform: Matrix4.identity()..rotateY(-math.pi / 2),
+                        child: RotatedBox(
+                          quarterTurns: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(color: Colors.brown),
+                              image: DecorationImage(
+                                alignment: Alignment.topLeft,
+                                opacity:
+                                    roomBehind && shouldFadeWalls ? 0.3 : 1.0,
+                                image: const AssetImage(
+                                    'assets/textures/greenWall.jpg'),
+                                repeat: ImageRepeat.repeat,
+                              ),
                             ),
                           ),
                         ),
@@ -117,50 +137,31 @@ class _RoomState extends State<Room> {
                   Positioned(
                     top: 0,
                     left: 0,
-                    child: Container(
-                      width: widget.length,
-                      height: widget.height,
-                      transform: Matrix4.identity()..rotateX(-math.pi / 2),
-                      transformAlignment: Alignment.bottomCenter,
+                    child: IgnorePointer(
+                      ignoring: _currentRoom == null ? true : false,
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          border: Border.all(color: Colors.brown),
-                          image: DecorationImage(
-                            alignment: Alignment.topLeft,
-                            opacity: widget.roomBeside && shouldFadeWalls
-                                ? 0.3
-                                : 1.0,
-                            image: const AssetImage(
-                                'assets/textures/greenWall.jpg'),
-                            repeat: ImageRepeat.repeat,
+                        width: length,
+                        height: height,
+                        transform: Matrix4.identity()..rotateX(-math.pi / 2),
+                        transformAlignment: Alignment.bottomCenter,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border.all(color: Colors.brown),
+                            image: DecorationImage(
+                              alignment: Alignment.topLeft,
+                              opacity:
+                                  roomBeside && shouldFadeWalls ? 0.3 : 1.0,
+                              image: const AssetImage(
+                                  'assets/textures/greenWall.jpg'),
+                              repeat: ImageRepeat.repeat,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  // Hide slots when in full view
-                  if (_currentRoom != null)
-                    for (Slot s in widget.slots
-                        .where((element) => element.item == null && element.owned == false))
-                      // if slot has no unfinished prerequisites...
-                      if (s.prereq == null ||
-                          widget
-                              .getFilledSlots()
-                              .toSet()
-                              .intersection(widget.getSlots(s.prereq!).toSet())
-                              .isNotEmpty)
-                        SlotCard(slot: s, roomName: widget.name),
-                  for (Slot s
-                      in widget.slots.where((element) => element.item != null))
-                    FurnitureCard(
-                      furniture: s.acceptables.firstWhere(
-                        (element) => element.name == s.item,
-                      ),
-                      slot: s,
-                    ),
-                  for (Furniture f in widget.furniture)
-                    FurnitureCard(furniture: f),
+                  for (Widget item in placeables) item,
                 ],
               );
             },

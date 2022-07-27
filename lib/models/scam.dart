@@ -4,6 +4,7 @@ class Scam {
   final bool wrongSlotItem;
   final bool wrongRandomItem;
   final bool scamStore;
+  final bool scamStoreDuplicate;
   final bool delay;
   const Scam({
     this.overchargeRate = 0,
@@ -11,6 +12,7 @@ class Scam {
     this.wrongSlotItem = false,
     this.wrongRandomItem = false,
     this.scamStore = false,
+    this.scamStoreDuplicate = false,
     this.delay = false,
   });
 }
