@@ -37,6 +37,7 @@ class Event {
     return ({
       'id': id,
       'eventId': eventId,
+      'sender': sender,
       'title': title,
       'type': type.name,
       'dialog': dialog,
@@ -53,6 +54,7 @@ class Event {
       id: snap['id'],
       eventId: snap['eventId'],
       title: snap['title'],
+      sender: snap['sender'],
       type: EventType.values.byName(snap['type']),
       dialog: snap['dialog'],
       question: snap['question'],

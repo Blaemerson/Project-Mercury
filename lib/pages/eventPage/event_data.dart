@@ -1,5 +1,6 @@
 import 'package:projectmercury/models/event.dart';
 
+//TODO: implement conditional events
 // The 3rd digit of eventId is the session in which they will be deployed
 List<Event> events = [
   Event(

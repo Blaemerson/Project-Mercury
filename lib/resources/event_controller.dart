@@ -166,6 +166,7 @@ class EventController with ChangeNotifier {
     }
   }
 
+//TODO: better way to calculate event progress
   void calculateEventProgress() {
     _eventProgress = [0, 0];
     int eventsTotal = events
@@ -183,7 +184,6 @@ class EventController with ChangeNotifier {
     calculateSessionProgress();
   }
 
-// TODO: calculate transaction progress
   void calculateSessionProgress() {
     int denom = _roomProgress[1] + _eventProgress[1];
     _sessionProgress =
@@ -235,6 +235,7 @@ class EventController with ChangeNotifier {
         : null;
   }
 
+//TODO: implement utility bill deployment
   buyItem(StoreItem item, String room, Slot slot) async {
     String itemId = await _firestore.addItem(item, room);
     deployEvent();
