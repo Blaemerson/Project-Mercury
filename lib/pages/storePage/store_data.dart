@@ -104,9 +104,15 @@ const List<StoreItem> storeItems = [
     seller: Seller.topNotchContractors,
   ),
   StoreItem(
-    name: 'Bookcase',
-    price: 200,
+    name: 'Discount Bookcase',
+    price: 50,
     item: 'bookcase',
+    seller: Seller.secondhandFurniture,
+  ),
+  StoreItem(
+    name: 'Vintage Bookcase',
+    price: 500,
+    item: 'vintage_bookcase',
     seller: Seller.marcelasAntiques,
   ),
   StoreItem(
@@ -156,6 +162,11 @@ const List<StoreItem> storeItems = [
     item: 'toilet',
   ),
   StoreItem(
+    name: 'Golden Toilet',
+    price: 800,
+    item: 'golden_toilet',
+  ),
+  StoreItem(
     name: 'Bathtub',
     price: 200,
     item: 'bathtub',
@@ -176,9 +187,9 @@ const List<StoreItem> storeItems = [
     item: 'large_fridge',
   ),
   StoreItem(
-    name: 'Dining Table',
+    name: 'Classic Pine Table',
     price: 550,
-    item: 'basic_dining_table',
+    item: 'dining_table',
   ),
   StoreItem(
     name: 'Window',
@@ -247,5 +258,17 @@ const List<StoreItem> storeItems = [
     name: 'Plush Loveseat',
     price: 160,
     item: 'plush_loveseat',
+  ),
+  StoreItem(
+    name: 'Discount End Tables (2)',
+    price: 160,
+    item: 'basic_end_table',
+    seller: Seller.theFurnitureSpot,
+  ),
+  StoreItem(
+    name: 'Basic Pet Bed',
+    price: 30,
+    item: 'basic_pet_bed',
+    seller: Seller.maggiesFurnitureDepot,
   ),
 ];
